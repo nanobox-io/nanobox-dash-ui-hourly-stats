@@ -1,0 +1,30 @@
+$face-size : 22px;
+
+.livesvg         { @include temperatures();
+  rect           { fill:#DEDEDE; transition: fill 500ms;}
+  rect.bg        { fill: #DEDEDE;}
+  rect.lines     { fill: white; opacity:0.6}
+  text           { fill:#BABABA; font-size:9px; font-family: Museo; }
+}
+.livesvg.large   { transition:fill 60ms;
+  // because the elements are nested, we can't just use the mixin
+  .cool          {
+    .stats       { fill: $color-cool; }
+    text         { fill: $color-cool; }
+  }
+  .warm          {
+    .stats       { fill: $color-warm;; }
+    text         { fill: $color-warm;; }
+  }
+  .hot           {
+    .stats       { fill: $color-hot; }
+    text         { fill: $color-hot; }
+  }
+  .sleep         {
+    .stats       { fill: $color-sleep; }
+    text         { fill: $color-sleep; }
+  }
+  text           { font-family:Museo; text-transform:uppercase;
+    &.percentage { font:{size:12px; weight:bold;}}
+  }
+}

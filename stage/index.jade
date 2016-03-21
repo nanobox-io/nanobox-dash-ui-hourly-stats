@@ -1,0 +1,43 @@
+doctype html
+html(lang="en")
+  
+  head
+    title Hourly Stats
+
+    // build:remove 
+    link(href="stage/css/stage.css", rel="stylesheet")
+    // endbuild
+    
+    // build:css style.css
+    link(href="css/hourly-stats-svg.css", rel="stylesheet")
+    link(href="css/main.css", rel="stylesheet")
+    // endbuild
+
+  body
+    .stats
+      .micro
+      .strip
+      .expanded
+        
+    // build:remove 
+    script(src="bower-libs/jquery/dist/jquery.js")
+    script(src="bower-libs/jade/runtime.js")
+    script(src="bower-libs/shadow-icons/rel/app.js")
+    // endbuild
+
+    // build:js app.js
+    script(src="bower-libs/d3/d3.js")
+    script(src="js/hourly-stats-svg.js")
+    script(src="js/jade-templates.js")
+    script(src="js/main.js")
+    // endbuild
+    
+    // build:remove 
+    script(src="stage/js/stage.js")
+    // endbuild
+    
+    
+    
+    // build:remove 
+    script(src="http://localhost:35729/livereload.js")
+    // endbuild

@@ -1,0 +1,4 @@
+.micro-view      { display:flex; align-items:center; justify-content:center;
+  .labels        { font-size:10px; font-family:Museo; font-size:8px; text-transform: uppercase; color:#BABABA;line-height: 1; text-align: right; }
+  .faceholder    { height:$face-size; width:$face-size; margin-left:6px;  }
+}
