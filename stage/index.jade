@@ -23,21 +23,22 @@ html(lang="en")
     script(src="bower-libs/jquery/dist/jquery.js")
     script(src="bower-libs/jade/runtime.js")
     script(src="bower-libs/shadow-icons/rel/app.js")
+    script(src="bower-libs/d3/d3.js")
     // endbuild
 
     // build:js app.js
-    script(src="bower-libs/d3/d3.js")
     script(src="js/hourly-stats-svg.js")
-    //- script(src="js/jade-templates.js")
     script(src="js/main.js")
     // endbuild
     
-    // build:remove 
+    //- I'm including this for generating test stats 
+    // build:js2 data-shim.js
     script(src="stage/js/stage.js")
     // endbuild
     
-    
-    
+    script(type="text/javascript").
+      init();
+      
     // build:remove 
     script(src="http://localhost:35729/livereload.js")
     // endbuild

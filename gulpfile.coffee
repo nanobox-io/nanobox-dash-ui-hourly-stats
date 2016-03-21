@@ -53,8 +53,6 @@ html = (cb)->
   gulp.src( jadePath )
     .pipe jade(client: true)
     .pipe plumber()
-    # .pipe wrap( "hourlyStatsJade['<%= file.relative.split('.')[0] %>'] = <%= file.contents %>;\n" )
-    # .pipe concat('jade-templates.js')
     .pipe wrap( "module.exports = <%= file.contents %>" )
     .pipe gulp.dest('./server/js/jade')
     .on('end', cb)
