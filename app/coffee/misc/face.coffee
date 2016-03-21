@@ -1,3 +1,5 @@
+jadeFaceTemplate = require 'jade/face'
+
 module.exports = class Face
 
   constructor: (@$el, @scalable) ->
@@ -6,6 +8,6 @@ module.exports = class Face
     return if @temperature == temperature
     @temperature = temperature
     @$el.empty()
-    $face = $ jadeTemplate['face']( {temperature:temperature, scalable:@scalable } )
+    $face = $ jadeFaceTemplate( {temperature:temperature, scalable:@scalable } )
     @$el.append $face
     shadowIconsInstance.svgReplaceWithString pxSvgIconString, $face

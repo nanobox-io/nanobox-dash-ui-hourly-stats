@@ -3,11 +3,12 @@ StatsUtils      = require 'misc/stats-utils'
 HorizLiveGraphs = require 'd3/now-horizontal'
 HistoricalSmall = require 'd3/historical-small'
 Face            = require 'misc/face'
+stripView       = require 'jade/strip-view'
 
 module.exports = class StripView extends View
 
   constructor: ($el) ->
-    @$node = $ jadeTemplate['strip-view']( {stats:StatsUtils.statTypes} )
+    @$node = $ stripView( {stats:StatsUtils.statTypes} )
     $el.append @$node
 
     @addHistoricStats()

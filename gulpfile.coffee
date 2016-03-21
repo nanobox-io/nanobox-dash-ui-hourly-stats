@@ -53,10 +53,10 @@ html = (cb)->
   gulp.src( jadePath )
     .pipe jade(client: true)
     .pipe plumber()
-    .pipe wrap( "jadeTemplate['<%= file.relative.split('.')[0] %>'] = <%= file.contents %>;\n" )
-    .pipe concat('jade-templates.js')
-    .pipe wrap( "jadeTemplate = {};\n<%= file.contents %>" )
-    .pipe gulp.dest('./server/js')
+    # .pipe wrap( "hourlyStatsJade['<%= file.relative.split('.')[0] %>'] = <%= file.contents %>;\n" )
+    # .pipe concat('jade-templates.js')
+    .pipe wrap( "module.exports = <%= file.contents %>" )
+    .pipe gulp.dest('./server/js/jade')
     .on('end', cb)
 
 css = (cb)->
@@ -81,14 +81,14 @@ js = (cb)->
   # App
   gulp.src( mainJsFile )
     .pipe plumber()
-    .pipe coffeeify({options: { debug: true, paths: [__dirname + '/node_modules', __dirname + '/app/coffee/'] } })
+    .pipe coffeeify({options: { debug: true, paths: ["#{__dirname}/node_modules", "#{__dirname}/app/coffee/", "#{__dirname}/server/js/" ] } })
     .pipe gulp.dest('server/js/')
     .on('end', cb)
 
 jsStage = (cb)->
   gulp.src mainStageJsFile
     .pipe plumber()
-    .pipe coffeeify({options: { debug: true, paths: [__dirname + '/node_modules', __dirname + '/app/coffee/'] } })
+    .pipe coffeeify({options: { debug: true, paths: ["#{__dirname}/node_modules", "#{__dirname}/app/coffee/"] } })
     .pipe gulp.dest('server/stage/js')
     .on('end', cb)
 
@@ -108,13 +108,13 @@ compileFiles = (doWatch=false, cb) ->
   count       = 0
   onComplete = ()=> if ++count == ar.length then cb()
   ar         = [
-    {meth:js,         glob:appJsPath}
     {meth:css,        glob:cssPath}
     {meth:html,       glob:jadePath}
     {meth:parseSVG,   glob:svgPath}
-    {meth:jsStage,    glob:stageJsPath}
     {meth:cssStage,   glob:cssStagePath}
     {meth:htmlStage,  glob:jadeStagePath}
+    {meth:jsStage,    glob:stageJsPath}
+    {meth:js,         glob:appJsPath}
     {meth:copyAssets, glob:assetPath, params:['server/assets', onComplete]}
   ]
 

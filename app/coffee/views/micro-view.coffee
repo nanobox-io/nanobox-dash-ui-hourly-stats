@@ -2,11 +2,12 @@ View            = require 'views/view'
 StatsUtils      = require 'misc/stats-utils'
 HorizLiveGraphs = require 'd3/now-horizontal'
 Face            = require 'misc/face'
+microView       = require 'jade/micro-view'
 
 module.exports = class MicroView extends View
 
   constructor: ($el) ->
-    @$node = $ jadeTemplate['micro-view']( {stats:StatsUtils.statTypes} )
+    @$node = $ microView( {stats:StatsUtils.statTypes} )
     $el.append @$node
     @addLiveStats()
     @addFace()

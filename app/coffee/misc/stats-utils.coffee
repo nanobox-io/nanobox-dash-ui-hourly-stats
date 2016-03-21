@@ -1,10 +1,24 @@
 module.exports = class StatsUtils
 
-  @setThresholds : (thresholds) ->
-    StatsUtils.thresholds = thresholds
+  # Set the health borders used to know what color / face a stat should show EX:
+  # { ram:[.75, 0.9] }
+  # A ram balue less than 0 would rturn 'sleep'
+  # A ram value between 0 and 0.75 would return 'cool'
+  # A ram value between 0.76 and 0.9 would return 'warm'
+  # A ram value greater than 0.9 would return 'hot'
+  # Note, any metric that doesn't have a threshold set will use the default - [.75, 0.9]
+  @setThresholds: (thresholds={}) -> StatsUtils.thresholds = thresholds
 
-  @setTypes : (statTypes) ->
-    StatsUtils.statTypes = statTypes
+  # An array of info concerning the stat metrics. (Note, The order of the array
+  # is used to order the visueal display of the stats). EX:
+  # statTypes = [
+  #   {id:"cpu_used",  nickname: "CPU",  name:"CPU Used"}
+  #   {id:"ram_used",  nickname: "RAM",  name:"RAM Used"}
+  #   {id:"swap_used", nickname: "SWAP", name:"Swap Used"}
+  #   {id:"disk_used", nickname: "DISK", name:"Disk Used"}
+  # ]
+  # StatUtils.setTypes(statTypes)
+  @setTypes:      (statTypes=[])  -> StatsUtils.statTypes  = statTypes
 
   @getIndexOfMetric : (metric) ->
     for statType, i in StatsUtils.statTypes
@@ -29,6 +43,7 @@ module.exports = class StatsUtils
       when val < threshold[1] then "warm"
       else "hot"
 
+  # Finds the hottest temperature and returns that
   @getOverallTemperature : (data) ->
     # Grab all the values and push them into an array
     ar = []
