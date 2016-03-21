@@ -1,20 +1,20 @@
 TestData = require './shim/test-data'
-window.statsDataMachine = new TestData()
+window.statsDataSimultor = new TestData()
 
 window.init = () ->
 
   # Micro View
   micro = new nanobox.HourlyStats $(".micro"), nanobox.HourlyStats.micro
-  micro.initStats statsDataMachine.statTypes, statsDataMachine.thresholds
+  micro.initStats statsDataSimultor.statTypes, statsDataSimultor.thresholds
   micro.build()
-  micro.updateLiveStats statsDataMachine.generateFakeLiveStats()
+  micro.updateLiveStats statsDataSimultor.generateFakeLiveStats()
 
   # Standard Strip View
   strip = new nanobox.HourlyStats $(".strip"), nanobox.HourlyStats.strip
-  strip.initStats statsDataMachine.statTypes, statsDataMachine.thresholds
+  strip.initStats statsDataSimultor.statTypes, statsDataSimultor.thresholds
   strip.build()
-  strip.updateLiveStats statsDataMachine.generateFakeLiveStats()
-  strip.updateHistoricStat "disk_used", statsDataMachine.generateFakeHistoricalStats()
-  strip.updateHistoricStat "ram_used", statsDataMachine.generateFakeHistoricalStats()
-  strip.updateHistoricStat "cpu_used", statsDataMachine.generateFakeHistoricalStats()
-  strip.updateHistoricStat "swap_used", statsDataMachine.generateFakeHistoricalStats()
+  strip.updateLiveStats statsDataSimultor.generateFakeLiveStats()
+  strip.updateHistoricStat "disk_used", statsDataSimultor.generateFakeHistoricalStats()
+  strip.updateHistoricStat "ram_used", statsDataSimultor.generateFakeHistoricalStats()
+  strip.updateHistoricStat "cpu_used", statsDataSimultor.generateFakeHistoricalStats()
+  strip.updateHistoricStat "swap_used", statsDataSimultor.generateFakeHistoricalStats()
