@@ -1,18 +1,13 @@
 // mixins and vars
 
-$color-cool  : #7DB441;
-$color-warm  : #FC8F4F;
-$color-hot   : #DE1953;
-$color-sleep : #DEDEDE;
-
 $dark-blue   : #173048;
 $light-blue  : #407287;
 $yellow      : #CCC;
 
 
 @mixin temperatures   {
-  .cool               {fill: $color-cool;}
-  .warm               {fill: $color-warm;}
-  .hot                {fill: $color-hot;}
-  .sleep              {fill: $color-sleep;}
+  .cool               {fill: $cool;}
+  .warm               {fill: $warm;}
+  .hot                {fill: $hot;}
+  .sleep              {fill: $sleep;}
 }

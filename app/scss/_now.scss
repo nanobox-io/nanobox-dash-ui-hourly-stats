@@ -9,20 +9,20 @@ $face-size : 22px;
 .livesvg.large   { transition:fill 60ms;
   // because the elements are nested, we can't just use the mixin
   .cool          {
-    .stats       { fill: $color-cool; }
-    text         { fill: $color-cool; }
+    .stats       { fill: $cool; }
+    text         { fill: $cool; }
   }
   .warm          {
-    .stats       { fill: $color-warm;; }
-    text         { fill: $color-warm;; }
+    .stats       { fill: $warm;; }
+    text         { fill: $warm;; }
   }
   .hot           {
-    .stats       { fill: $color-hot; }
-    text         { fill: $color-hot; }
+    .stats       { fill: $hot; }
+    text         { fill: $hot; }
   }
   .sleep         {
-    .stats       { fill: $color-sleep; }
-    text         { fill: $color-sleep; }
+    .stats       { fill: $sleep; }
+    text         { fill: $sleep; }
   }
   text           { font-family:Museo; text-transform:uppercase;
     &.percentage { font:{size:12px; weight:bold;}}
