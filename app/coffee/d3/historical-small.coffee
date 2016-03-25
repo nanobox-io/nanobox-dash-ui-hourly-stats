@@ -2,10 +2,12 @@ StatsUtils      = require 'misc/stats-utils'
 
 module.exports = class HistoricalSmall
 
-  constructor: (el) ->
-    @svg    = d3.select(el).append("svg").attr
+  constructor: (el, @height, @vertPadding, @horizPadding=8) ->
+    totalBars = 4
+    @totalHeight = (@height * totalBars) + (@vertPadding*(totalBars-1))
+    @svg = d3.select(el).append("svg").attr
       width  : 200
-      height : 32
+      height : @totalHeight
       class  : "historicsvg small"
 
   update : (data) ->
@@ -21,7 +23,7 @@ module.exports = class HistoricalSmall
       .enter()
       .append("g") # Add a group for positioning
       .attr
-        transform : (d, i)-> "translate(0, #{ d.index * 9  })"
+        transform : (d, i)=> "translate(0, #{ d.index * (@height+@vertPadding)  })"
 
     # Each Hour...
     box = group.selectAll("rect")
@@ -32,9 +34,9 @@ module.exports = class HistoricalSmall
       .enter()
       .append("rect")
       .attr
-        width : 5
-        height: 5
-        x : (d, i) -> i * 8
+        width : @height
+        height: @height
+        x : (d, i) => i * @horizPadding
 
     # Set the temperarure based on the value
     box.attr

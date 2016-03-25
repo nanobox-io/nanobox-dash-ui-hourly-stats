@@ -4,28 +4,35 @@ HorizLiveGraphs = require 'd3/now-horizontal'
 HistoricalSmall = require 'd3/historical-small'
 Face            = require 'misc/face'
 stripView       = require 'jade/strip-view'
+percentages     = require 'jade/percentages'
 
 module.exports = class StripView extends View
 
   constructor: ($el) ->
     @$node = $ stripView( {stats:StatsUtils.statTypes} )
+    @$percentages = $ ".percentages", @$node
     $el.append @$node
 
-    @addHistoricStats()
-    @addLiveStats()
+    barHeight  = 5
+    barPadding = 5
+    @addHistoricStats barHeight, barPadding
+    @addLiveStats barHeight, barPadding
     @addFace()
 
 
-  addHistoricStats : () ->
-    @historicStats = new HistoricalSmall $(".historic", @$node)[0]
+  addHistoricStats : (barHeight, barPadding) ->
+    @historicStats = new HistoricalSmall $(".historic", @$node)[0], barHeight, barPadding
 
-  addLiveStats : () ->
-    @liveStats   = new HorizLiveGraphs
+  addLiveStats : (barHeight, barPadding) ->
+    config =
       barWidth    : 50
-      barHeight   : 5
-      padding     : 4
-      totalHeight : 32
+      barHeight   : barHeight
+      padding     : barPadding
+      totalHeight : barHeight*4 + barPadding*3
       holder      : $(".graphs", @$node)[0]
+
+    @liveStats   = new HorizLiveGraphs config
+
 
   addFace : () ->
     @face = new Face $(".face", @$node), "true"
@@ -33,6 +40,7 @@ module.exports = class StripView extends View
   updateLiveStats : (data) ->
     @face.update StatsUtils.getOverallTemperature(data)
     @liveStats.update data
+    @updateLivePercentages data
 
   updateHistoricStats : (metric, data) ->
     obj = {}
@@ -40,3 +48,11 @@ module.exports = class StripView extends View
     data  = StatsUtils.fillGapsInHistoricalData data
     obj[metric] = StatsUtils.normalizeHistoricalData data, range
     @historicStats.update obj
+
+  updateLivePercentages : (data) ->
+    ar = []
+    for key, val of data
+      ar.push Math.round(val*100)
+    console.log ar
+    @$percentages.empty()
+    @$percentages.append $( percentages( {percentages:ar} ) )
