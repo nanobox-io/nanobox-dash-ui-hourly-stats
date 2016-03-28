@@ -10,11 +10,11 @@ module.exports = class HistoricalSmall
       height : @totalHeight
       class  : "historicsvg small"
 
-  update : (data) ->
+  update : (data, statTypes) ->
     dataAr = []
     indexes = {}
     for key, val of data
-      dataAr.push {metric:key, val:val, index:StatsUtils.getIndexOfMetric(key)}
+      dataAr.push {metric:key, val:val, index:statTypes[key].index}
       indexes[key] = dataAr.length - 1
 
     # Metric as a group...

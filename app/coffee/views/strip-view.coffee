@@ -8,8 +8,8 @@ percentages     = require 'jade/percentages'
 
 module.exports = class StripView extends View
 
-  constructor: ($el) ->
-    @$node = $ stripView( {stats:StatsUtils.statTypes} )
+  constructor: ($el, statTypes) ->
+    @$node = $ stripView( {stats:statTypes} )
     @$percentages = $ ".percentages", @$node
     $el.append @$node
 
@@ -18,7 +18,6 @@ module.exports = class StripView extends View
     @addHistoricStats barHeight, barPadding
     @addLiveStats barHeight, barPadding
     @addFace()
-
 
   addHistoricStats : (barHeight, barPadding) ->
     @historicStats = new HistoricalSmall $(".historic", @$node)[0], barHeight, barPadding
@@ -33,7 +32,6 @@ module.exports = class StripView extends View
 
     @liveStats   = new HorizLiveGraphs config
 
-
   addFace : () ->
     @face = new Face $(".face", @$node), "true"
 
@@ -42,17 +40,16 @@ module.exports = class StripView extends View
     @liveStats.update data
     @updateLivePercentages data
 
-  updateHistoricStats : (metric, data) ->
+  updateHistoricStat : (metric, data, statTypes) ->
     obj = {}
     range = StatsUtils.get24hrRangeStartingLastHour()
     data  = StatsUtils.fillGapsInHistoricalData data
     obj[metric] = StatsUtils.normalizeHistoricalData data, range
-    @historicStats.update obj
+    @historicStats.update obj, statTypes
 
   updateLivePercentages : (data) ->
     ar = []
     for key, val of data
       ar.push Math.round(val*100)
-    console.log ar
     @$percentages.empty()
     @$percentages.append $( percentages( {percentages:ar} ) )

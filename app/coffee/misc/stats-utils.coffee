@@ -28,20 +28,10 @@ module.exports = class StatsUtils
     return -1
 
   @getTemperature : (val, stat) ->
-    return 'sleep' if !StatsUtils.thresholds?
-
-    # Check to see if there is a custom threshold range for this metric
-    # If there is none, use a default.
-    if StatsUtils.thresholds["#{stat}_thresholds"]?
-      threshold = StatsUtils.thresholds["#{stat}_thresholds"]
-    else
-      threshold = [.75, 0.9]
-
-    switch
-      when val < 0 then "sleep"
-      when val < threshold[0] then "cool"
-      when val < threshold[1] then "warm"
-      else "hot"
+    if      val < 0   then "sleep"
+    else if val < .75 then "cool"
+    else if val < 0.9 then "warm"
+    else                   "hot"
 
   # Finds the hottest temperature and returns that
   @getOverallTemperature : (data) ->

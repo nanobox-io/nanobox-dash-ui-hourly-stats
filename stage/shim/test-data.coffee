@@ -11,12 +11,6 @@ module.exports = class TestData
         {id:"disk_used", nickname: "DISK", name:"Disk Used"}
       ]
 
-    @thresholds =
-      cpu_used_thresholds:     [.35, .7]
-      ram_used_thresholds:     [.25, .5]
-      swap_used_thresholds:    [.15, .8]
-
-
   generateFakeLiveStats : () ->
     obj = {}
 

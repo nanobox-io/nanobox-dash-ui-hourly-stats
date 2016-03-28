@@ -6,8 +6,8 @@ microView       = require 'jade/micro-view'
 
 module.exports = class MicroView extends View
 
-  constructor: ($el) ->
-    @$node = $ microView( {stats:StatsUtils.statTypes} )
+  constructor: ($el, statTypes) ->
+    @$node = $ microView( {stats:statTypes} )
     $el.append @$node
     @addLiveStats()
     @addFace()

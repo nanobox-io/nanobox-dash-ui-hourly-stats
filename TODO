@@ -1,0 +1,4 @@
+☐ Find a better way to configure stats ordering, and stats names than is currently found in :
+  StatsUtils.etThresholds
+  StatsUtils.setTypes
+  StatsUtils.getIndexOfMetric
