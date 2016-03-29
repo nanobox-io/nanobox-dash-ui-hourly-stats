@@ -8,7 +8,7 @@ percentages     = require 'jade/percentages'
 
 module.exports = class StripView extends View
 
-  constructor: ($el, @statTypes) ->
+  constructor: ($el, id, @statTypes) ->
     @$node = $ stripView( {stats:@statTypes} )
     @$percentages = $ ".percentages", @$node
     $el.append @$node
@@ -18,7 +18,7 @@ module.exports = class StripView extends View
     @addHistoricStats barHeight, barPadding
     @addLiveStats barHeight, barPadding
     @addFace()
-    @subscribeToStatData()
+    @subscribeToStatData id
 
   addHistoricStats : (barHeight, barPadding) ->
     @historicStats = new HistoricalSmall $(".historic", @$node)[0], barHeight, barPadding
@@ -55,12 +55,16 @@ module.exports = class StripView extends View
     @$percentages.empty()
     @$percentages.append $( percentages( {percentages:ar} ) )
 
-  subscribeToStatData : () ->
+  subscribeToStatData : (id) ->
+    # Based on what stats this component is interested in, create
+    # an array of metric names, and subscribe
+    # ex : ['ram', 'cpu', etc..]
     ar = []
     for key, val of @statTypes
       ar.push key
 
     PubSub.publish 'STATS.SUBSCRIBE', {
+      statProviderId : id
       subscriber     : @
       liveStats      : ar
       historicStats  : ar

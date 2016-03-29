@@ -9,7 +9,7 @@ class HourlyStats
   @viewKind  : The kind of view to show - micro, strip, etc..
   @statTypes : An array noting the stats we will be loading and their display order
   ###
-  constructor: (@$el, @viewKind, statTypes=['cpu','ram','swap','disk']) ->
+  constructor: (@$el, @viewKind, @id, statTypes=['cpu','ram','swap','disk']) ->
     @statTypes = {}
 
     # Add stat meta data into an array for later use
@@ -42,8 +42,8 @@ class HourlyStats
 
   setState : (viewKind) ->
     switch viewKind
-      when "micro" then @component = new MicroView @$el, @statTypes
-      when "strip" then @component = new StripView @$el, @statTypes
+      when "micro" then @component = new MicroView @$el, @id, @statTypes
+      when "strip" then @component = new StripView @$el, @id, @statTypes
 
   # ------------ Constants
 

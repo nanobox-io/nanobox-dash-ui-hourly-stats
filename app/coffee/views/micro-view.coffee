@@ -6,15 +6,12 @@ microView       = require 'jade/micro-view'
 
 module.exports = class MicroView extends View
 
-  constructor: ($el, statTypes) ->
+  constructor: ($el, id, statTypes) ->
     @$node = $ microView( {stats:statTypes} )
     $el.append @$node
     @addLiveStats()
     @addFace()
-    PubSub.publish 'STATS.SUBSCRIBE', {
-      subscriber : @
-      liveStats  : ['ram', 'cpu', 'swap', 'disk']
-    }
+    @subscribeToStatData(id)
 
   addLiveStats : () ->
     @liveStats   = new HorizLiveGraphs
@@ -30,3 +27,10 @@ module.exports = class MicroView extends View
   updateLiveStats : (data) ->
     @face.update StatsUtils.getOverallTemperature(data)
     @liveStats.update data
+
+  subscribeToStatData : (id) ->
+    PubSub.publish 'STATS.SUBSCRIBE', {
+      statProviderId : id
+      subscriber     : @
+      liveStats      : ['ram', 'cpu', 'swap', 'disk']
+    }
