@@ -8,8 +8,8 @@ percentages     = require 'jade/percentages'
 
 module.exports = class StripView extends View
 
-  constructor: ($el, statTypes) ->
-    @$node = $ stripView( {stats:statTypes} )
+  constructor: ($el, @statTypes) ->
+    @$node = $ stripView( {stats:@statTypes} )
     @$percentages = $ ".percentages", @$node
     $el.append @$node
 
@@ -18,6 +18,7 @@ module.exports = class StripView extends View
     @addHistoricStats barHeight, barPadding
     @addLiveStats barHeight, barPadding
     @addFace()
+    @subscribeToStatData()
 
   addHistoricStats : (barHeight, barPadding) ->
     @historicStats = new HistoricalSmall $(".historic", @$node)[0], barHeight, barPadding
@@ -40,12 +41,12 @@ module.exports = class StripView extends View
     @liveStats.update data
     @updateLivePercentages data
 
-  updateHistoricStat : (metric, data, statTypes) ->
+  updateHistoricStat : (metric, data) ->
     obj = {}
     range = StatsUtils.get24hrRangeStartingLastHour()
     data  = StatsUtils.fillGapsInHistoricalData data
     obj[metric] = StatsUtils.normalizeHistoricalData data, range
-    @historicStats.update obj, statTypes
+    @historicStats.update obj, @statTypes
 
   updateLivePercentages : (data) ->
     ar = []
@@ -53,3 +54,14 @@ module.exports = class StripView extends View
       ar.push Math.round(val*100)
     @$percentages.empty()
     @$percentages.append $( percentages( {percentages:ar} ) )
+
+  subscribeToStatData : () ->
+    ar = []
+    for key, val of @statTypes
+      ar.push key
+
+    PubSub.publish 'STATS.SUBSCRIBE', {
+      subscriber     : @
+      liveStats      : ar
+      historicStats  : ar
+    }

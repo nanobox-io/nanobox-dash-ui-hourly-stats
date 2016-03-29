@@ -3,16 +3,19 @@ window.statsDataSimultor = new TestData()
 
 window.init = () ->
 
+  PubSub.subscribe 'STATS.SUBSCRIBE'  , (m, data)=>
+    data.subscriber.updateLiveStats statsDataSimultor.generateFakeLiveStats()
+    if data.historicStats
+      for stat in data.historicStats
+        data.subscriber.updateHistoricStat stat, statsDataSimultor.generateFakeHistoricalStats()
+
+  PubSub.subscribe 'STATS.UNSUBSCRIBE', (m, data)=>
+
+
   # Micro View
   micro = new nanobox.HourlyStats $(".micro"), nanobox.HourlyStats.micro
   micro.build()
-  micro.updateLiveStats statsDataSimultor.generateFakeLiveStats()
 
   # Standard Strip View
   strip = new nanobox.HourlyStats $(".strip"), nanobox.HourlyStats.strip
   strip.build()
-  strip.updateLiveStats statsDataSimultor.generateFakeLiveStats()
-  strip.updateHistoricStat "disk", statsDataSimultor.generateFakeHistoricalStats()
-  strip.updateHistoricStat "ram", statsDataSimultor.generateFakeHistoricalStats()
-  strip.updateHistoricStat "cpu", statsDataSimultor.generateFakeHistoricalStats()
-  strip.updateHistoricStat "swap", statsDataSimultor.generateFakeHistoricalStats()

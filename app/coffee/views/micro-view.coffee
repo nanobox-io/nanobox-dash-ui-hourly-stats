@@ -11,6 +11,10 @@ module.exports = class MicroView extends View
     $el.append @$node
     @addLiveStats()
     @addFace()
+    PubSub.publish 'STATS.SUBSCRIBE', {
+      subscriber : @
+      liveStats  : ['ram', 'cpu', 'swap', 'disk']
+    }
 
   addLiveStats : () ->
     @liveStats   = new HorizLiveGraphs
