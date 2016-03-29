@@ -11,6 +11,15 @@ module.exports = class TestData
         {id:"disk_used", nickname: "DISK", name:"Disk Used"}
       ]
 
+  createFakeStatDataProvider : ()->
+    PubSub.subscribe 'STATS.SUBSCRIBE'  , (m, data)=>
+      data.subscriber.updateLiveStats statsDataSimultor.generateFakeLiveStats()
+      if data.historicStats
+        for stat in data.historicStats
+          data.subscriber.updateHistoricStat stat, statsDataSimultor.generateFakeHistoricalStats()
+
+    PubSub.subscribe 'STATS.UNSUBSCRIBE', (m, data)=>
+
   generateFakeLiveStats : () ->
     obj = {}
 
