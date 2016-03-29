@@ -9,6 +9,7 @@
     "PubSubJS": "pubsub-js#^1.5.3"
   },
   "ignore": [
+    "libs",
     "app",
     "bower_components",
     "node_modules",
