@@ -24,13 +24,13 @@ module.exports = class MicroView extends View
   addFace : () ->
     @face = new Face $(".face", @$node), "true"
 
-  updateLiveStats : (data) ->
+  updateLiveStats : (data) =>
     @face.update StatsUtils.getOverallTemperature(data)
     @liveStats.update data
 
   subscribeToStatData : (id) ->
-    PubSub.publish 'STATS.SUBSCRIBE', {
+    PubSub.publish 'STATS.SUBSCRIBE.LIVE', {
       statProviderId : id
-      subscriber     : @
+      callback       : @updateLiveStats
       liveStats      : ['ram', 'cpu', 'swap', 'disk']
     }

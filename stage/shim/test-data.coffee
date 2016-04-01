@@ -12,11 +12,16 @@ module.exports = class TestData
       ]
 
   createFakeStatDataProvider : ()->
-    PubSub.subscribe 'STATS.SUBSCRIBE'  , (m, data)=>
-      data.subscriber.updateLiveStats statsDataSimultor.generateFakeLiveStats()
-      if data.historicStats
-        for stat in data.historicStats
-          data.subscriber.updateHistoricStat stat, statsDataSimultor.generateFakeHistoricalStats()
+    PubSub.subscribe 'STATS.SUBSCRIBE.LIVE', (m, data)=>
+      data.callback statsDataSimultor.generateFakeLiveStats()
+
+    PubSub.subscribe 'STATS.SUBSCRIBE.HISTORIC', (m, data)=>
+      for stat in data.historicStats
+        data.callback stat, statsDataSimultor.generateFakeHistoricalStats()
+
+    # PubSub.subscribe 'STATS.SUBSCRIBE.BREAKDOWN', (m, data)=>
+
+    # PubSub.subscribe 'STATS.SUBSCRIBE.HOURLY_AVG', (m, data)=>
 
     PubSub.subscribe 'STATS.UNSUBSCRIBE', (m, data)=>
 

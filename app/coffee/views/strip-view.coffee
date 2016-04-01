@@ -36,12 +36,12 @@ module.exports = class StripView extends View
   addFace : () ->
     @face = new Face $(".face", @$node), "true"
 
-  updateLiveStats : (data) ->
+  updateLiveStats : (data) =>
     @face.update StatsUtils.getOverallTemperature(data)
     @liveStats.update data
     @updateLivePercentages data
 
-  updateHistoricStat : (metric, data) ->
+  updateHistoricStat : (metric, data) =>
     obj = {}
     range = StatsUtils.get24hrRangeStartingLastHour()
     data  = StatsUtils.fillGapsInHistoricalData data
@@ -63,9 +63,16 @@ module.exports = class StripView extends View
     for key, val of @statTypes
       ar.push key
 
-    PubSub.publish 'STATS.SUBSCRIBE', {
+    PubSub.publish 'STATS.SUBSCRIBE.LIVE', {
       statProviderId : id
-      subscriber     : @
+      callback       : @updateLiveStats
+      liveStats      : ar
+      historicStats  : ar
+    }
+
+    PubSub.publish 'STATS.SUBSCRIBE.HISTORIC', {
+      statProviderId : id
+      callback       : @updateHistoricStat
       liveStats      : ar
       historicStats  : ar
     }
