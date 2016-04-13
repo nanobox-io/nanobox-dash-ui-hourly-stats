@@ -1,6 +1,10 @@
+$light-gray: #e8e8e8;
+$gray: #bababa;
+
 @import '../../libs/core-styles/core';
 @import 'vars-and-utils';
 @import 'now';
 @import 'historic';
 @import 'micro-view';
-@import 'strip-view';
+@import 'standard-view';
+@import 'expanded-view';

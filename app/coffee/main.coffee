@@ -1,61 +1,36 @@
-StatsUtils = require 'misc/stats-utils'
 MicroView  = require 'views/micro-view'
-StripView  = require 'views/strip-view'
+StandardView  = require 'views/standard-view'
+ExpandedView  = require 'views/expanded-view'
 
+#
 class HourlyStats
 
-  ### Constructor:
-  @el        : The jquery element to attach the stats to
-  @viewKind  : The kind of view to show - micro, strip, etc..
-  @statTypes : An array noting the stats we will be loading and their display order
-  ###
-  constructor: (@$el, @viewKind, @id, statTypes=['cpu','ram','swap','disk']) ->
-    @statTypes = {}
+  # constructor
+  # @view    : The kind of view to show (micro, standard, expanded)
+  # @el      : The jquery element to attach the stats to
+  # @stats   : An array noting the stats we will be loading and their display order
+  constructor: (@view, @$el, @id) ->
 
-    # Add stat meta data into an array for later use
-    # when creating labels and other tasks
-    for stat, i in statTypes
-      @statTypes[stat] =
-        index    : i
-        nickname : HourlyStats[stat].nickname
-        name     : HourlyStats[stat].name
+    # set default metrics; we'll need to do this same thing (provide default data)
+    # when used in production
+    @stats = [
+      {metric: "cpu",  value: 0},
+      {metric: "ram",  value: 0},
+      {metric: "swap", value: 0},
+      {metric: "disk", value: 0}
+    ]
 
+    #
     shadowIcons = new pxicons.ShadowIcons()
 
+  # build creates a new component based on the @view that is passed in when
+  # instantiated
+  build : () ->
+    switch @view
+      when "micro"    then @component = new MicroView @$el, @id, @stats
+      when "standard" then @component = new StandardView @$el, @id, @stats
+      when "expanded" then @component = new ExpandedView @$el, @id, @stats
 
-  # ------------ API
-
-  # Start the ball rolling
-  build : () -> @setState @viewKind
-
-  # Update all the live stats in one fell swoop, do we need to
-  # break this out per metric like historical stats?
-  updateLiveStats : (data) ->
-    @component.updateLiveStats data
-
-  # Update the data for a single metric of historical stats
-  updateHistoricStat : (metric, data) ->
-    @component.updateHistoricStat metric, data, @statTypes
-
-
-  # ------------ Methods
-
-  setState : (viewKind) ->
-    switch viewKind
-      when "micro" then @component = new MicroView @$el, @id, @statTypes
-      when "strip" then @component = new StripView @$el, @id, @statTypes
-
-  # ------------ Constants
-
-  @micro : "micro"
-  @strip : "strip"
-
-  # List all of the stat types we'll ever display anywhere in the dashboard here:
-  @cpu   : { nickname: "CPU",  name:"CPU Used" }
-  @ram   : { nickname: "RAM",  name:"RAM Used" }
-  @swap  : { nickname: "SWAP", name:"Swap Used" }
-  @disk  : { nickname: "DISK", name:"Disk Used" }
-
-
+#
 window.nanobox ||= {}
 nanobox.HourlyStats = HourlyStats

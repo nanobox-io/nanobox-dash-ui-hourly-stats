@@ -1,0 +1,11 @@
+.standard-view
+  .labels
+    each stat in stats
+      .label #{stat.metric}
+  .historical-stats
+  .divider
+  .live-stats
+  .percentages
+    each stat in stats
+      .percent(class = stat.metric) #{stat.value}%
+  .face

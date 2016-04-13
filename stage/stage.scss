@@ -1,8 +1,9 @@
-body      { margin:0; padding:0; background:#DFDFDF;  }
-.micro, .strip,
-.expanded { background:white;
-  > *     { margin-bottom:20px; }
+body          {margin:0; padding:0; background:#DFDFDF;}
+
+//
+.view         {
+  & > *       {margin-bottom:20px; background:white;}
+  &.micro     {width:125px;}
+  &.standard,
+  &.expanded  {width:345px;}
 }
-.micro    { width:117px;}
-.strip    { width:345px;}
-.expanded { }

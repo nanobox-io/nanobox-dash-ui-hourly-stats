@@ -1,0 +1,46 @@
+@include temperatures();
+
+//
+.expanded-view        {display:flex; width:100%; padding:5px; align-items:center; justify-content:space-around;
+
+  // histroical stats
+  .historical-stats   {display:flex; margin-left:8px;
+    svg               {width:100%;
+      g               {
+        rect          {fill:$light-gray; transition: fill 200ms ease;
+          &.cool      {fill:$cool;}
+          &.warm      {fill:$warm;}
+          &.hot       {fill:$hot;}
+        }
+      }
+    }
+  }
+
+  // live stats
+  .live-stats         {display:flex; margin-left:8px;
+    svg               {width:100%;
+      rect            {fill:$light-gray; transition: fill 200ms ease;
+        &.cool        {fill:$cool;}
+        &.warm        {fill:$warm;}
+        &.hot         {fill:$hot;}
+      }
+    }
+  }
+
+  // stats
+  .stats              {
+    .stat             {text-align:center; text-transform:uppercase; font-size:10px; line-height:12px; color:$gray; transition: color 200ms ease;
+      .percent        {}
+      .label          {}
+
+      &.cool          {color:$cool;}
+      &.warm          {color:$warm;}
+      &.hot           {color:$hot;}
+    }
+  }
+
+  // face
+  .face               {margin-left:8px;
+    .shadow-parent    {height:$face-size; width:$face-size;}
+  }
+}

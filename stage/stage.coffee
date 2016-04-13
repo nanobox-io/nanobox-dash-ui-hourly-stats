@@ -5,9 +5,13 @@ window.init = () ->
   statsDataSimultor.createFakeStatDataProvider()
 
   # Micro View
-  micro = new nanobox.HourlyStats $(".micro"), nanobox.HourlyStats.micro
+  micro = new nanobox.HourlyStats "micro", $(".micro")
   micro.build()
 
-  # Standard Strip View
-  strip = new nanobox.HourlyStats $(".strip"), nanobox.HourlyStats.strip
-  strip.build()
+  # Standard View
+  standard = new nanobox.HourlyStats "standard", $(".standard")
+  standard.build()
+
+  # Expanded View
+  expanded = new nanobox.HourlyStats "expanded", $(".expanded")
+  expanded.build()

@@ -1,0 +1,9 @@
+.expanded-view
+  .historical-stats
+  .live-stats
+  .stats
+    each stat in stats
+      .stat(class = stat.metric)
+        .percent #{stat.value}%
+        .label #{stat.metric}
+  .face

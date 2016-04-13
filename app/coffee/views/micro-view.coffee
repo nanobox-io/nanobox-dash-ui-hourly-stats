@@ -1,36 +1,38 @@
-View            = require 'views/view'
-StatsUtils      = require 'misc/stats-utils'
-HorizLiveGraphs = require 'd3/now-horizontal'
-Face            = require 'misc/face'
-microView       = require 'jade/micro-view'
+Face        = require 'misc/face'
+LiveStats   = require 'd3/live-stats'
+StatsUtils  = require 'misc/stats-utils'
 
-module.exports = class MicroView extends View
+#
+microView = require 'jade/micro-view'
 
-  constructor: ($el, id, statTypes) ->
-    @$node = $ microView( {stats:statTypes} )
+#
+module.exports = class MicroView
+
+  #
+  constructor: ($el, id, @stats) ->
+    @$node = $(microView({labels:@stats}))
     $el.append @$node
-    @addLiveStats()
-    @addFace()
+
+    @build()
     @subscribeToStatData(id)
 
-  addLiveStats : () ->
-    @liveStats   = new HorizLiveGraphs
-      barWidth    : 40
-      barHeight   : 5
-      padding     : 3
-      totalHeight : 29
-      holder      : $(".graphs", @$node)[  0]
+  # build the svg
+  build : () ->
 
-  addFace : () ->
+    # add live stats
+    @liveStats = new LiveStats($(".live-stats", @$node), @stats)
+
+    # add face
     @face = new Face $(".face", @$node), "true"
 
+  #
   updateLiveStats : (data) =>
     @face.update StatsUtils.getOverallTemperature(data)
-    @liveStats.update data
+    @liveStats.update(data)
 
+  #
   subscribeToStatData : (id) ->
     PubSub.publish 'STATS.SUBSCRIBE.LIVE', {
       statProviderId : id
       callback       : @updateLiveStats
-      liveStats      : ['ram', 'cpu', 'swap', 'disk']
     }

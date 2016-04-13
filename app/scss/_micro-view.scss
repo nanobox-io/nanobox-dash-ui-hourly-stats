@@ -1,5 +1,26 @@
-.micro-view      { display:flex; align-items:center; justify-content:center;
-  .labels        { font-size:10px; font-family:Museo; font-size:8px; text-transform: uppercase; color:#BABABA;line-height: 1; text-align: right; }
-  .graphs        { margin:4px 6px 0 7px; }
-  .faceholder    { height:$face-size; width:$face-size; }
+@include temperatures();
+
+//
+.micro-view           {display:flex; width:100%; padding:5px; align-items:center; justify-content:space-around;
+
+  // labels
+  .labels             {
+    .label            {font-size:10px; line-height:10px; color:$gray; text-transform:uppercase;}
+  }
+
+  // live stats
+  .live-stats         {display:flex; margin-left:8px;
+    svg               {width:100%;
+      rect            {fill:$light-gray; transition: fill 200ms ease;
+        &.cool        {fill:$cool;}
+        &.warm        {fill:$warm;}
+        &.hot         {fill:$hot;}
+      }
+    }
+  }
+
+  // face
+  .face               {margin-left:8px;
+    .shadow-parent    {height:$face-size; width:$face-size;}
+  }
 }

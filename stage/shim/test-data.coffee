@@ -1,131 +1,58 @@
 module.exports = class TestData
 
-  constructor: (@statTypes) ->
-    @happy = true
+  #
+  constructor: () ->
 
-    if !@statTypes?
-      @statTypes       = [
-        {id:"cpu_used",  nickname: "CPU",  name:"CPU Used"}
-        {id:"ram_used",  nickname: "RAM",  name:"RAM Used"}
-        {id:"swap_used", nickname: "SWAP", name:"Swap Used"}
-        {id:"disk_used", nickname: "DISK", name:"Disk Used"}
-      ]
-
+  #
   createFakeStatDataProvider : ()->
+
+    #
     PubSub.subscribe 'STATS.SUBSCRIBE.LIVE', (m, data)=>
-      data.callback statsDataSimultor.generateFakeLiveStats()
+      data.callback statsDataSimultor.generateLiveStats()
+      setInterval () ->
+        data.callback statsDataSimultor.generateLiveStats()
+      , 5000
 
+    #
     PubSub.subscribe 'STATS.SUBSCRIBE.HISTORIC', (m, data)=>
-      for stat in data.historicStats
-        data.callback stat, statsDataSimultor.generateFakeHistoricalStats()
+      data.callback statsDataSimultor.generateHistoricalStats()
+      setInterval () ->
+        for i in [0..4]
+          setTimeout () ->
+            data.callback statsDataSimultor.generateHistoricalStat()
+          , Math.floor((Math.random()*1000) + 250)
+      , 5000
 
-    # PubSub.subscribe 'STATS.SUBSCRIBE.BREAKDOWN', (m, data)=>
-
-    # PubSub.subscribe 'STATS.SUBSCRIBE.HOURLY_AVG', (m, data)=>
-
+    #
     PubSub.subscribe 'STATS.UNSUBSCRIBE', (m, data)=>
 
-  generateFakeLiveStats : () ->
-    obj = {}
+  # generate data for each metric
+  generateLiveStats : () ->
+    stats = []
+    for metric in ["cpu", "ram", "swap", "disk"]
+      stats.push {metric: metric, value: (Math.random() * 1.00) + 0.00}
+    stats
 
-    # 20% chance of being 0 usage
-    if Math.random() < 0.2
-      for statType in @statTypes
-        obj[statType.id] = 0
+  # generate hourly data for each metric
+  generateHistoricalStats : () ->
+    stats = []
+    for metric in ["cpu", "ram", "swap", "disk"]
+      data = []
+      for hour in [0...24]
+        data.push {time: "#{("0" + hour).slice(-2)}", value: ((Math.random() * 1.00) + 0.00)}
+      stats.push {metric: metric, data: data}
+    stats
 
-    else
-      for statType in @statTypes
-        obj[statType.id] = Math.random()
+  # generate hourly data for a single metric
+  generateHistoricalStat : () ->
 
-    return obj
+    # generate a random number between 0 and the length of the available metrics,
+    # selecting a random one from the array
+    metric = ["cpu", "ram", "swap", "disk"][(Math.floor(Math.random() * 4) + 0)]
 
-  generateAlternatingFaceStats: () ->
-    if @happy
-      data =
-        cpu_used     : .3
-        ram_used     : .3
-        swap_used    : .3
-        disk_io_wait : .3
-        disk_used    : .3
-    else
-      data =
-        cpu_used     : .95
-        ram_used     : .95
-        swap_used    : .95
-        disk_io_wait : .95
-        disk_used    : .95
-
-    @happy = !@happy
-    data
-
-  generateFakeHistoricalStats : (is24hrs=true)->
-
-    totalHrs = if is24hrs then 25 else 24*7
-
-
-    now  = new Date()
-    # last hour
-    now.setHours(now.getHours() - 1)
-    now.setMinutes(0)
-    now.setSeconds(0)
-
-    # console.log "START TIME : #{now}"
-
-    time = now.getTime()
-    last = Math.random()
-    totalHrs = 24*7
-
-    ar = []
-    # Add a value for each hour for the last 7 days starting 1 hour ago
-    for i in [1..totalHrs]
-      val = @getModdedVal(last)
-      if val > 0
-        ar.push {time:time, value:val}
-      time-=3600000
-
-    # console.log "END TIME   : #{new Date(time)}"
-
-    ar
-
-
-  generateFakeDiskStats : () -> Math.random()
-
-  forceIntoRange : (number, min, max) ->
-    if      number < min then return min
-    else if number > max then return max
-    else                      return number
-
-  generateFakeHourlyStats : () ->
-    obj = {}
-    last = Math.random()
+    data = []
     for hour in [0...24]
-      for quarter in [0, 15, 30, 45]
-        if Math.random() > .1
-          obj["#{@padNumber(hour,2)}:#{@padNumber(quarter,2)}"] = @getModdedVal(last)
-    obj
+      data.push {time: "#{("0" + hour).slice(-2)}", value: ((Math.random() * 1.00) + 0.00)}
 
-  padNumber : (number, size) ->
-    string = "#{number}"
-    while (string.length < size)
-      string = "0" + string
-    string
-
-  getModdedVal : (last) ->
-    mod = if Math.random() < 0.5 then 1 else -1
-    last += Math.random() * 0.2 * mod
-    last = 0 if last < 0
-    last = 1 if last > 1
-    return last.toFixed(2)
-
-  getRangeTestRange : (hoursAgo) ->
-    now  = new Date()
-    now.setHours(now.getHours() - 1)
-    now.setMinutes(0)
-    now.setSeconds(0)
-
-    now.setHours(now.getHours() - hoursAgo)
-    end   = now.getTime()
-    now.setHours(now.getHours() - 23)
-    start   = now.getTime()
-
-    [start, end]
+    # return the single metric with its data
+    [{metric: metric, data: data}]

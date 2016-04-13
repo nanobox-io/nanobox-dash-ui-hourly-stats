@@ -1,0 +1,47 @@
+@include temperatures();
+
+//
+.standard-view        {display:flex; width:100%; padding:5px; align-items:center; justify-content:space-around;
+
+  // labels
+  .labels             {
+    .label            {font-size:10px; line-height:10px; color:$gray; text-transform:uppercase;}
+  }
+
+  // histroical stats
+  .historical-stats   {display:flex; margin-left:8px;
+    svg               {width:100%;
+      g               {
+        rect          {fill:$light-gray; transition: fill 200ms ease;
+          &.cool      {fill:$cool;}
+          &.warm      {fill:$warm;}
+          &.hot       {fill:$hot;}
+        }
+      }
+    }
+  }
+
+  //
+  .divider            {background:$light-gray; width:1px; height:75%; }
+
+  // live stats
+  .live-stats         {display:flex; margin-left:8px;
+    svg               {width:100%;
+      rect            {fill:$light-gray; transition: fill 200ms ease;
+        &.cool        {fill:$cool;}
+        &.warm        {fill:$warm;}
+        &.hot         {fill:$hot;}
+      }
+    }
+  }
+
+  // percentages
+  .percentages        {
+    .percent          {font-size:10px; line-height:10px; color:$gray; text-align:right;}
+  }
+
+  // face
+  .face               {margin-left:8px;
+    .shadow-parent    {height:$face-size; width:$face-size;}
+  }
+}
