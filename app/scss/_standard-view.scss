@@ -1,15 +1,18 @@
 @include temperatures();
 
 //
-.standard-view        {display:flex; width:100%; padding:5px; align-items:center;
+.standard-view        {display:flex; width:100%; padding:5px; align-items:center; justify-content:space-around;
+
+  //
+  & > *               {margin:0px 5px;}
 
   // labels
-  .labels             {margin-left:8px; text-align:right;
+  .labels             {text-align:right;
     .label            {font-size:8px; line-height:10px; color:$gray; text-transform:uppercase;}
   }
 
   // histroical stats
-  .historical-stats   {display:flex; margin-left:8px;
+  .historical-stats   {display:flex;
     svg               {
       g               {
         rect          {fill:$light-gray; transition: fill 200ms ease;
@@ -22,10 +25,10 @@
   }
 
   //
-  .divider            {background:$light-gray; width:1px; height:75%; }
+  .divider            {background:$light-gray; width:1px; height:36px;}
 
   // live stats
-  .live-stats         {display:flex; margin-left:8px;
+  .live-stats         {display:flex;
     svg               {
       rect            {fill:$light-gray; transition: fill 200ms ease;
         &.cool        {fill:$cool;}
