@@ -1,7 +1,7 @@
 body          {margin:0; padding:0; background:#DFDFDF;}
 
 //
-.view         {
+.view         {display:flex;
   & > *       {margin-bottom:20px; background:white;}
   &.micro     {width:125px;}
   &.standard,

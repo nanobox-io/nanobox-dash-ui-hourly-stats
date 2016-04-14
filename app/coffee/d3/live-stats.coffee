@@ -15,7 +15,9 @@ module.exports = class LiveStats
     # create container svg
     @svg = d3.select(@$target.get(0))
       .append("svg")
-        .attr(height: data.length*(self.barHeight+data.length)) # length of data * (height of each bar + length of data); this accounts
+        .attr
+          width: self.maxWidth
+          height: data.length*(self.barHeight+data.length) # length of data * (height of each bar + length of data); this accounts
 
     # add background group
     background = @svg.append("svg:g")

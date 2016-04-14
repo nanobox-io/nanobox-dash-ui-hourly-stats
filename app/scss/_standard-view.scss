@@ -1,16 +1,16 @@
 @include temperatures();
 
 //
-.standard-view        {display:flex; width:100%; padding:5px; align-items:center; justify-content:space-around;
+.standard-view        {display:flex; width:100%; padding:5px; align-items:center;
 
   // labels
-  .labels             {
-    .label            {font-size:10px; line-height:10px; color:$gray; text-transform:uppercase;}
+  .labels             {margin-left:8px; text-align:right;
+    .label            {font-size:8px; line-height:10px; color:$gray; text-transform:uppercase;}
   }
 
   // histroical stats
   .historical-stats   {display:flex; margin-left:8px;
-    svg               {width:100%;
+    svg               {
       g               {
         rect          {fill:$light-gray; transition: fill 200ms ease;
           &.cool      {fill:$cool;}
@@ -26,7 +26,7 @@
 
   // live stats
   .live-stats         {display:flex; margin-left:8px;
-    svg               {width:100%;
+    svg               {
       rect            {fill:$light-gray; transition: fill 200ms ease;
         &.cool        {fill:$cool;}
         &.warm        {fill:$warm;}
@@ -36,8 +36,8 @@
   }
 
   // percentages
-  .percentages        {
-    .percent          {font-size:10px; line-height:10px; color:$gray; text-align:right;}
+  .percentages        {margin-left:8px;
+    .percent          {font-size:10px; line-height:10px; color:$gray; text-align:left;}
   }
 
   // face

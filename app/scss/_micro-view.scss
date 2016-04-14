@@ -1,16 +1,16 @@
 @include temperatures();
 
 //
-.micro-view           {display:flex; width:100%; padding:5px; align-items:center; justify-content:space-around;
+.micro-view           {display:flex; width:100%; padding:5px; align-items:center;
 
   // labels
-  .labels             {
-    .label            {font-size:10px; line-height:10px; color:$gray; text-transform:uppercase;}
+  .labels             {margin-left:8px; text-align:right;
+    .label            {font-size:8px; line-height:10px; color:$gray; text-transform:uppercase;}
   }
 
   // live stats
   .live-stats         {display:flex; margin-left:8px;
-    svg               {width:100%;
+    svg               {
       rect            {fill:$light-gray; transition: fill 200ms ease;
         &.cool        {fill:$cool;}
         &.warm        {fill:$warm;}
@@ -20,7 +20,7 @@
   }
 
   // face
-  .face               {margin-left:8px;
+  .face               {margin:0px 8px;
     .shadow-parent    {height:$face-size; width:$face-size;}
   }
 }

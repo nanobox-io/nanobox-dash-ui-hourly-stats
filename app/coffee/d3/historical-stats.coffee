@@ -14,7 +14,9 @@ module.exports = class HistoricalStats
     # create container svg
     @svg = d3.select(@$target.get(0))
       .append("svg")
-        .attr(height: data.length*(self.barSize+data.length)) # length of data * (height of each bar + length of data); this makes it tall enough to accomodate each bar with a bars space inbetween
+        .attr
+          width: 200
+          height: data.length*(self.barSize+data.length) # length of data * (height of each bar + length of data); this makes it tall enough to accomodate each bar with a bars space inbetween
 
   # update
   update : (data) ->
@@ -41,7 +43,7 @@ module.exports = class HistoricalStats
               .each (bd, j) ->
                 box = d3.select(@)
                   .attr
-                    x:      self.barSize*(j*1.25)
+                    x:      self.barSize*(j*1.5)
                     width:  self.barSize
                     height: self.barSize
                     class:  StatsUtils.getTemperature(bd.value)
