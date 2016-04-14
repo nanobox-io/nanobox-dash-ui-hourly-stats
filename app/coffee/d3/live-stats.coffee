@@ -4,7 +4,7 @@ StatsUtils = require 'misc/stats-utils'
 module.exports = class LiveStats
 
   # options
-  maxWidth:  40
+  maxWidth:  50
   barHeight: 5
 
   #
