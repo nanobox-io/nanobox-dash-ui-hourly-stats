@@ -8,9 +8,12 @@ standardView    = require 'jade/standard-view'
 module.exports = class StandardView
 
   # options
-  maxWidth:  50
-  barHeight: 5
-  barSize:   5
+  numMetrics:       24 # figure out a better way to know this rather than just happening to know it's 24...
+  metricHeight:     5
+  metricWidth:      5
+  vPadding:         5
+  hPadding:         4
+  maxWidth:         50 # this is for the live stat only...
 
   #
   constructor: ($el, id, @stats) ->
@@ -27,15 +30,15 @@ module.exports = class StandardView
     @historicStats = d3.select($(".historical-stats", @$node).get(0))
       .append("svg")
         .attr
-          width:  200
-          height: @stats.length*(5+@stats.length)
+          width:  @numMetrics*(@metricWidth+@hPadding)
+          height: @stats.length*(@metricHeight + @vPadding) - @vPadding
 
     # add live stats
     @liveStats = d3.select($(".live-stats", @$node).get(0))
       .append("svg")
         .attr
-          width:  50
-          height: @stats.length*(5+@stats.length)
+          width:  @maxWidth
+          height: @stats.length*(@metricHeight + @vPadding) - @vPadding
 
     # add face
     @face = new Face $(".face", @$node), "true"
@@ -45,24 +48,35 @@ module.exports = class StandardView
 
     self = @
 
-    # create foreground
+    # create background bars
+    background = @liveStats.selectAll(".background").data(data)
+    background.enter()
+      .append("svg:rect")
+        .each (d, i) ->
+          d3.select(@).attr
+            width:     (self.maxWidth)
+            height:    self.metricHeight
+            class:     "background"
+            transform: "translate(0, #{(self.metricHeight*2)*i})" # a bars distances between each metric
+
+    # create foreground bars
     foreground = @liveStats.selectAll(".stat").data(data)
     foreground.enter()
       .append("svg:rect")
         .each (d, i) ->
           d3.select(@).attr
-            width:     40
-            height:    5
+            width:     (d.value*self.maxWidth) - d.value
+            height:    self.metricHeight
             class:     "stat #{StatsUtils.getTemperature(d.value)}"
-            transform: "translate(0, #{10*i})"
+            transform: "translate(0, #{(self.metricHeight*2)*i})" # a bars distances between each metric
 
-    # update foreground
+    # update foreground bars
     foreground.data(data)
       .each (d) ->
         d3.select(@)
           .transition().delay(0).duration(500)
           .attr
-            width: ((d.value*self.maxWidth)-d.value) # (value*max) - value (so as never to go over 100%)
+            width: (d.value*self.maxWidth) - d.value
             class: "stat #{StatsUtils.getTemperature(d.value)}"
 
     # update percentages
@@ -88,7 +102,7 @@ module.exports = class StandardView
           #
           group = d3.select(@).attr
             class: gd.metric
-            transform: "translate(0, #{(self.barSize*2)*i})" # a bars distances between each metric
+            transform: "translate(0, #{(self.metricWidth*2)*i})" # a bars distances between each metric
 
           # foreground
           foreground = group.selectAll(".stat").data(gd.data)
@@ -96,9 +110,9 @@ module.exports = class StandardView
             .append("svg:rect")
               .each (bd, j) ->
                 d3.select(@).attr
-                  x:      (self.barSize+3)*j
-                  width:  5
-                  height: 5
+                  x:      (self.metricWidth + self.hPadding)*j
+                  width:  self.metricWidth
+                  height: self.metricHeight
                   class:  "stat #{StatsUtils.getTemperature(bd.value)}"
 
     # update stats

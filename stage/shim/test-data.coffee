@@ -10,17 +10,23 @@ module.exports = class TestData
     PubSub.subscribe 'STATS.SUBSCRIBE.LIVE', (m, data)=>
       data.callback statsDataSimultor.generateLiveStats()
       setInterval () ->
-        data.callback statsDataSimultor.generateLiveStats()
+
+        # disable updates by default
+        if window.enableUpdates
+          data.callback statsDataSimultor.generateLiveStats()
       , 5000
 
     #
     PubSub.subscribe 'STATS.SUBSCRIBE.HISTORIC', (m, data)=>
       data.callback statsDataSimultor.generateHistoricalStats()
       setInterval () ->
-        for i in [0..4]
-          setTimeout () ->
-            data.callback statsDataSimultor.generateHistoricalStat()
-          , Math.floor((Math.random()*1000) + 250)
+
+        # disable updates by default
+        if window.enableUpdates
+          for i in [0..4]
+            setTimeout () ->
+              data.callback statsDataSimultor.generateHistoricalStat()
+            , Math.floor((Math.random()*1000) + 250)
       , 5000
 
     #

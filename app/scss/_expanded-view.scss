@@ -1,10 +1,10 @@
 @include temperatures();
 
 //
-.expanded-view        {display:flex; width:100%; padding:5px; align-items:center;
+.expanded-view        {display:flex; width:100%; padding:20px; align-items:center; flex-wrap:wrap;
 
   //
-  & > *               {margin:0px 4px;}
+  h4.title            {width:100%; margin:0px 0px 20px 0px; font-size:12px; line-height:12px; text-align:left; font-style:italic; color:$blue;}
 
   // histroical stats
   .historical-stats   {display:flex;
@@ -20,7 +20,7 @@
   }
 
   // live stats
-  .live-stats         {display:flex;
+  .live-stats         {display:flex; margin-left:20px;
     svg               {
       rect            {fill:$light-gray; transition: fill 200ms ease;
         &.cool        {fill:$cool;}
@@ -31,8 +31,8 @@
   }
 
   // stats
-  .stats              {
-    .stat             {text-align:left; text-transform:uppercase; font-size:10px; line-height:12px; color:$gray; transition: color 200ms ease;
+  .stats              {display:flex; flex-direction:column; justify-content:space-around; height:200px; margin-left:10px;
+    .stat             {margin-top:10px; text-align:left; text-transform:uppercase; font-size:10px; line-height:12px; color:$gray; transition: color 200ms ease;
       .percent        {font-size:14px;}
       .label          {}
 
@@ -42,8 +42,14 @@
     }
   }
 
-  // face
-  .face               {margin-left:8px;
-    .shadow-parent    {height:$face-size; width:$face-size;}
+  // timeline
+  .timeline           {font-size:10px; line-height:10px; fill:$gray;
+    svg               {
+      text            {text-anchor:middle;}
+      .time           {
+        &.primary     {}
+        &.secondary   {fill:$light-gray;}
+      }
+    }
   }
 }
