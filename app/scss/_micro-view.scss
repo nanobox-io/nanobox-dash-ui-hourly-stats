@@ -1,14 +1,14 @@
 @include temperatures();
 
 //
-.micro-view           {display:flex; width:100%; padding:5px; align-items:center; justify-content:space-around;
+.micro-view           {display:flex; width:100%; padding:5px; align-items:center;
 
   //
   & > *               {margin:0px 4px;}
 
   // labels
   .labels             {text-align:right;
-    .label            {font-size:8px; line-height:10px; color:$gray; text-transform:uppercase;}
+    .label            {font-size:8px; line-height:8px; color:$gray; text-transform:uppercase;}
   }
 
   // live stats

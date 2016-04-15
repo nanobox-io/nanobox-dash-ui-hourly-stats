@@ -1,6 +1,4 @@
 Face            = require 'misc/face'
-HistoricalStats = require 'd3/historical-stats'
-LiveStats       = require 'd3/live-stats'
 StatsUtils      = require 'misc/stats-utils'
 
 #
@@ -10,6 +8,9 @@ expandedView    = require 'jade/expanded-view'
 module.exports = class ExpandedView
 
   #
+  barSize: 5
+
+  #
   constructor: ($el, id, @stats) ->
     @$node = $(expandedView({stats:@stats}))
     $el.append @$node
@@ -17,102 +18,74 @@ module.exports = class ExpandedView
     @build()
     @subscribeToStatData id
 
-  # build the svg
+  # build svgs
   build : () ->
 
-    # add histroical stats
-    @_buildHistoricalStats()
-    # @histroicalStats = new HistoricalStats($(".historical-stats", @$node), @stats, {barWidth:5, barHeight:40})
+    # add histroical stats svg
+    @historicStats = d3.select($(".historical-stats", @$node).get(0))
+      .append("svg")
+        .attr
+          width:  200
+          height: @stats.length*(40+@stats.length)
 
-    # add live stats
-    @_buildLiveStats()
-    # @liveStats = new LiveStats($(".live-stats", @$node), @stats, {barWidth:10, barHeight:40})
+    # add live stats svg
+    @liveStats = d3.select($(".live-stats", @$node).get(0))
+      .append("svg")
+        .attr
+          width:  10
+          height: @stats.length*(40+@stats.length)
 
     # add face
     @face = new Face $(".face", @$node), "true"
 
-  #
-  _buildHistoricalStats : () ->
-    @historicalStats = d3.select($(".historical-stats", @$node).get(0))
-      .append("svg")
-        .attr(height: @stats.length*(40+@stats.length)) # length of data * (height of each bar + length of data); this makes it tall enough to accomodate each bar with a bars space inbetween
-
-    # add background group
-    # background = @svg.append("svg:g")
-
-    # add stats group
-    # stats = @svg.append("svg:g")
-
-    # add "background" bars
-    # background.selectAll("rect")
-    #   .data(@stats).enter()
-    #     .append("svg:rect")
-    #       .each (d, i) ->
-    #         rect = d3.select(@)
-    #           .attr
-    #             width: self.maxWidth
-    #             height: self.barHeight
-    #             class: "background"
-    #             transform: "translate(0, #{(self.barHeight*2)*i})" # a bars distances between each metric
-
-  _buildLiveStats : () ->
-    @liveStats = d3.select($(".live-stats", @$node).get(0))
-      .append("svg")
-        .attr(height: @stats.length*(40+@stats.length)) # length of data * (height of each bar + length of data); this makes it tall enough to accomodate each bar with a bars space inbetween
-
-    # add background group
-    # background = @svg.append("svg:g")
-
-    # add stats group
-    # stats = @svg.append("svg:g")
-
-    # add "background" bars
-    # background.selectAll("rect")
-    #   .data(@stats).enter()
-    #     .append("svg:rect")
-    #       .each (d, i) ->
-    #         rect = d3.select(@)
-    #           .attr
-    #             width: self.maxWidth
-    #             height: self.barHeight
-    #             class: "background"
-    #             transform: "translate(0, #{(self.barHeight*2)*i})" # a bars distances between each metric
-
-
-  # updates stats, percentages, and face
+  # updates live stats, percentages, and face
   updateLiveStats : (data) =>
 
     self = @
 
-    # add "stat" bars
-    bars = @liveStats.selectAll("rect").data(data)
+    #
+    y = d3.scale.linear().range([40, 0])
 
-    # create stats
-    bars.enter()
+    # create background bars
+    background = @liveStats.selectAll(".background").data(data)
+    background.enter()
       .append("svg:rect")
         .each (d, i) ->
-          rect = d3.select(@)
-            .attr
-              width: 10
-              height: 40
-              class: "stat #{d.metric}"
-              transform: "translate(0, #{(40 + 10)*i})" # a bars distances between each metric
+          d3.select(@).attr
+            width: 10
+            height: 40
+            class: "background"
+            transform: "translate(0, #{(40 + 10)*i})" # a bars distances between each metric
 
-    # update stats
-    bars.data(data)
+    # create foreground bars
+    foreground = @liveStats.selectAll(".stat").data(data)
+    foreground.enter()
+      .append("svg:rect")
+        .each (d, i) ->
+          d3.select(@).attr
+            y:         y(d.value)
+            width:     10
+            height:    40 - y(d.value)
+            class:     "stat #{StatsUtils.getTemperature(d.value)}"
+            transform: "translate(0, #{(40 + 10)*i})" # a bars distances between each metric
+
+    # update foreground bars
+    foreground.data(data)
       .each (d) ->
-        stat = d3.select(@)
+        d3.select(@)
           .transition().delay(0).duration(500)
           .attr
-            height: ((d.value*40)-d.value) # (value*max) - value (so as never to go over 100%)
-            class: StatsUtils.getTemperature d.value
+            y:      y(d.value)
+            height: 40 - y(d.value)
+            class:  "stat #{StatsUtils.getTemperature(d.value)}"
 
-    #
+    # update percentages
     for d in data
       stat = $(".stats", @$node).find(".#{d.metric}")
       stat.removeClass("sleep cold warm hot").addClass(StatsUtils.getTemperature(d.value))
       stat.find(".percent").text "#{Math.round(d.value*100)}%"
 
+    # update face
     @face.update StatsUtils.getOverallTemperature(data)
 
   # updates historic stats
@@ -120,41 +93,59 @@ module.exports = class ExpandedView
 
     self = @
 
-    # add stat groups
-    groups = @historicalStats.selectAll("g").data(data)
+    #
+    y = d3.scale.linear().range([40, 0])
 
-    # create stats
+    # add metric groups
+    groups = @historicStats.selectAll("g").data(data)
+
+    # create metrics
     groups.enter()
       .append("svg:g")
         .each (gd, i) ->
 
-          #
-          group = d3.select(@)
-            .attr
-              class: gd.metric
-              transform: "translate(0, #{(40 + 10)*i})" # a bars distances between each metric
+          # metric group
+          group = d3.select(@).attr
+            class: gd.metric
+            transform: "translate(0, #{(40 + 10)*i})" # a bars distances between each metric
 
-          #
-          boxes = group.selectAll("rect").data(gd.data).enter()
+          # background bars
+          background = group.selectAll(".background").data(gd.data)
+          background.enter()
             .append("svg:rect")
               .each (bd, j) ->
-                box = d3.select(@)
-                  .attr
-                    x:      5*(j*1.25)
-                    width:  5
-                    height: 40
-                    class:  StatsUtils.getTemperature(bd.value)
+                d3.select(@).attr
+                  x:      (self.barSize+3)*j
+                  width:  5
+                  height: 40
+                  class:  "background"
 
-    # update stats
+          # foreground bars
+          foreground = group.selectAll(".stat").data(gd.data)
+          foreground.enter()
+            .append("svg:rect")
+              .each (bd, j) ->
+                d3.select(@).attr
+                  x:      (self.barSize+3)*j
+                  y:      y(bd.value)
+                  width:  5
+                  height: 40 - y(bd.value)
+                  class:  "stat #{StatsUtils.getTemperature(bd.value)}"
+
+    # update metrics
     groups.data(data)
       .each (gd) ->
-        box = self.historicalStats.select(".#{gd.metric}").selectAll("rect").data(gd.data)
-          .each (bd) ->
+
+        # foreground bars
+        foreground = self.historicStats.select(".#{gd.metric}").selectAll(".stat").data(gd.data)
+        foreground.data(gd.data)
+          .each (bd, j) ->
             d3.select(@)
               .transition().delay(0).duration(500)
               .attr
-                height: ((bd.value*40)-bd.value)
-                class: StatsUtils.getTemperature(bd.value)
+                y:      y(bd.value)
+                height: 40 - y(bd.value)
+                class:  "stat #{StatsUtils.getTemperature(bd.value)}"
 
   #
   subscribeToStatData : (id) ->

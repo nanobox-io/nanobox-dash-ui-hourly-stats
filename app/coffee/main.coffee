@@ -6,19 +6,20 @@ ExpandedView  = require 'views/expanded-view'
 class HourlyStats
 
   # constructor
-  # @view    : The kind of view to show (micro, standard, expanded)
-  # @el      : The jquery element to attach the stats to
-  # @stats   : An array noting the stats we will be loading and their display order
-  constructor: (@view, @$el, @id) ->
+  constructor: (@view, @$el, @id, metrics=["cpu", "ram", "swap", "disk"]) ->
 
-    # set default metrics; we'll need to do this same thing (provide default data)
-    # when used in production
-    @stats = [
-      {metric: "cpu",  value: 0},
-      {metric: "ram",  value: 0},
-      {metric: "swap", value: 0},
-      {metric: "disk", value: 0}
-    ]
+    # provide default data
+    @stats = []
+    for metric in metrics
+      @stats.push {metric: metric, value: 0}
+
+    # provide default data
+    # @expandedStats = []
+    # for metric in metrics
+    #   data = []
+    #   for hour in [0...24]
+    #     data.push {time: "#{("0" + hour).slice(-2)}", value: 0}
+    #   @expandedStats.push {metric: metric, data: data}
 
     #
     shadowIcons = new pxicons.ShadowIcons()
