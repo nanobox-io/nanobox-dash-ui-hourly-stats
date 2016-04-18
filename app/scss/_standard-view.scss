@@ -12,7 +12,7 @@
   .historical-stats   {display:inline-flex; margin-left:5px;
     svg               {
       g               {
-        rect          {fill:$light-gray; transition: fill 200ms ease;
+        rect          {fill:$stat-bg; transition: fill 200ms ease;
           &.cool      {fill:$cool;}
           &.warm      {fill:$warm;}
           &.hot       {fill:$hot;}
@@ -22,12 +22,12 @@
   }
 
   //
-  .divider            {background:$light-gray; width:1px; height:36px;}
+  .divider            {background:$lighter-gray; width:1px; height:36px; margin:0 2px;}
 
   // live stats
   .live-stats         {display:inline-flex; margin-left:5px;
     svg               {
-      rect            {fill:$light-gray; transition: fill 200ms ease;
+      rect            {fill:$stat-bg; transition: fill 200ms ease;
         &.cool        {fill:$cool;}
         &.warm        {fill:$warm;}
         &.hot         {fill:$hot;}

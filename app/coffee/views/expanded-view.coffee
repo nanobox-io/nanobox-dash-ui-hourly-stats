@@ -8,10 +8,11 @@ expandedView    = require 'jade/expanded-view'
 module.exports = class ExpandedView
 
   numMetrics:   24 # figure out a better way to know this rather than just happening to know it's 24...
-  metricHeight: 40
+  metricHeight: 35
   metricWidth:  5
+  liveWidth:    12
   vPadding:     10
-  hPadding:     4
+  hPadding:     5
 
   #
   constructor: ($el, id, @stats) ->
@@ -35,7 +36,7 @@ module.exports = class ExpandedView
     @liveStats = d3.select($(".live-stats", @$node).get(0))
       .append("svg")
         .attr
-          width:  @metricWidth*2
+          width:  @liveWidth
           height: @stats.length*(@metricHeight + @vPadding) - @vPadding
 
     # add timeline
@@ -144,7 +145,7 @@ module.exports = class ExpandedView
       .append("svg:rect")
         .each (d, i) ->
           d3.select(@).attr
-            width:     (self.metricWidth*2)
+            width:     self.liveWidth
             height:    self.metricHeight
             class:     "background"
             transform: "translate(0, #{(self.metricHeight + (self.metricWidth*2))*i})" # a bars distances between each metric
@@ -156,7 +157,7 @@ module.exports = class ExpandedView
         .each (d, i) ->
           d3.select(@).attr
             y:         y(d.value)
-            width:     (self.metricWidth*2)
+            width:     self.liveWidth
             height:    self.metricHeight - y(d.value)
             class:     "stat #{StatsUtils.getTemperature(d.value)}"
             transform: "translate(0, #{(self.metricHeight + (self.metricWidth*2))*i})" # a bars distances between each metric

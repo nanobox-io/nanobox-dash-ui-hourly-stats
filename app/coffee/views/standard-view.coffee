@@ -65,7 +65,7 @@ module.exports = class StandardView
       .append("svg:rect")
         .each (d, i) ->
           d3.select(@).attr
-            width:     (d.value*self.maxWidth) - d.value
+            width:     0
             height:    self.metricHeight
             class:     "stat #{StatsUtils.getTemperature(d.value)}"
             transform: "translate(0, #{(self.metricHeight*2)*i})" # a bars distances between each metric

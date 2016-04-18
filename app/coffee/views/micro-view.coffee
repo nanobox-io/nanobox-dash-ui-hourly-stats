@@ -10,7 +10,7 @@ module.exports = class MicroView
   # options
   metricHeight:     5
   vPadding:         3
-  maxWidth:         50 # this is for the live stat only...
+  maxWidth:         42 # this is for the live stat only...
 
   #
   constructor: ($el, id, @stats) ->
@@ -55,7 +55,7 @@ module.exports = class MicroView
       .append("svg:rect")
         .each (d, i) ->
           d3.select(@).attr
-            width:     (d.value*self.maxWidth) - d.value
+            width:     0
             height:    self.metricHeight
             class:     "stat #{StatsUtils.getTemperature(d.value)}"
             transform: "translate(0, #{(self.metricHeight + self.vPadding)*i})" # a bars distances between each metric
