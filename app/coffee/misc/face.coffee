@@ -20,4 +20,4 @@ module.exports = class Face
     @$el.empty()
     $face = $ jadeFaceTemplate( {temperature:temp, scalable:@scalable } )
     @$el.append $face
-    shadowIconsInstance.svgReplaceWithString pxSvgIconString, $face
+    castShadows $face
