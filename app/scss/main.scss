@@ -1,11 +1,12 @@
-$light-gray: #DEDEDE;
+$face-size :   22px;
+
+$light-gray:   #DEDEDE;
 $lighter-gray: #e8e8e8;
-$gray: #bababa;
-$blue: #76b5c1;
+$gray:         #bababa;
+$blue:         #76b5c1;
 
 @import '../../libs/core-styles/core';
 @import 'vars-and-utils';
-@import 'now';
 @import 'historic';
 @import 'micro-view';
 @import 'standard-view';

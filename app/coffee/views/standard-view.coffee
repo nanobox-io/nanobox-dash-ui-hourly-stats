@@ -8,7 +8,7 @@ standardView    = require 'jade/standard-view'
 module.exports = class StandardView
 
   # options
-  numMetrics:       24 # figure out a better way to know this rather than just happening to know it's 24...
+  numMetrics:       25 # figure out a better way to know this rather than just happening to know it's 24...
   metricHeight:     5
   metricWidth:      5
   vPadding:         5

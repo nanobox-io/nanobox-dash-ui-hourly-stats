@@ -1,5 +1,4 @@
 .expanded-view
-  h4.title 24 Hour Server Health History
   .stat-row
     .historical-stats
     .live-stats
@@ -8,5 +7,16 @@
         .stat(class = stat.metric)
           .percent #{stat.value}%
           .label #{stat.metric}
-  .face
   .timeline
+
+  //- 
+  .slider-container
+    .stats-dropshield
+
+    .modal 
+      .close &times;
+      .days
+      .slide-range
+        .slider
+          .side.left
+          .side.right

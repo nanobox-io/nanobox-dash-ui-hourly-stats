@@ -44,7 +44,7 @@ module.exports = class TestData
     stats = []
     for metric in ["cpu", "ram", "swap", "disk"]
       data = []
-      for hour in [0...24]
+      for hour in [0..24]
         data.push {time: "#{("0" + hour).slice(-2)}", value: ((Math.random() * 1.00) + 0.00)}
       stats.push {metric: metric, data: data}
     stats
@@ -57,7 +57,7 @@ module.exports = class TestData
     metric = ["cpu", "ram", "swap", "disk"][(Math.floor(Math.random() * 4) + 0)]
 
     data = []
-    for hour in [0...24]
+    for hour in [0..24]
       data.push {time: "#{("0" + hour).slice(-2)}", value: ((Math.random() * 1.00) + 0.00)}
 
     # return the single metric with its data
