@@ -3,6 +3,11 @@ StatsUtils = require 'misc/stats-utils'
 #
 module.exports = class Slider
 
+  # these aren't being used yet, but they should
+  maxWidth  = 640
+  maxHeight = 50
+  numLines  = 193 # 0 - 23 hours * 7 days + 7 days (dividers) + 2 (ends); 23*7+9 = 193
+
   constructor : (@$node, @parent) ->
 
     # slider and dropshield
@@ -13,11 +18,6 @@ module.exports = class Slider
     @$handle  = @$node.find('.handle')
     @$left    = @$handle.find('.left')
     @$right   = @$handle.find('.right')
-
-    #
-    maxWidth  = 640
-    maxHeight = 50
-    numLines  = 193 # 0 - 23 hours * 7 days + 7 days (dividers) + 2 (ends); 23*7+9 = 193
 
     # add close events
     @$node.find('.close').click @close

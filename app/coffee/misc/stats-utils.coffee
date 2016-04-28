@@ -34,4 +34,5 @@ module.exports = class StatsUtils
     # start is 24 hours ago from "end"
     start = moment(end).subtract(24, "hours")
 
+    #
     [start, end]

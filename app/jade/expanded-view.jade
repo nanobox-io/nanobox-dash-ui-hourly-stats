@@ -1,5 +1,6 @@
 .expanded-view
-  .slider-dropshield(style="display:none;")
+  
+  //- 
   .stat-row
     .historical-stats
     .live-stats
@@ -8,6 +9,8 @@
         .stat(class = stat.metric)
           .percent #{stat.value}%
           .label #{stat.metric}
+  
+  //- 
   .timeline
 
   //- 
@@ -15,6 +18,7 @@
     span Date Range
     
   //- 
+  .slider-dropshield(style="display:none;")
   .slider(style="display:none;")
     .close &times;
     .days
