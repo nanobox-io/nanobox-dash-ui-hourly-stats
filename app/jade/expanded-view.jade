@@ -1,4 +1,5 @@
 .expanded-view
+  .slider-dropshield(style="display:none;")
   .stat-row
     .historical-stats
     .live-stats
@@ -10,13 +11,16 @@
   .timeline
 
   //- 
-  .slider-container
-    .stats-dropshield
-
-    .modal 
-      .close &times;
-      .days
-      .slide-range
-        .slider
-          .side.left
-          .side.right
+  .toggle-slider
+    span Date Range
+    
+  //- 
+  .slider(style="display:none;")
+    .close &times;
+    .days
+    
+    //- 
+    .slide-range
+      .handle
+        .side.left
+        .side.right
