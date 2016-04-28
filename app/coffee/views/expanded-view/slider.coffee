@@ -31,6 +31,9 @@ module.exports = class Slider
         $(window).unbind 'mouseup'
         delete @firstDragDone
 
+    # indicate that the slider has never been opened
+    @hasOpened = false
+
     #
     @buildDates()
     @drawTimeline()
@@ -77,9 +80,13 @@ module.exports = class Slider
     @rightLimit = (@leftLimit + 530) - @$handle.width()
 
     # set the initial position of the slider at "right now"
-    @$handle.css(left: @rightLimit)
-    @buildRangeTag @$right, now.subtract(1, "hour")
-    @buildRangeTag @$left, now.subtract(24, "hours")
+    if !@hasOpened
+      @$handle.css(left: @rightLimit)
+      @buildRangeTag @$right, now.subtract(1, "hour")
+      @buildRangeTag @$left, now.subtract(24, "hours")
+
+      # the slider has been opened so we don't need to "initialize" the handle
+      @hasOpened = true
 
     # NOTE: this will be replaced with actual data that is either passed in (most
     # likely) or fetched at this point
@@ -243,8 +250,8 @@ module.exports = class Slider
       # set next tick position
       posx += 3
 
-      # if count is an "day" (24 hours) then add a little padding to the front and back of
-      # the tick placement
+      # if count is an "day" (24 hours) then add a little extra padding to the
+      # front and back of the tick placement
       switch count
         when 1, 24 then posx += 2
 
@@ -256,8 +263,7 @@ module.exports = class Slider
     @$slider.removeClass 'open'
     @$shield.removeClass 'open'
 
-    now = moment()
-
     # update data to "right now"
-    @parent.updateTimeline(now)
-    @parent.updateHistoricStats(@getSlideSet(now.subtract(24, "hours")))
+    # now = moment()
+    # @parent.updateTimeline(now)
+    # @parent.updateHistoricStats(@getSlideSet(now.subtract(24, "hours")))
