@@ -39,7 +39,7 @@ $dashboard_82:    #1581BA;
   .historical-stats   {
     svg               {
       g               {
-        rect          {fill:$stat-bg; transition: fill 200ms ease;
+        rect          {fill:$stat-bg; // transition: fill 200ms ease;
           &.cool      {fill:$cool;}
           &.warm      {fill:$warm;}
           &.hot       {fill:$hot;}

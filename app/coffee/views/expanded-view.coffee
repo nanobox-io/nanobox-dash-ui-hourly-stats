@@ -243,7 +243,8 @@ module.exports = class ExpandedView
         foreground.data(gd.data)
           .each (bd, j) ->
             d3.select(@)
-              .transition().delay(0).duration(250)
+              # pulling this for now because it looks weird with the slider
+              # .transition().delay(0).duration(250)
               .attr
                 y:      y(bd.value)
                 height: self.metricHeight - y(bd.value)
