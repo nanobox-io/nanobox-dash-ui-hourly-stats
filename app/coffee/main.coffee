@@ -13,14 +13,6 @@ class HourlyStats
     for metric in metrics
       @stats.push {metric: metric, value: 0}
 
-    # provide default data
-    # @expandedStats = []
-    # for metric in metrics
-    #   data = []
-    #   for hour in [0...24]
-    #     data.push {time: "#{("0" + hour).slice(-2)}", value: 0}
-    #   @expandedStats.push {metric: metric, data: data}
-
     #
     shadowIcons = new pxicons.ShadowIcons()
 

@@ -145,6 +145,8 @@ module.exports = class ExpandedView
   # updates live stats, and percentages
   updateLiveStats : (data) =>
 
+    console.log "EXPANDED LIVE!", JSON.stringify(data)
+
     self = @
 
     #
@@ -192,6 +194,8 @@ module.exports = class ExpandedView
 
   # updates historic stats
   updateHistoricStats : (data) =>
+
+    console.log "EXPANDED HISTORICAL!", JSON.stringify(data)
 
     self = @
 
