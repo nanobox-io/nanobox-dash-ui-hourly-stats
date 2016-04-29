@@ -12,7 +12,7 @@ module.exports = class Slider
 
     # slider and dropshield
     @$slider  = @$node.find('.slider')
-    @$shield  = @$node.find('.stats-dropshield')
+    @$shield  = @$node.find('.slider-dropshield')
 
     # slide control (handle)
     @$handle  = @$node.find('.handle')
