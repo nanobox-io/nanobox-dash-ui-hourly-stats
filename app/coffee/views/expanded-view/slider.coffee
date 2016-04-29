@@ -72,12 +72,12 @@ module.exports = class Slider
     now = moment()
 
     # this is the current hour (number of ticks) times the spacing between ticks
-    @leftLimit = now.hours()*3
+    @leftLimit = (now.hours()*3) + 3
 
     # I would like to find a way to calculate this rather than just using the
     # apparently magical 530 that just happens to work...?
     # @rightLimit = (@leftLimit + (193*3)) - @$handle.width()
-    @rightLimit = (@leftLimit + 530) - @$handle.width()
+    @rightLimit = (@leftLimit + 532) - @$handle.width()
 
     # set the initial position of the slider at "right now"
     if !@hasOpened
@@ -167,45 +167,6 @@ module.exports = class Slider
       </div>")
 
   #
-  drawData: (data) ->
-
-    #
-    @svg = d3.select($(".slide-range").get(0))
-      .append("svg")
-        .attr
-          class: "data"
-          width:  640
-          height: 10
-
-    #
-    for metric, i in data
-      metricg = @svg.append("svg:g").attr(transform: "translate(0, #{2*i})")
-
-      # pos starts at leftLimit
-      # pos = @leftLimit
-      pos = moment().hours()*3
-
-      # reverse the values because we're bulding it from left to right and the
-      # vales come in desc. from left to right and we want asc.
-      metric.values.reverse()
-
-      #
-      for stat, j in metric.values
-        metricg.append("svg:rect")
-          .attr
-            class:   StatsUtils.getTemperature(stat.value),
-            x:      pos+j,
-            y:      0,
-            width:  1,
-            height: 1
-
-        # set next position
-        pos += 2
-
-        # if the stat hour is a "day" add an extra space
-        pos += 4 if stat.date.hour() == 0
-
-  #
   drawTimeline: () =>
 
     #
@@ -257,6 +218,45 @@ module.exports = class Slider
 
       # reset count every "day"
       if count == 24 then count = 0
+
+  #
+  drawData: (data) ->
+
+    #
+    @svg = d3.select($(".slide-range").get(0))
+      .append("svg")
+        .attr
+          class: "data"
+          width:  640
+          height: 10
+
+    #
+    for metric, i in data
+      metricg = @svg.append("svg:g").attr(transform: "translate(0, #{2*i})")
+
+      # pos starts at leftLimit
+      # pos = @leftLimit
+      pos = moment().hours()*3
+
+      # reverse the values because we're bulding it from left to right and the
+      # vales come in desc. from left to right and we want asc.
+      metric.values.reverse()
+
+      #
+      for stat, j in metric.values
+        metricg.append("svg:rect")
+          .attr
+            class:   StatsUtils.getTemperature(stat.value),
+            x:      pos+j,
+            y:      0,
+            width:  1,
+            height: 1
+
+        # set next position
+        pos += 2
+
+        # if the stat hour is a "day" add an extra space
+        pos += 4 if stat.date.hour() == 0
 
   # hide the slider and dropshield and reset data back to "now"
   close : () =>
