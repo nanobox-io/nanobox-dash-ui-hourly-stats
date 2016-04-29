@@ -35,7 +35,6 @@ module.exports = class MicroView
 
   # updates live stats, and face
   updateLiveStats : (data) =>
-    console.log "MICRO LIVE!", JSON.stringify(data)
 
     self = @
 

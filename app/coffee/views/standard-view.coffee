@@ -45,7 +45,6 @@ module.exports = class StandardView
 
   # updates live stats, percentages, and face
   updateLiveStats : (data) =>
-    console.log "STANDARD LIVE!", JSON.stringify(data)
 
     self = @
 
@@ -89,7 +88,6 @@ module.exports = class StandardView
 
   # updateHistoricStats
   updateHistoricStats : (data) =>
-    console.log "STANDARD HISTORICAL!", JSON.stringify(data)
 
     self = @
 
