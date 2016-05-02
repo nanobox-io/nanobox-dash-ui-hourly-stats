@@ -57,7 +57,7 @@ module.exports = class MicroView
           d3.select(@).attr
             width:     0
             height:    self.metricHeight
-            class:     "stat #{StatsUtils.getTemperature(d.value)}"
+            class:     "stat fill-temp #{StatsUtils.getTemperature(d.value)}"
             transform: "translate(0, #{(self.metricHeight + self.vPadding)*i})" # a bars distances between each metric
 
     # update foreground bars
@@ -67,7 +67,7 @@ module.exports = class MicroView
           .transition().delay(0).duration(500)
           .attr
             width: (d.value*self.maxWidth) - d.value
-            class: "stat #{StatsUtils.getTemperature(d.value)}"
+            class: "stat fill-temp #{StatsUtils.getTemperature(d.value)}"
 
     # update face
     @face.update StatsUtils.getOverallTemperature(data)

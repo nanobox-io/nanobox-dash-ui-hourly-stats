@@ -1,13 +1,24 @@
-$face-size :   22px;
+$face-size:       22px;
 
-$light-gray:   #DEDEDE;
-$lighter-gray: #e8e8e8;
-$gray:         #bababa;
-$blue:         #76b5c1;
+$lightest-gray:   #ededed;
+$lighter-gray:    #e8e8e8;
+$light-gray:      #dedede;
+$gray:            #bababa;
+$light-blue:      #407287;
+$blue:            #76b5c1;
+$dark-blue:       #173048;
+
+$yellow:          #FFCC4A;
+$dashboard_1:     #F8F8F8;
+$dashboard_8:     #E6E6E6;
+$dashboard_73:    #48B5DA;
+$dashboard_82:    #1581BA;
 
 @import '../../libs/core-styles/core';
-@import 'vars-and-utils';
-@import 'historic';
+
+// this mixin provides the cool/warm/hot "temperatures" for fills, strokes, etc.
+@include core-temperatures();
+
 @import 'micro-view';
 @import 'standard-view';
 @import 'expanded-view';

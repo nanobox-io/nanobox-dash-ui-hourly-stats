@@ -6,7 +6,7 @@
     .live-stats
     .stats
       each stat in stats
-        .stat(class = stat.metric)
+        .stat.color-temp(class = stat.metric)
           .percent #{stat.value}%
           .label #{stat.metric}
   
@@ -18,8 +18,8 @@
     span Date Range
     
   //- 
-  .slider-dropshield(style="display:none;")
-  .slider(style="display:none;")
+  .slider-dropshield(style = "display:none;")
+  .slider(style = "display:none;")
     .close &times;
     .days
     

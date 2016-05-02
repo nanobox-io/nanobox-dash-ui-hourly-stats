@@ -67,7 +67,7 @@ module.exports = class StandardView
           d3.select(@).attr
             width:     0
             height:    self.metricHeight
-            class:     "stat #{StatsUtils.getTemperature(d.value)}"
+            class:     "stat fill-temp #{StatsUtils.getTemperature(d.value)}"
             transform: "translate(0, #{(self.metricHeight*2)*i})" # a bars distances between each metric
 
     # update foreground bars
@@ -77,7 +77,7 @@ module.exports = class StandardView
           .transition().delay(0).duration(500)
           .attr
             width: (d.value*self.maxWidth) - d.value
-            class: "stat #{StatsUtils.getTemperature(d.value)}"
+            class: "stat fill-temp #{StatsUtils.getTemperature(d.value)}"
 
     # update percentages
     for d in data
@@ -113,7 +113,7 @@ module.exports = class StandardView
                   x:      (self.metricWidth + self.hPadding)*j
                   width:  self.metricWidth
                   height: self.metricHeight
-                  class:  "stat #{StatsUtils.getTemperature(bd.value)}"
+                  class:  "stat fill-temp #{StatsUtils.getTemperature(bd.value)}"
 
     # update stats
     groups.data(data)
@@ -124,7 +124,7 @@ module.exports = class StandardView
         foreground.data(gd.data)
           .each (bd) ->
             d3.select(@).attr
-              class:  "stat #{StatsUtils.getTemperature(bd.value)}"
+              class:  "stat fill-temp #{StatsUtils.getTemperature(bd.value)}"
 
   #
   subscribeToStatData : (id) ->

@@ -1,8 +1,8 @@
-StatsUtils      = require 'misc/stats-utils'
+StatsUtils  = require 'misc/stats-utils'
 Slider      = require 'views/expanded-view/slider'
 
 #
-expandedView    = require 'jade/expanded-view'
+expandedView = require 'jade/expanded-view'
 
 #
 module.exports = class ExpandedView
@@ -170,7 +170,7 @@ module.exports = class ExpandedView
             y:         y(d.value)
             width:     self.liveWidth
             height:    self.metricHeight - y(d.value)
-            class:     "stat #{StatsUtils.getTemperature(d.value)}"
+            class:     "stat fill-temp #{StatsUtils.getTemperature(d.value)}"
             transform: "translate(0, #{(self.metricHeight + (self.metricWidth*2))*i})" # a bars distances between each metric
 
     # update foreground bars
@@ -181,7 +181,7 @@ module.exports = class ExpandedView
           .attr
             y:      y(d.value)
             height: self.metricHeight - y(d.value)
-            class:  "stat #{StatsUtils.getTemperature(d.value)}"
+            class:  "stat fill-temp #{StatsUtils.getTemperature(d.value)}"
 
     # update percentages
     for d in data
@@ -232,7 +232,7 @@ module.exports = class ExpandedView
                   y:      y(bd.value)
                   width:  self.metricWidth
                   height: self.metricHeight - y(bd.value)
-                  class:  "stat #{StatsUtils.getTemperature(bd.value)}"
+                  class:  "stat fill-temp #{StatsUtils.getTemperature(bd.value)}"
 
     # update metrics
     groups.data(data)
@@ -248,7 +248,7 @@ module.exports = class ExpandedView
               .attr
                 y:      y(bd.value)
                 height: self.metricHeight - y(bd.value)
-                class:  "stat #{StatsUtils.getTemperature(bd.value)}"
+                class:  "stat fill-temp #{StatsUtils.getTemperature(bd.value)}"
 
   #
   subscribeToStatData : (id) ->
