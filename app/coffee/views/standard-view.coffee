@@ -16,7 +16,7 @@ module.exports = class StandardView
   maxWidth:         50 # this is for the live stat only...
 
   #
-  constructor: ($el, id, @stats) ->
+  constructor: ($el, @stats, id) ->
     @$node = $(standardView({stats:@stats}))
     $el.append @$node
 

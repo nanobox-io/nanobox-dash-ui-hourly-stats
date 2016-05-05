@@ -15,7 +15,7 @@ module.exports = class ExpandedView
   hPadding:     5
 
   #
-  constructor: ($el, id, @stats) ->
+  constructor: ($el, @stats, id) ->
     @$node = $(expandedView({stats:@stats}))
     $el.append @$node
 

@@ -13,7 +13,7 @@ module.exports = class MicroView
   maxWidth:         42 # this is for the live stat only...
 
   #
-  constructor: ($el, id, @stats) ->
+  constructor: ($el, @stats, id) ->
     @$node = $(microView({labels:@stats}))
     $el.append @$node
 
