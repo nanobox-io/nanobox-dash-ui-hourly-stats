@@ -1,4 +1,4 @@
-jadeFaceTemplate = require 'jade/face'
+face = require 'jade/face'
 
 #
 module.exports = class Face
@@ -18,6 +18,6 @@ module.exports = class Face
     @temperature = temp
 
     @$el.empty()
-    $face = $ jadeFaceTemplate( {temperature:temp, scalable:@scalable } )
+    $face = $ face( {temperature:temp, scalable:@scalable } )
     @$el.append $face
     castShadows $face
