@@ -5,13 +5,13 @@ window.init = () ->
   statsDataSimultor.createFakeStatDataProvider()
 
   # Micro View
-  micro = new nanobox.HourlyStats $(".micro"), {view: "micro", metrics: ["cpu", "ram", "swap", "disk"]}
+  micro = new nanobox.HourlyStats $(".micro"), {view: "micro"}
   micro.build()
 
   # Standard View
-  standard = new nanobox.HourlyStats $(".standard"), {view: "standard", metrics: ["cpu", "ram", "swap", "disk"]}
+  standard = new nanobox.HourlyStats $(".standard"), {view: "standard"}
   standard.build()
 
   # Expanded View
-  expanded = new nanobox.HourlyStats $(".expanded"), {view: "expanded", metrics: ["cpu", "ram", "swap", "disk"]}
+  expanded = new nanobox.HourlyStats $(".expanded"), {view: "expanded"}
   expanded.build()

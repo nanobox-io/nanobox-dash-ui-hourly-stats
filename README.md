@@ -3,9 +3,9 @@
 ```coffeescript
 
 # initialize, selecting the type (either micro, standard, or expanded)
-micro = new nanobox.HourlyStats("micro", $("body"))
-standard = new nanobox.HourlyStats("standard", $("body"))
-expanded = new nanobox.HourlyStats("expanded", $("body"))
+micro = new nanobox.HourlyStats $("body"), {view: "micro"}
+standard = new nanobox.HourlyStats $("body"), {view: "standard"}
+expanded = new nanobox.HourlyStats $("body"), {view: "expanded"}
 
 # build the component
 *.build()
@@ -14,6 +14,14 @@ expanded = new nanobox.HourlyStats("expanded", $("body"))
 *.updateLiveStats(data)
 *.updateHistoricStats(data)
 ```
+
+#### Options
+| Option=default | Description |
+|---|---|---|
+| logsEnabled=false | Is logging enabled (T/F) |
+| logLevel="INFO" | Selected log level of [available levels](https://github.com/sdomino/dash/blob/master/src/dash.coffee#L8) |
+| view="" | Which view of component to instantiate of `micro`, `standard`, or `extended` |
+| id="" | The `id` of the service the component belongs to |
 
 ## Data structure
 The data structure for each of the three difference components is the same:

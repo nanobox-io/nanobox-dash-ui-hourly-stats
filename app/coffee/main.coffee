@@ -6,7 +6,7 @@ ExpandedView  = require 'views/expanded-view'
 class HourlyStats
 
   # constructor
-  constructor: (@$el, @options) ->
+  constructor: (@$el, @options={metrics:["cpu", "ram", "swap", "disk"]}) ->
 
     # provide default data
     @stats = []
