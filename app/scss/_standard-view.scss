@@ -1,5 +1,5 @@
 //
-.standard-view        {display:flex; width:100%; padding:10px; align-items:center;
+.standard-view        {display:flex; width:100%; align-items:center;
 
   // labels
   .labels             {text-align:right;
@@ -31,7 +31,7 @@
   }
 
   // face
-  .face               {margin-left:5px;
+  .face               {margin-left:11px;
     .shadow-parent    {height:$face-size; width:$face-size;}
   }
 }
