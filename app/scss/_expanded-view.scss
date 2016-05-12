@@ -16,7 +16,7 @@
   }
 
   // live stats
-  .live-stats         {margin-left:20px;
+  .live-stats         {margin-left:11px;
     svg               {
       rect            {fill:$lightest-gray; transition: fill 200ms ease;}
     }
@@ -41,8 +41,8 @@
     svg               {
       text            {text-anchor:middle;}
       .time           {
-        &.primary     {}
-        &.secondary   {fill:$light-gray;}
+        &.primary     {fill:#6B7B8F; font-style:italic; font-weight:$medium; }
+        &.secondary   {fill:#6B7B8F; font-style:italic; font-weight:$medium; }
       }
     }
   }
