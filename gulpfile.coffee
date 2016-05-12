@@ -34,7 +34,7 @@ jadeDest          = './server/js/jade'
 
 jadeStagePath     = 'stage/index.jade'
 jadePath          = 'app/jade/**/*.jade'
-cssPath           = ['app/scss/**/*.scss', 'libs/core-styles/**/*.scss']
+cssPath           = 'app/scss/**/*.scss'
 cssStagePath      = 'stage/stage.scss'
 appJsPath         = ['app/coffee/**/*.coffee', "#{jadeDest}/**/*.js"]
 stageJsPath       = 'stage/**/*.coffee'

@@ -6,12 +6,17 @@ ExpandedView  = require 'views/expanded-view'
 class HourlyStats
 
   # constructor
-  constructor: (@$el, @options={metrics:["cpu", "ram", "swap", "disk"]}) ->
+  constructor: (@$el, @options={}) ->
+
+    # set defaults
+    if !@options.metrics then @options.metrics = ["cpu", "ram", "swap", "disk"]
+    if !@options.logsEnabled then @options.logsEnabled = false
+    if !@options.loglevel then @options.logLevel = "INFO"
 
     # provide default data
-    @stats = []
+    @options.stats = []
     for metric in @options.metrics
-      @stats.push {metric: metric, value: 0}
+      @options.stats.push {metric: metric, value: 0}
 
     #
     shadowIcons = new pxicons.ShadowIcons()
@@ -20,9 +25,9 @@ class HourlyStats
   # instantiated
   build : () ->
     switch @options.view
-      when "micro"    then @component = new MicroView @$el, @stats, @options.id
-      when "standard" then @component = new StandardView @$el, @stats, @options.id
-      when "expanded" then @component = new ExpandedView @$el, @stats, @options.id
+      when "micro"    then new MicroView @$el, @options
+      when "standard" then new StandardView @$el, @options
+      when "expanded" then new ExpandedView @$el, @options
 
 #
 window.nanobox ||= {}

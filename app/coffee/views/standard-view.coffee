@@ -2,7 +2,7 @@ Face            = require 'misc/face'
 StatsUtils      = require 'misc/stats-utils'
 
 #
-standardView    = require 'jade/standard-view'
+view = require 'jade/standard-view'
 
 #
 module.exports = class StandardView
@@ -16,12 +16,18 @@ module.exports = class StandardView
   maxWidth:         50 # this is for the live stat only...
 
   #
-  constructor: ($el, @stats, id) ->
-    @$node = $(standardView({stats:@stats}))
+  constructor: ($el, @options) ->
+
+    #
+    @stats = @options.stats
+
+    #
+    @$node = $(view({stats:@stats}))
     $el.append @$node
 
+    #
     @build()
-    @subscribeToStatData id
+    @subscribeToStatData(@options.id)
 
   # build svgs
   build : () ->

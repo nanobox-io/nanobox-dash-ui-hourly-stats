@@ -2,7 +2,7 @@ Face        = require 'misc/face'
 StatsUtils  = require 'misc/stats-utils'
 
 #
-microView = require 'jade/micro-view'
+view = require 'jade/micro-view'
 
 #
 module.exports = class MicroView
@@ -13,12 +13,18 @@ module.exports = class MicroView
   maxWidth:         42 # this is for the live stat only...
 
   #
-  constructor: ($el, @stats, id) ->
-    @$node = $(microView({labels:@stats}))
+  constructor: ($el, @options) ->
+
+    #
+    @stats = @options.stats
+
+    #
+    @$node = $(view({labels:@stats}))
     $el.append @$node
 
+    #
     @build()
-    @subscribeToStatData(id)
+    @subscribeToStatData(@options.id)
 
   # build the svg
   build : () ->

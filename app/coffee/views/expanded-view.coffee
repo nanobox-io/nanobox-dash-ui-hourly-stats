@@ -2,7 +2,7 @@ StatsUtils  = require 'misc/stats-utils'
 Slider      = require 'views/expanded-view/slider'
 
 #
-expandedView = require 'jade/expanded-view'
+view = require 'jade/expanded-view'
 
 #
 module.exports = class ExpandedView
@@ -15,12 +15,18 @@ module.exports = class ExpandedView
   hPadding:     5
 
   #
-  constructor: ($el, @stats, id) ->
-    @$node = $(expandedView({stats:@stats}))
+  constructor: ($el, @options) ->
+
+    #
+    @stats = @options.stats
+
+    #
+    @$node = $(view({stats:@stats}))
     $el.append @$node
 
+    #
     @build()
-    @subscribeToStatData id
+    @subscribeToStatData(@options.id)
 
   # build svgs
   build : () ->
