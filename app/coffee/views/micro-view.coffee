@@ -20,9 +20,6 @@ module.exports = class MicroView
     @stats = @options.stats
 
     #
-    @_subscribeToStatData(@options.id)
-
-    #
     @$node = $(view({labels:@stats}))
     $el.append @$node
 
@@ -38,6 +35,9 @@ module.exports = class MicroView
 
     # add face
     @face = new Face $(".face", @$node), "true"
+
+    #
+    @_subscribeToStatData(@options.id)
 
   # updates live stats, and face
   updateLiveStats : (data) =>

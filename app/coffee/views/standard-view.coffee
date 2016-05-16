@@ -23,9 +23,6 @@ module.exports = class StandardView
     @stats = @options.stats
 
     #
-    @_subscribeToStatData(@options.id)
-
-    #
     @$node = $(view({stats:@stats}))
     $el.append @$node
 
@@ -48,6 +45,9 @@ module.exports = class StandardView
 
     # add face
     @face = new Face $(".face", @$node), "true"
+
+    #
+    @_subscribeToStatData(@options.id)
 
   # updates live stats, percentages, and face
   updateLiveStats : (data) =>

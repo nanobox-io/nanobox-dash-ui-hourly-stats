@@ -23,9 +23,6 @@ module.exports = class ExpandedView
     @stats = @options.stats
 
     #
-    @_subscribeToStatData(@options.id)
-
-    #
     @$node = $(view({stats:@stats}))
     $el.append @$node
 
@@ -60,6 +57,9 @@ module.exports = class ExpandedView
     # create the slider and add toggle
     @slider ||= new Slider(@$node, @)
     $(".toggle-slider").click (e) => @slider.open()
+
+    #
+    @_subscribeToStatData(@options.id)
 
 
   #
