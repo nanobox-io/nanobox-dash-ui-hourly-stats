@@ -3,6 +3,6 @@ body          {margin:0; padding:0; background:#DFDFDF;}
 //
 .view         { display:flex; margin-bottom:20px; background:white;
   &.micro     { width:116px;  }
-  &.standard  { width:375px; }
-  &.expanded  { width:345px; padding:20px;  }
+  &.standard  { width:375px;}
+  &.expanded  { width:345px; padding:20px; box-sizing: border-box;}
 }
