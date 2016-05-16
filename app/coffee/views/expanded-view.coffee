@@ -7,26 +7,27 @@ view = require 'jade/expanded-view'
 #
 module.exports = class ExpandedView
 
-  numMetrics:   25 # figure out a better way to know this rather than just happening to know it's 24...
-  metricHeight: 35
-  metricWidth:  5
-  liveWidth:    12
-  vPadding:     10
-  hPadding:     5
+  # options; I'd love to figure out a way to calculate these rather than just
+  # having them hard coded...
+  _numMetrics:   25 # figure out a better way to know this rather than just happening to know it's 24...
+  _metricHeight: 35
+  _metricWidth:  5
+  _liveWidth:    12
+  _vPadding:     10
+  _hPadding:     5
 
   #
-  constructor: ($el, @options) ->
+  constructor: ($el, @options={}) ->
 
     #
     @stats = @options.stats
 
     #
-    @$node = $(view({stats:@stats}))
-    $el.append @$node
+    @_subscribeToStatData(@options.id)
 
     #
-    @build()
-    @subscribeToStatData(@options.id)
+    @$node = $(view({stats:@stats}))
+    $el.append @$node
 
   # build svgs
   build : () ->
@@ -35,23 +36,23 @@ module.exports = class ExpandedView
     @historicStats = d3.select($(".historical-stats", @$node).get(0))
       .append("svg")
         .attr
-          width:  @numMetrics*(@metricWidth+@hPadding)
-          height: @stats.length*(@metricHeight + @vPadding) - @vPadding
+          width:  @_numMetrics*(@_metricWidth+@_hPadding)
+          height: @stats.length*(@_metricHeight + @_vPadding) - @_vPadding
 
     # add live stats svg
     @liveStats = d3.select($(".live-stats", @$node).get(0))
       .append("svg")
         .attr
-          width:  @liveWidth
-          height: @stats.length*(@metricHeight + @vPadding) - @vPadding
+          width:  @_liveWidth
+          height: @stats.length*(@_metricHeight + @_vPadding) - @_vPadding
 
     # add timeline; we need to add a little to the width to account for the beginning
     # and ending values which can't get cut off
     @timeline = d3.select($(".timeline", @$node).get(0))
       .append("svg")
         .attr
-          width  : @numMetrics*(@metricWidth + @hPadding) + 15
-          height : @metricHeight
+          width  : @_numMetrics*(@_metricWidth + @_hPadding) + 15
+          height : @_metricHeight
 
     # add the timeline and set to "right now"
     @updateTimeline(moment())
@@ -154,7 +155,7 @@ module.exports = class ExpandedView
     self = @
 
     #
-    y = d3.scale.linear().range([self.metricHeight, 0])
+    y = d3.scale.linear().range([self._metricHeight, 0])
 
     # create background bars
     background = @liveStats.selectAll(".background").data(data)
@@ -162,10 +163,10 @@ module.exports = class ExpandedView
       .append("svg:rect")
         .each (d, i) ->
           d3.select(@).attr
-            width:     self.liveWidth
-            height:    self.metricHeight
+            width:     self._liveWidth
+            height:    self._metricHeight
             class:     "background"
-            transform: "translate(0, #{(self.metricHeight + (self.metricWidth*2))*i})" # a bars distances between each metric
+            transform: "translate(0, #{(self._metricHeight + (self._metricWidth*2))*i})" # a bars distances between each metric
 
     # create foreground bars
     foreground = @liveStats.selectAll(".stat").data(data)
@@ -174,10 +175,10 @@ module.exports = class ExpandedView
         .each (d, i) ->
           d3.select(@).attr
             y:         y(d.value)
-            width:     self.liveWidth
-            height:    self.metricHeight - y(d.value)
+            width:     self._liveWidth
+            height:    self._metricHeight - y(d.value)
             class:     "stat fill-temp #{StatsUtils.getTemperature(d.value)}"
-            transform: "translate(0, #{(self.metricHeight + (self.metricWidth*2))*i})" # a bars distances between each metric
+            transform: "translate(0, #{(self._metricHeight + (self._metricWidth*2))*i})" # a bars distances between each metric
 
     # update foreground bars
     foreground.data(data)
@@ -186,7 +187,7 @@ module.exports = class ExpandedView
           .transition().delay(0).duration(500)
           .attr
             y:      y(d.value)
-            height: self.metricHeight - y(d.value)
+            height: self._metricHeight - y(d.value)
             class:  "stat fill-temp #{StatsUtils.getTemperature(d.value)}"
 
     # update percentages
@@ -202,7 +203,7 @@ module.exports = class ExpandedView
     self = @
 
     #
-    y = d3.scale.linear().range([self.metricHeight, 0])
+    y = d3.scale.linear().range([self._metricHeight, 0])
 
     # add metric groups
     groups = @historicStats.selectAll("g").data(data)
@@ -215,7 +216,7 @@ module.exports = class ExpandedView
           # metric group
           group = d3.select(@).attr
             class: gd.metric
-            transform: "translate(0, #{(self.metricHeight + 10)*i})" # a bars distances between each metric
+            transform: "translate(0, #{(self._metricHeight + 10)*i})" # a bars distances between each metric
 
           # background bars
           background = group.selectAll(".background").data(gd.data)
@@ -223,9 +224,9 @@ module.exports = class ExpandedView
             .append("svg:rect")
               .each (bd, j) ->
                 d3.select(@).attr
-                  x:      (self.metricWidth + self.hPadding)*j
-                  width:  self.metricWidth
-                  height: self.metricHeight
+                  x:      (self._metricWidth + self._hPadding)*j
+                  width:  self._metricWidth
+                  height: self._metricHeight
                   class:  "background"
 
           # foreground bars
@@ -234,10 +235,10 @@ module.exports = class ExpandedView
             .append("svg:rect")
               .each (bd, j) ->
                 d3.select(@).attr
-                  x:      (self.metricWidth + self.hPadding)*j
+                  x:      (self._metricWidth + self._hPadding)*j
                   y:      y(bd.value)
-                  width:  self.metricWidth
-                  height: self.metricHeight - y(bd.value)
+                  width:  self._metricWidth
+                  height: self._metricHeight - y(bd.value)
                   class:  "stat fill-temp #{StatsUtils.getTemperature(bd.value)}"
 
     # update metrics
@@ -253,11 +254,11 @@ module.exports = class ExpandedView
               # .transition().delay(0).duration(250)
               .attr
                 y:      y(bd.value)
-                height: self.metricHeight - y(bd.value)
+                height: self._metricHeight - y(bd.value)
                 class:  "stat fill-temp #{StatsUtils.getTemperature(bd.value)}"
 
   #
-  subscribeToStatData : (id) ->
+  _subscribeToStatData : (id) ->
     PubSub.publish 'STATS.SUBSCRIBE.LIVE', {
       statProviderId : id
       callback       : @updateLiveStats
