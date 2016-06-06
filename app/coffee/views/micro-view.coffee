@@ -7,13 +7,14 @@ view = require 'jade/micro-view'
 #
 module.exports = class MicroView
 
-  # options
-  metricHeight:     5
-  vPadding:         3
-  maxWidth:         42 # this is for the live stat only...
+  # options; I'd love to figure out a way to calculate these rather than just
+  # having them hard coded...
+  _metricHeight: 5
+  _vPadding:     3
+  _maxWidth:     42
 
   #
-  constructor: ($el, @options) ->
+  constructor: ($el, @options={}) ->
 
     #
     @stats = @options.stats
@@ -22,10 +23,6 @@ module.exports = class MicroView
     @$node = $(view({labels:@stats}))
     $el.append @$node
 
-    #
-    @build()
-    @subscribeToStatData(@options.id)
-
   # build the svg
   build : () ->
 
@@ -33,11 +30,14 @@ module.exports = class MicroView
     @liveStats = d3.select($(".live-stats", @$node).get(0))
       .append("svg")
         .attr
-          width:  @maxWidth
-          height: @stats.length*(@metricHeight + @vPadding) - @vPadding
+          width:  @_maxWidth
+          height: @stats.length*(@_metricHeight + @_vPadding) - @_vPadding
 
     # add face
     @face = new Face $(".face", @$node), "true"
+
+    #
+    @_subscribeToStatData(@options.id)
 
   # updates live stats, and face
   updateLiveStats : (data) =>
@@ -50,10 +50,10 @@ module.exports = class MicroView
       .append("svg:rect")
         .each (d, i) ->
           d3.select(@).attr
-            width:     (self.maxWidth)
-            height:    self.metricHeight
+            width:     (self._maxWidth)
+            height:    self._metricHeight
             class:     "background"
-            transform: "translate(0, #{(self.metricHeight + self.vPadding)*i})" # a bars distances between each metric
+            transform: "translate(0, #{(self._metricHeight + self._vPadding)*i})" # a bars distances between each metric
 
     # create foreground bars
     foreground = @liveStats.selectAll(".stat").data(data)
@@ -62,9 +62,9 @@ module.exports = class MicroView
         .each (d, i) ->
           d3.select(@).attr
             width:     0
-            height:    self.metricHeight
+            height:    self._metricHeight
             class:     "stat fill-temp #{StatsUtils.getTemperature(d.value)}"
-            transform: "translate(0, #{(self.metricHeight + self.vPadding)*i})" # a bars distances between each metric
+            transform: "translate(0, #{(self._metricHeight + self._vPadding)*i})" # a bars distances between each metric
 
     # update foreground bars
     foreground.data(data)
@@ -72,14 +72,14 @@ module.exports = class MicroView
         d3.select(@)
           .transition().delay(0).duration(500)
           .attr
-            width: (d.value*self.maxWidth) - d.value
+            width: (d.value*self._maxWidth) - d.value
             class: "stat fill-temp #{StatsUtils.getTemperature(d.value)}"
 
     # update face
     @face.update StatsUtils.getOverallTemperature(data)
 
   #
-  subscribeToStatData : (id) ->
+  _subscribeToStatData : (id) ->
     PubSub.publish 'STATS.SUBSCRIBE.LIVE', {
       statProviderId : id
       callback       : @updateLiveStats

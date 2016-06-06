@@ -25,7 +25,7 @@ module.exports = class Slider
 
     # add drag events
     @$handle.mousedown =>
-      $(window).mousemove @drag
+      $(window).mousemove @_drag
       $(window).mouseup =>
         $(window).unbind 'mousemove'
         $(window).unbind 'mouseup'
@@ -35,31 +35,9 @@ module.exports = class Slider
     @hasOpened = false
 
     #
-    @buildDates()
-    @drawTimeline()
-
-  #
-  buildDates : () =>
-
-    # iterate from 7 down to 0 (7 times for 7 days), building the "days track"
-    # across the top of the slider
-    for i in [7..0]
-
-      # today minus "i" gives each day of the week
-      day = moment().subtract(i, "day")
-
-      # the day differences between today and "day"
-      diff = moment().diff(day, "day")
-
-      # determine day display based on "diff"; 0 is "today", 1 is "yesterday", any
-      # other day is displayed by name
-      display = switch
-        when diff <= 0 then "Today"
-        when diff == 1 then "Yesterday"
-        else day.format("ddd")
-
-      # add each day to the "days track"
-      @$node.find('.days').append("<div class='day'>#{display}</div>")
+    @_drawDays()
+    @_drawTimeline()
+    @_drawData()
 
   #
   open : () =>
@@ -82,8 +60,8 @@ module.exports = class Slider
     # set the initial position of the slider at "right now"
     if !@hasOpened
       @$handle.css(left: @rightLimit)
-      @buildRangeTag @$right, now.subtract(1, "hour")
-      @buildRangeTag @$left, now.subtract(24, "hours")
+      @_buildRangeTag @$right, now.subtract(1, "hour")
+      @_buildRangeTag @$left, now.subtract(24, "hours")
 
       # the slider has been opened so we don't need to "initialize" the handle
       @hasOpened = true
@@ -102,72 +80,74 @@ module.exports = class Slider
       @data.push m
 
     # draw data points on slider
-    @drawData(@data)
+    @updateData(@data)
+
+  # hide the slider and dropshield and reset data back to "now"
+  close : () =>
+    @$slider.removeClass 'open'
+    @$shield.removeClass 'open'
+
+    # update data to "right now"
+    # now = moment()
+    # @parent.updateTimeline(now)
+    # @parent.updateHistoricStats(@_getSlideSet(now.subtract(24, "hours")))
 
   #
-  drag : (e) =>
-
-    # what is this?
-    if !@firstDragDone
-      @firstDragDone = true
-      @startMousePosition = e.clientX
-      @startSliderPosition = @$handle.position().left
+  updateData: (data) ->
 
     #
-    calulcatedPosition = @startSliderPosition + (e.clientX - @startMousePosition)
+    for metric, i in data
+      metricg = @svg.append("svg:g").attr(transform: "translate(0, #{2*i})")
 
-    #
-    newPosition = switch
-      when calulcatedPosition < @leftLimit then @leftLimit
-      when calulcatedPosition > @rightLimit then @rightLimit
-      else Math.round calulcatedPosition
+      # pos starts at leftLimit
+      # pos = @leftLimit
+      pos = moment().hours()*3
 
-    #
-    @$handle.css left: newPosition
+      # reverse the values because we're bulding it from left to right and the
+      # vales come in desc. from left to right and we want asc.
+      metric.values.reverse()
 
-    #
-    percent = (newPosition - @leftLimit) / (@rightLimit - @leftLimit)
-    [start, end] = StatsUtils.getTimeStampsFromPercentage(percent)
+      #
+      for stat, j in metric.values
+        metricg.append("svg:rect")
+          .attr
+            class:  "fill-temp #{StatsUtils.getTemperature(stat.value)}",
+            x:      pos+j,
+            y:      0,
+            width:  1,
+            height: 1
 
-    #
-    @buildRangeTag @$left, start
-    @buildRangeTag @$right, end
+        # set next position
+        pos += 2
 
-    # we need to add one hour to "end" when updating the timeline because it shows
-    # a 25 hours range not 24; it shows the last hour AND 24 hours from that hour
-    # meaning it shows that same hour twice (once at each end)
-    @parent.updateTimeline(end.add(1, "hour"))
-    @parent.updateHistoricStats(@getSlideSet(start))
+        # if the stat hour is a "day" add an extra space
+        pos += 4 if stat.date.hour() == 0
 
   #
-  getSlideSet: (date) ->
-    data = []
-    for d in @data
+  _drawDays : () =>
 
-      # if the value is the same as the end value, then take that index and the
-      # next 24
-      values = []
-      for v, i in d.values
-        if v.date.isSame(date, "hour")
-          values = d.values[i..i+24]
+    # iterate from 7 down to 0 (7 times for 7 days), building the "days track"
+    # across the top of the slider
+    for i in [7..0]
 
-      metric = {metric: d.metric, data: values}
+      # today minus "i" gives each day of the week
+      day = moment().subtract(i, "day")
 
-      data.push metric
+      # the day differences between today and "day"
+      diff = moment().diff(day, "day")
 
-    data
+      # determine day display based on "diff"; 0 is "today", 1 is "yesterday", any
+      # other day is displayed by name
+      display = switch
+        when diff <= 0 then "Today"
+        when diff == 1 then "Yesterday"
+        else day.format("ddd")
 
-  #
-  buildRangeTag : ($el, time) =>
-    $el.html $("
-      <div class='slider-label'>
-        <div class='day'>#{time.format("ddd")}</div>
-        <div class='hour'>#{time.format("h")}</div>
-        <div class='period'>#{time.format("a")}</div>
-      </div>")
+      # add each day to the "days track"
+      @$node.find('.days').append("<div class='day'>#{display}</div>")
 
   #
-  drawTimeline: () =>
+  _drawTimeline: () =>
 
     #
     @svg = d3.select($(".slide-range").get(0))
@@ -220,9 +200,7 @@ module.exports = class Slider
       if count == 24 then count = 0
 
   #
-  drawData: (data) ->
-
-    #
+  _drawData : () ->
     @svg = d3.select($(".slide-range").get(0))
       .append("svg")
         .attr
@@ -230,40 +208,64 @@ module.exports = class Slider
           width:  640
           height: 10
 
+  #
+  _buildRangeTag : ($el, time) =>
+    $el.html $("
+      <div class='slider-label'>
+        <div class='day'>#{time.format("ddd")}</div>
+        <div class='hour'>#{time.format("h")}</div>
+        <div class='period'>#{time.format("a")}</div>
+      </div>")
+
+  #
+  _getSlideSet: (date) ->
+    data = []
+    for d in @data
+
+      # if the value is the same as the end value, then take that index and the
+      # next 24
+      values = []
+      for v, i in d.values
+        if v.date.isSame(date, "hour")
+          values = d.values[i..i+24]
+
+      metric = {metric: d.metric, data: values}
+
+      data.push metric
+
+    data
+
+  #
+  _drag : (e) =>
+
+    # what is this?
+    if !@firstDragDone
+      @firstDragDone = true
+      @startMousePosition = e.clientX
+      @startSliderPosition = @$handle.position().left
+
     #
-    for metric, i in data
-      metricg = @svg.append("svg:g").attr(transform: "translate(0, #{2*i})")
+    calulcatedPosition = @startSliderPosition + (e.clientX - @startMousePosition)
 
-      # pos starts at leftLimit
-      # pos = @leftLimit
-      pos = moment().hours()*3
+    #
+    newPosition = switch
+      when calulcatedPosition < @leftLimit then @leftLimit
+      when calulcatedPosition > @rightLimit then @rightLimit
+      else Math.round calulcatedPosition
 
-      # reverse the values because we're bulding it from left to right and the
-      # vales come in desc. from left to right and we want asc.
-      metric.values.reverse()
+    #
+    @$handle.css left: newPosition
 
-      #
-      for stat, j in metric.values
-        metricg.append("svg:rect")
-          .attr
-            class:   StatsUtils.getTemperature(stat.value),
-            x:      pos+j,
-            y:      0,
-            width:  1,
-            height: 1
+    #
+    percent = (newPosition - @leftLimit) / (@rightLimit - @leftLimit)
+    [start, end] = StatsUtils.getTimeStampsFromPercentage(percent)
 
-        # set next position
-        pos += 2
+    #
+    @_buildRangeTag @$left, start
+    @_buildRangeTag @$right, end
 
-        # if the stat hour is a "day" add an extra space
-        pos += 4 if stat.date.hour() == 0
-
-  # hide the slider and dropshield and reset data back to "now"
-  close : () =>
-    @$slider.removeClass 'open'
-    @$shield.removeClass 'open'
-
-    # update data to "right now"
-    # now = moment()
-    # @parent.updateTimeline(now)
-    # @parent.updateHistoricStats(@getSlideSet(now.subtract(24, "hours")))
+    # we need to add one hour to "end" when updating the timeline because it shows
+    # a 25 hours range not 24; it shows the last hour AND 24 hours from that hour
+    # meaning it shows that same hour twice (once at each end)
+    @parent.updateTimeline(end.add(1, "hour"))
+    @parent.updateHistoricStats(@_getSlideSet(start))

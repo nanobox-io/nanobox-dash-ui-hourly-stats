@@ -7,16 +7,17 @@ view = require 'jade/standard-view'
 #
 module.exports = class StandardView
 
-  # options
-  numMetrics:       25 # figure out a better way to know this rather than just happening to know it's 24...
-  metricHeight:     5
-  metricWidth:      5
-  vPadding:         5
-  hPadding:         4
-  maxWidth:         50 # this is for the live stat only...
+  # options; I'd love to figure out a way to calculate these rather than just
+  # having them hard coded...
+  _numMetrics:   25 # figure out a better way to know this rather than just happening to know it's 24...
+  _metricHeight: 5
+  _metricWidth:  5
+  _vPadding:     5
+  _hPadding:     4
+  _maxWidth:     50
 
   #
-  constructor: ($el, @options) ->
+  constructor: ($el, @options={}) ->
 
     #
     @stats = @options.stats
@@ -30,10 +31,6 @@ module.exports = class StandardView
     @$node = $(view({stats:@stats, xtraClasses:xtraClasses}))
     $el.append @$node
 
-    #
-    @build()
-    @subscribeToStatData(@options.id)
-
   # build svgs
   build : () ->
 
@@ -41,18 +38,21 @@ module.exports = class StandardView
     @historicStats = d3.select($(".historical-stats", @$node).get(0))
       .append("svg")
         .attr
-          width:  @numMetrics*(@metricWidth+@hPadding)
-          height: @stats.length*(@metricHeight + @vPadding) - @vPadding
+          width:  @_numMetrics*(@_metricWidth+@_hPadding)
+          height: @stats.length*(@_metricHeight + @_vPadding) - @_vPadding
 
     # add live stats
     @liveStats = d3.select($(".live-stats", @$node).get(0))
       .append("svg")
         .attr
-          width:  @maxWidth
-          height: @stats.length*(@metricHeight + @vPadding) - @vPadding
+          width:  @_maxWidth
+          height: @stats.length*(@_metricHeight + @_vPadding) - @_vPadding
 
     # add face
     @face = new Face $(".face", @$node), "true"
+
+    #
+    @_subscribeToStatData(@options.id)
 
   # updates live stats, percentages, and face
   updateLiveStats : (data) =>
@@ -65,10 +65,10 @@ module.exports = class StandardView
       .append("svg:rect")
         .each (d, i) ->
           d3.select(@).attr
-            width:     (self.maxWidth)
-            height:    self.metricHeight
+            width:     (self._maxWidth)
+            height:    self._metricHeight
             class:     "background"
-            transform: "translate(0, #{(self.metricHeight+self.vPadding)*i})" # a bars distances between each metric
+            transform: "translate(0, #{(self._metricHeight+self._vPadding)*i})" # a bars distances between each metric
 
     # create foreground bars
     foreground = @liveStats.selectAll(".stat").data(data)
@@ -77,9 +77,9 @@ module.exports = class StandardView
         .each (d, i) ->
           d3.select(@).attr
             width:     0
-            height:    self.metricHeight
+            height:    self._metricHeight
             class:     "stat fill-temp #{StatsUtils.getTemperature(d.value)}"
-            transform: "translate(0, #{(self.metricHeight+self.vPadding)*i})" # a bars distances between each metric
+            transform: "translate(0, #{(self._metricHeight+self._vPadding)*i})" # a bars distances between each metric
 
     # update foreground bars
     foreground.data(data)
@@ -87,7 +87,7 @@ module.exports = class StandardView
         d3.select(@)
           .transition().delay(0).duration(500)
           .attr
-            width: (d.value*self.maxWidth) - d.value
+            width: (d.value*self._maxWidth) - d.value
             class: "stat fill-temp #{StatsUtils.getTemperature(d.value)}"
 
     # update percentages
@@ -113,7 +113,7 @@ module.exports = class StandardView
           #
           group = d3.select(@).attr
             class: gd.metric
-            transform: "translate(0, #{(self.metricHeight+self.vPadding)*i})" # a bars distances between each metric
+            transform: "translate(0, #{(self._metricHeight+self._vPadding)*i})" # a bars distances between each metric
 
           # foreground
           foreground = group.selectAll(".stat").data(gd.data)
@@ -121,9 +121,9 @@ module.exports = class StandardView
             .append("svg:rect")
               .each (bd, j) ->
                 d3.select(@).attr
-                  x:      (self.metricWidth + self.hPadding)*j
-                  width:  self.metricWidth
-                  height: self.metricHeight
+                  x:      (self._metricWidth + self._hPadding)*j
+                  width:  self._metricWidth
+                  height: self._metricHeight
                   class:  "stat fill-temp #{StatsUtils.getTemperature(bd.value)}"
 
     # update stats
@@ -138,7 +138,7 @@ module.exports = class StandardView
               class:  "stat fill-temp #{StatsUtils.getTemperature(bd.value)}"
 
   #
-  subscribeToStatData : (id) ->
+  _subscribeToStatData : (id) ->
     PubSub.publish 'STATS.SUBSCRIBE.LIVE', {
       statProviderId : id
       callback       : @updateLiveStats
