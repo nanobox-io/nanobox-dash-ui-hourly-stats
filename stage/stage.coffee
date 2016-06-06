@@ -18,7 +18,7 @@ window.init = () ->
   standard2 = new nanobox.HourlyStats $("#standard2"), {view: "standard", isContainer:true, metrics:['cpu', 'ram']  }
   standard2.build()
 
-  standard3 = new nanobox.HourlyStats $("#standard3"), {view: "standard", isContainer:true, compressView:true  }
+  standard3 = new nanobox.HourlyStats $("#standard3"), {view: "standard", compressView:true  }
   standard3.build()
 
   # Expanded View

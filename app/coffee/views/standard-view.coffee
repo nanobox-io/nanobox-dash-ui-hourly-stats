@@ -24,7 +24,7 @@ module.exports = class StandardView
 
     xtraClasses = ''
     if @options.compressView
-      @vPadding   = 3
+      @_vPadding   = 3
       xtraClasses = 'compressed'
 
     #
