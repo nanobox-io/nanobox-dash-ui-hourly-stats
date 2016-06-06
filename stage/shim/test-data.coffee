@@ -8,6 +8,8 @@ module.exports = class TestData
 
     #
     PubSub.subscribe 'STATS.SUBSCRIBE.LIVE', (m, data)=>
+      # console.log "live stats:"
+      # console.log JSON.stringify statsDataSimultor.generateLiveStats()
       data.callback statsDataSimultor.generateLiveStats()
       setInterval () ->
 
@@ -18,6 +20,9 @@ module.exports = class TestData
 
     #
     PubSub.subscribe 'STATS.SUBSCRIBE.HISTORIC', (m, data)=>
+      # console.log "live stats:"
+      # console.log JSON.stringify statsDataSimultor.generateHistoricalStats()
+
       data.callback statsDataSimultor.generateHistoricalStats()
       setInterval () ->
 
@@ -33,16 +38,16 @@ module.exports = class TestData
     PubSub.subscribe 'STATS.UNSUBSCRIBE', (m, data)=>
 
   # generate data for each metric
-  generateLiveStats : () ->
+  generateLiveStats : (isContainer) ->
     stats = []
-    for metric in ["cpu", "ram", "swap", "disk"]
+    for metric in @getMetrics(isContainer)
       stats.push {metric: metric, value: (Math.random() * 1.00) + 0.00}
     stats
 
   # generate hourly data for each metric
-  generateHistoricalStats : () ->
+  generateHistoricalStats : (isContainer) ->
     stats = []
-    for metric in ["cpu", "ram", "swap", "disk"]
+    for metric in @getMetrics(isContainer)
       data = []
       for hour in [0..24]
         data.push {time: "#{("0" + hour).slice(-2)}", value: ((Math.random() * 1.00) + 0.00)}
@@ -50,11 +55,12 @@ module.exports = class TestData
     stats
 
   # generate hourly data for a single metric
-  generateHistoricalStat : () ->
+  generateHistoricalStat : (isContainer) ->
 
     # generate a random number between 0 and the length of the available metrics,
     # selecting a random one from the array
-    metric = ["cpu", "ram", "swap", "disk"][(Math.floor(Math.random() * 4) + 0)]
+    metrics = @getMetrics(isContainer)
+    metric  = metrics[ Math.floor( Math.random() * metrics.length ) ]
 
     data = []
     for hour in [0..24]
@@ -62,3 +68,11 @@ module.exports = class TestData
 
     # return the single metric with its data
     [{metric: metric, data: data}]
+
+  getMetrics : (isContainer) ->
+    # It's a container..
+    if isContainer
+      ["cpu", "ram"]
+    # It's a host
+    else
+      ["cpu", "ram", "swap", "disk"]

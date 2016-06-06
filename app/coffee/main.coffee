@@ -9,9 +9,9 @@ class HourlyStats
   constructor: (@$el, @options={}) ->
 
     # set defaults
-    if !@options.metrics then @options.metrics = ["cpu", "ram", "swap", "disk"]
-    if !@options.logsEnabled then @options.logsEnabled = false
-    if !@options.loglevel then @options.logLevel = "INFO"
+    if !@options.metrics      then @options.metrics     = ["cpu", "ram", "swap", "disk"]
+    if !@options.logsEnabled  then @options.logsEnabled = false
+    if !@options.loglevel     then @options.logLevel    = "INFO"
 
     # provide default data
     @options.stats = []

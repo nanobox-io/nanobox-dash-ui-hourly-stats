@@ -16,7 +16,7 @@
   }
 
   //
-  .divider            {background:$lighter-gray; width:1px; height:36px; margin:0 2px;}
+  .divider            {background:$lighter-gray; width:1px; margin:0 2px; align-self: stretch; }
 
   // live stats
   .live-stats         {display:inline-flex; margin-left:5px;
@@ -34,4 +34,10 @@
   .face               {margin-left:11px;
     .shadow-parent    {height:$face-size; width:$face-size;}
   }
+
+  &.compressed        {
+    .labels .label,
+    .percentages .percent {line-height: 8px;}
+  }
+
 }

@@ -21,8 +21,13 @@ module.exports = class StandardView
     #
     @stats = @options.stats
 
+    xtraClasses = ''
+    if @options.compressView
+      @vPadding   = 3
+      xtraClasses = 'compressed'
+
     #
-    @$node = $(view({stats:@stats}))
+    @$node = $(view({stats:@stats, xtraClasses:xtraClasses}))
     $el.append @$node
 
     #
@@ -63,7 +68,7 @@ module.exports = class StandardView
             width:     (self.maxWidth)
             height:    self.metricHeight
             class:     "background"
-            transform: "translate(0, #{(self.metricHeight*2)*i})" # a bars distances between each metric
+            transform: "translate(0, #{(self.metricHeight+self.vPadding)*i})" # a bars distances between each metric
 
     # create foreground bars
     foreground = @liveStats.selectAll(".stat").data(data)
@@ -74,7 +79,7 @@ module.exports = class StandardView
             width:     0
             height:    self.metricHeight
             class:     "stat fill-temp #{StatsUtils.getTemperature(d.value)}"
-            transform: "translate(0, #{(self.metricHeight*2)*i})" # a bars distances between each metric
+            transform: "translate(0, #{(self.metricHeight+self.vPadding)*i})" # a bars distances between each metric
 
     # update foreground bars
     foreground.data(data)
@@ -108,7 +113,7 @@ module.exports = class StandardView
           #
           group = d3.select(@).attr
             class: gd.metric
-            transform: "translate(0, #{(self.metricWidth*2)*i})" # a bars distances between each metric
+            transform: "translate(0, #{(self.metricHeight+self.vPadding)*i})" # a bars distances between each metric
 
           # foreground
           foreground = group.selectAll(".stat").data(gd.data)
