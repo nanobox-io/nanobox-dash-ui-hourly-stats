@@ -14,7 +14,7 @@ $dashboard_8:     #E6E6E6;
 $dashboard_73:    #48B5DA;
 $dashboard_82:    #1581BA;
 
-@import '../../libs/core-styles/core';
+@import '../../lib/assets/core-styles/core';
 
 // this mixin provides the cool/warm/hot "temperatures" for fills, strokes, etc.
 @include core-temperatures();
