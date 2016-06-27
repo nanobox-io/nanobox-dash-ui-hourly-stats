@@ -1,48 +1,47 @@
-//
-.expanded-view        {display:flex; flex-direction:column; position:relative; width:100%;
+.expanded-view                      {display:flex; flex-direction:column; position:relative; width:100%;
 
-  .stat-row           {display:flex;}
+  .stat-row                         {display:flex;}
 
   //
-  h4.title            {width:100%; margin:0px 0px 20px 0px; font-size:12px; line-height:12px; text-align:left; font-style:italic; color:#547F91;}
+  h4.title                          {width:100%; margin:0px 0px 20px 0px; font-size:12px; line-height:12px; text-align:left; font-style:italic; color:#547F91;}
 
   // histroical stats
-  .historical-stats   {
-    svg               {
-      g               {
-        rect          {fill:$lightest-gray; /*transition: fill 200ms ease;*/ }
+  .historical-stats                 {
+    svg                             {
+      g                             {
+        rect                        {fill:$lightest-gray; /*transition: fill 200ms ease;*/ }
       }
     }
   }
 
   // live stats
-  .live-stats         {margin-left:11px;
-    svg               {
-      rect            {fill:$lightest-gray; transition: fill 200ms ease;}
+  .live-stats                       {margin-left:11px;
+    svg                             {
+      rect                          {fill:$lightest-gray; transition: fill 200ms ease;}
     }
   }
 
   // stats
-  .stats              {position:relative;
-    .stat             {position:absolute; top:0px; left:5px; text-align:left; text-transform:uppercase; font-size:10px; line-height:12px; color:$gray; transition: color 200ms ease;
-      .percent        {font-size:14px;}
-      .label          {}
+  .stats                            {position:relative;
+    .stat                           {position:absolute; top:0px; left:5px; text-align:left; text-transform:uppercase; font-size:10px; line-height:12px; color:$gray; transition: color 200ms ease;
+      .percent                      {font-size:14px;}
+      .label                        {}
 
       // if you want something done right... do it manually.
-      &:nth-child(1)  {top:14px;}
-      &:nth-child(2)  {top:59px;}
-      &:nth-child(3)  {top:104px;}
-      &:nth-child(4)  {top:149px;}
+      &:nth-child(1)                {top:14px;}
+      &:nth-child(2)                {top:59px;}
+      &:nth-child(3)                {top:104px;}
+      &:nth-child(4)                {top:149px;}
     }
   }
 
   // timeline
-  .timeline           {position:relative; top:0px; left:-10px; font-size:10px; line-height:10px; fill:$gray; user-select:none;
-    svg               {
-      text            {text-anchor:middle;}
-      .time           {
-        &.primary     {fill:#6B7B8F; font-style:italic; font-weight:$medium; }
-        &.secondary   {fill:#6B7B8F; font-style:italic; font-weight:$medium; }
+  .timeline                         {position:relative; top:0px; left:-10px; font-size:10px; line-height:10px; fill:$gray; user-select:none;
+    svg                             {
+      text                          {text-anchor:middle;}
+      .time                         {
+        &.primary                   {fill:#6B7B8F; font-style:italic; font-weight:$medium; }
+        &.secondary                 {fill:#6B7B8F; font-style:italic; font-weight:$medium; }
       }
     }
   }

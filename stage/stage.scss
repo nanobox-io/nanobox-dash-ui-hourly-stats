@@ -1,8 +1,15 @@
-body          {margin:0; padding:0; background:#DFDFDF;}
+@import           '../lib/assets/core-styles/styles';
 
 //
-.view         { display:flex; margin-bottom:20px; background:white;
-  &.micro     { width:116px;  }
-  &.standard  { width:375px;}
-  &.expanded  { width:345px; padding:20px; box-sizing: border-box;}
+body {margin:0; padding:0; background:#DFDFDF;}
+
+//
+.nanobox-dash-ui-hourly-stats {display:flex; flex-direction:column; background:$white;
+
+  & > *                       {margin-bottom:20px;}
+
+  //
+  .micro-view                 {width:116px;}
+  .standard-view              {width:375px;}
+  .expanded-view              {width:345px; padding:20px; box-sizing: border-box;}
 }
