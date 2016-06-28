@@ -1,15 +1,17 @@
 @import '../lib/assets/core-styles/styles';
 
 //
-body {margin:0; padding:0; background:#DFDFDF;}
+body {margin:0; padding:0; background:#dfdfdf;}
 
 //
-.nanobox-dash-ui-hourly-stats {display:flex; flex-direction:column; background:$white;
+.nanobox-dash-ui-hourly-stats {display:flex; flex-direction:column; background:#ffffff;
 
   & > *                       {margin-bottom:20px;}
 
   //
-  .micro-view                 {width:116px;}
-  .standard-view              {width:375px;}
-  .expanded-view              {width:345px; padding:20px; box-sizing: border-box;}
+  .view                       {
+    &.micro                   {width:116px;}
+    &.standard                {width:375px;}
+    &.expanded                {width:345px; padding:20px; box-sizing: border-box;}
+  }
 }
