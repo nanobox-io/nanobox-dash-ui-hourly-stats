@@ -74,14 +74,17 @@
   }
 
   //
-  .slider                           {z-index:101; position:absolute; bottom:-68px; left:0px; width:640px; height:70px; padding:10px; background:$dark-blue; color:$light-blue; border-radius: 5px; user-select: none;
+  .slider                           {z-index:101; position:absolute; bottom:-45px; left:0px; width:640px; height:90px; padding:10px; background:$dark-blue; color:$light-blue; border-radius:5px; user-select:none;
     &.open                          {@include drop-shadow(0px, 1px, 4px, rgba(#013342, 0.6), 0px); display:inline-block !important;}
 
     .close                          {position:absolute; top:1px; right:5px; font-size:21px; line-height:21px; cursor:pointer; }
 
     //
-    .days                           {font-size:11px; margin-left:4px;
-      .day                          {display:inline-block; width:76px; text-align:center; }
+    // .days                           {font-size:11px; margin-left:4px;
+    //   .day                          {display:inline-block; width:76px; text-align:center; }
+    // }
+    .days                           {display:flex; align-items:center; justify-content:space-around; text-align:center;
+      .day                          {flex:1 1 20%;}
     }
 
     //
@@ -89,21 +92,23 @@
 
       //
       svg                           {position:absolute; top:0px; left:0px;
-        &.lines                     {}
-        &.data                      {top:40px; left:4px;}
+        &.lines                     {top:5px}
+        &.data                      {top:45px; left:4px;}
       }
 
       //
-      .handle                       {margin-top:-5px; height:62px; width:75px; position:absolute; z-index: 2; cursor:pointer;
-        &:hover:before              {opacity:0.5; @include transition(opacity, 0.1s); }
-        &:before                    {@include transition(opacity, 0.4s); content:""; position:absolute; background:#288EAD; top:0; bottom:0; left:0; width:100%; opacity:.3; z-index:-1; }
+      .handle                       {@include transition(background-color, 0.1s); display:flex; align-items:center; justify-content:space-between; z-index:2; position:absolute; top:2px; left:0px; width:75px; height:55px; background-color:rgba(#288EAD, 0.4); cursor:pointer;
+        &hover                      {background-color:rgba(#288EAD, 0.5);}
+        // &:hover:before              {opacity:0.5; @include transition(opacity, 0.1s); }
+
+        // &:before                    {@include transition(opacity, 0.4s); content:""; position:absolute; background:#288EAD; top:0; bottom:0; left:0; width:100%; opacity:.3; z-index:-1; }
 
         //
         .side                       {color:$yellow; text-align:center; font-size: 9px; margin:5px 3px;
-          .slider-label             {text-transform:uppercase;}
+          .slider-label             {display:flex; flex-direction:column; align-items:center; text-transform:uppercase;}
           .hour                     {font-size:13px; }
           &:before                  {content:""; position:absolute; top:-1px; bottom:-1px; width:3px; border:1px solid $white; }
-          &:after                   {content:""; position:absolute; top:28px; display:block; height:0px; width:0px; border:5px solid transparent; }
+          &:after                   {content:""; position:absolute; top:24px; display:block; height:0px; width:0px; border:5px solid transparent; }
 
           //
           &.left                    {float:left;

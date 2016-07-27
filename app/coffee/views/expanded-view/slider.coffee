@@ -150,7 +150,7 @@ module.exports = class Slider
   _drawTimeline: () =>
 
     #
-    @svg = d3.select($(".slide-range").get(0))
+    @svg = d3.select(@$node.find(".slide-range").get(0))
       .append("svg")
         .attr
           class: "lines"
@@ -201,7 +201,7 @@ module.exports = class Slider
 
   #
   _drawData : () ->
-    @svg = d3.select($(".slide-range").get(0))
+    @svg = d3.select(@$node.find(".slide-range").get(0))
       .append("svg")
         .attr
           class: "data"
