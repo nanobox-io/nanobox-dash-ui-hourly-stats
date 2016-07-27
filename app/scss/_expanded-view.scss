@@ -53,18 +53,13 @@
     &:before                        {@include bracket; left:-1px; border-right-color:transparent;}
     &:after                         {@include bracket; right:-1px; border-left-color:transparent;}
 
-    span                            {color:$dashboard_73;
-      // &:before                      {@include pagodacons(normal, '\0032'); margin-right:3px; font-size:16px;}
-      // &:after                       {@include svgArrow('up', 'blue'); content:""; position:absolute; top:7px; right:9px;}
-    }
+    span                            {color:$dashboard_73;}
 
     &:hover                         {background:$dashboard_73;
       &:after                       {color:$dashboard_82; border-color:$dashboard_82; border-left-color: transparent;}
       &:before                      {color:$dashboard_82; border-color:$dashboard_82; border-right-color:transparent;}
 
-      span                          {color:$dashboard_82;
-        // &:after                     {@include svgArrow('up', 'dashboard_85'); content:""; position:absolute; top:7px; right:9px;}
-      }
+      span                          {color:$dashboard_82;}
     }
   }
 
@@ -80,9 +75,6 @@
     .close                          {position:absolute; top:1px; right:5px; font-size:21px; line-height:21px; cursor:pointer; }
 
     //
-    // .days                           {font-size:11px; margin-left:4px;
-    //   .day                          {display:inline-block; width:76px; text-align:center; }
-    // }
     .days                           {display:flex; align-items:center; justify-content:space-around; text-align:center;
       .day                          {flex:1 1 20%;}
     }
@@ -99,9 +91,6 @@
       //
       .handle                       {@include transition(background-color, 0.1s); display:flex; align-items:center; justify-content:space-between; z-index:2; position:absolute; top:2px; left:0px; width:75px; height:55px; background-color:rgba(#288EAD, 0.4); cursor:pointer;
         &hover                      {background-color:rgba(#288EAD, 0.5);}
-        // &:hover:before              {opacity:0.5; @include transition(opacity, 0.1s); }
-
-        // &:before                    {@include transition(opacity, 0.4s); content:""; position:absolute; background:#288EAD; top:0; bottom:0; left:0; width:100%; opacity:.3; z-index:-1; }
 
         //
         .side                       {color:$yellow; text-align:center; font-size: 9px; margin:5px 3px;
