@@ -14,9 +14,9 @@ window.init = () ->
 
   # Micro View
   microData =
-    view        : "micro",
-    isContainer : false,
-    entity      : "host",
+    view        : "micro"
+    isContainer : false
+    entity      : "host"
     entityId    : "asdf2312341"
     days        : 1
   micro = new nanobox.HourlyStats $("#micro1"), microData
