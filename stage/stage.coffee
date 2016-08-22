@@ -30,7 +30,7 @@ window.init = () ->
     entityId    : "asdf2312342"
     days        : 1
 
-  micro2 = new nanobox.HourlyStats $("#micro2  ")
+  micro2 = new nanobox.HourlyStats $("#micro2  "), micro2Data
   micro2.build()
 
   # Standard View
@@ -41,7 +41,7 @@ window.init = () ->
     entityId    : "asdf2312343"
     days        : 1
 
-  standard = new nanobox.HourlyStats $("#standard1")
+  standard = new nanobox.HourlyStats $("#standard1"), standardData
   standard.build()
 
   standard2Data =
@@ -52,7 +52,7 @@ window.init = () ->
     entityId    : "asdf2312344"
     days        : 1
 
-  standard2 = new nanobox.HourlyStats $("#standard2")
+  standard2 = new nanobox.HourlyStats $("#standard2"), standard2Data
   standard2.build()
 
   standard3Data =
@@ -62,7 +62,7 @@ window.init = () ->
     entityId     : "asdf2312345"
     days         : 1
 
-  standard3 = new nanobox.HourlyStats $("#standard3")
+  standard3 = new nanobox.HourlyStats $("#standard3"), standard3Data
   standard3.build()
 
   # Expanded View
@@ -73,7 +73,7 @@ window.init = () ->
     entityId    : "asdf2312346"
     days        : 7
 
-  expanded = new nanobox.HourlyStats $("#expanded1")
+  expanded = new nanobox.HourlyStats $("#expanded1"), expandedData
   expanded.build()
 
   expanded2Data =
@@ -84,5 +84,5 @@ window.init = () ->
     entityId    : "asdf2312347"
     days        : 7
 
-  expanded2 = new nanobox.HourlyStats $("#expanded2")
+  expanded2 = new nanobox.HourlyStats $("#expanded2"), expanded2Data
   expanded2.build()
