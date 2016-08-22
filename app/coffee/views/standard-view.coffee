@@ -144,7 +144,12 @@ module.exports = class StandardView
       callback       : @updateLiveStats
     }
 
+
+    # TODO : Add these additional parameters when publishing the need for stats
     PubSub.publish 'STATS.SUBSCRIBE.HISTORIC', {
       statProviderId : id
       callback       : @updateHistoricStats
+      # entity      (Provided on instantiation)
+      # entityId    (Provided on instantiation)
+      # metric      (ram, cpu, disk, swap)
     }

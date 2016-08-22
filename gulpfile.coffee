@@ -113,7 +113,7 @@ compileFiles = (doWatch=false, cb) ->
     {meth:htmlStage,  glob:jadeStagePath}
     {meth:jsStage,    glob:stageJsPath}
     {meth:js,         glob:appJsPath}
-    {meth:copyAssets, glob:assetPath, params:['./server/assets/core-styles/', onComplete]}
+    {meth:copyAssets, glob:assetPath, params:['./server/assets/', onComplete]}
   ]
 
   createWatcher = (item, params)->
