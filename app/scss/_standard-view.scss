@@ -1,43 +1,37 @@
-//
-.standard-view        {display:flex; width:100%; align-items:center;
+.standard-view            {display:flex; width:100%; align-items:center;
 
   // labels
-  .labels             {text-align:right;
-    .label            {font-size:8px; line-height:10px; color:$gray; text-transform:uppercase;}
+  .labels                 {text-align:right;
+    .label                {font-size:8px; line-height:10px; color:$gray; text-transform:uppercase;}
   }
 
   // histroical stats
-  .historical-stats   {display:inline-flex; margin-left:5px;
-    svg               {
-      g               {
-        rect          {fill:$lightest-gray; transition: fill 200ms ease;}
+  .historical-stats       {display:inline-flex; margin-left:5px;
+    svg                   {
+      g                   {
+        rect              {fill:$lightest-gray; transition: fill 200ms ease;}
       }
     }
   }
 
   //
-  .divider            {background:$lighter-gray; width:1px; margin:0 2px; align-self: stretch; }
+  .divider                {background:$lighter-gray; width:1px; margin:0 2px; align-self: stretch; }
 
   // live stats
-  .live-stats         {display:inline-flex; margin-left:5px;
-    svg               {
-      rect            {fill:$lightest-gray; transition: fill 200ms ease;}
+  .live-stats             {display:inline-flex; margin-left:5px;
+    svg                   {
+      rect                {fill:$lightest-gray; transition: fill 200ms ease;}
     }
   }
 
   // percentages
-  .percentages        {margin-left:5px;
-    .percent          {font-size:8px; line-height:10px; color:$gray; text-align:left;}
+  .percentages            {margin-left:5px;
+    .percent              {font-size:8px; line-height:10px; color:$gray; text-align:left;}
   }
 
-  // face
-  .face               {margin-left:11px;
-    .shadow-parent    {height:$face-size; width:$face-size;}
-  }
-
-  &.compressed        {
+  //
+  &.compressed            {
     .labels .label,
     .percentages .percent {line-height: 8px;}
   }
-
 }

@@ -56,7 +56,7 @@ module.exports = class ExpandedView
 
     # create the slider and add toggle
     @slider ||= new Slider(@$node, @)
-    $(".toggle-slider").click (e) => @slider.open()
+    @$node.find(".toggle-slider").click (e) => @slider.open()
 
     #
     @_subscribeToStatData(@options.id)

@@ -1,4 +1,3 @@
-//
 .micro-view           {display:flex; align-items:center;
 
   //
@@ -14,10 +13,5 @@
     svg               {margin-top: -2px;
       rect            {fill:$lightest-gray; transition: fill 200ms ease;}
     }
-  }
-
-  // face
-  .face               {
-    .shadow-parent    {height:$face-size; width:$face-size;}
   }
 }
