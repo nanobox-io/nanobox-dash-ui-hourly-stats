@@ -10,10 +10,11 @@ module.exports = class TestData
     PubSub.subscribe 'STATS.SUBSCRIBE.LIVE', (m, data)=>
       # console.log "live stats:"
       # console.log JSON.stringify statsDataSimultor.generateLiveStats()
-      data.callback statsDataSimultor.generateLiveStats()
-      setInterval () ->
 
-        # disable updates by default
+      data.callback statsDataSimultor.generateLiveStats()
+
+      # auto updates; disabled by default
+      setInterval () ->
         if window.enableUpdates
           data.callback statsDataSimultor.generateLiveStats()
       , 5000
@@ -24,14 +25,11 @@ module.exports = class TestData
       # console.log JSON.stringify statsDataSimultor.generateHistoricalStats()
 
       data.callback statsDataSimultor.generateHistoricalStats()
-      setInterval () ->
 
-        # disable updates by default
+      # auto update; disabled by default
+      setInterval () ->
         if window.enableUpdates
-          for i in [0..4]
-            setTimeout () ->
-              data.callback statsDataSimultor.generateHistoricalStat()
-            , Math.floor((Math.random()*1000) + 250)
+          data.callback statsDataSimultor.generateHistoricalStat()
       , 5000
 
     #
@@ -39,20 +37,50 @@ module.exports = class TestData
 
   # generate data for each metric
   generateLiveStats : (isContainer) ->
-    stats = []
-    for metric in @getMetrics(isContainer)
-      stats.push {metric: metric, value: (Math.random() * 1.00) + 0.00}
-    stats
+
+    # update all stats simultaniously
+    #
+    # stats = []
+    #
+    # for metric in @getMetrics(isContainer)
+    #   stats.push {metric: metric, value: (Math.random() * 1.00) + 0.00}
+    #
+    # return stats
+
+    # update a random single stat
+    metrics = @getMetrics(isContainer)
+    metric = metrics[Math.floor(Math.random()*metrics.length)]
+
+    # console.log "LIVE METRIC!", metric
+
+    #
+    return {metric: metric, value: (Math.random() * 1.00) + 0.00}
 
   # generate hourly data for each metric
   generateHistoricalStats : (isContainer) ->
-    stats = []
-    for metric in @getMetrics(isContainer)
-      data = []
-      for hour in [0..24]
-        data.push {time: "#{("0" + hour).slice(-2)}", value: ((Math.random() * 1.00) + 0.00)}
-      stats.push {metric: metric, data: data}
-    stats
+
+    # update all stats simultaniously
+    #
+    # stats = []
+    #
+    # for metric in @getMetrics(isContainer)
+    #   data = []
+    #   for hour in [0..24]
+    #     data.push {time: "#{("0" + hour).slice(-2)}", value: ((Math.random() * 1.00) + 0.00)}
+    #   stats.push {metric: metric, data: data}
+    #
+    # return stats
+
+    # update a random single stat
+    metrics = @getMetrics(isContainer)
+    metric = metrics[Math.floor(Math.random()*metrics.length)]
+
+    data = []
+    for hour in [0..24]
+      data.push {time: "#{("0" + hour).slice(-2)}", value: ((Math.random() * 1.00) + 0.00)}
+
+    #
+    return {metric: metric, data: data}
 
   # generate hourly data for a single metric
   generateHistoricalStat : (isContainer) ->
@@ -67,12 +95,13 @@ module.exports = class TestData
       data.push {time: "#{("0" + hour).slice(-2)}", value: ((Math.random() * 1.00) + 0.00)}
 
     # return the single metric with its data
-    [{metric: metric, data: data}]
+    {metric: metric, data: data}
 
+  #
   getMetrics : (isContainer) ->
-    # It's a container..
-    if isContainer
-      ["cpu", "ram"]
+
+    # It's a container
+    if isContainer then ["cpu", "ram"]
+
     # It's a host
-    else
-      ["cpu", "ram", "swap", "disk"]
+    else ["cpu", "ram", "swap", "disk"]

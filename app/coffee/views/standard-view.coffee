@@ -1,5 +1,5 @@
-Face            = require 'misc/face'
-StatsUtils      = require 'misc/stats-utils'
+Face       = require 'misc/face'
+StatsUtils = require 'misc/stats-utils'
 
 #
 view = require 'jade/standard-view'
@@ -7,149 +7,106 @@ view = require 'jade/standard-view'
 #
 module.exports = class StandardView
 
-  # options; I'd love to figure out a way to calculate these rather than just
-  # having them hard coded...
-  _numMetrics:   25 # figure out a better way to know this rather than just happening to know it's 24...
-  _metricHeight: 5
-  _metricWidth:  5
-  _vPadding:     5
-  _hPadding:     4
-  _maxWidth:     50
-
   #
-  constructor: ($el, @options={}) ->
-
-    #
-    @stats = @options.stats
-
-    xtraClasses = ''
-    if @options.compressView
-      @_vPadding   = 3
-      xtraClasses = 'compressed'
-
-    #
-    @$node = $(view({stats:@stats, xtraClasses:xtraClasses}))
+  constructor: ($el, @options={}, @main) ->
+    @$node = $(view({classes: @options.classes}))
     $el.append @$node
 
-  # build svgs
+  #
   build : () ->
+    @view = d3.select($(".standard-view", @$node).get(0))
+    @face = new Face $(".standard-view .face", @$node), "true"
+    @_subscribeToStatData()
 
-    # add histroical stats
-    @historicStats = d3.select($(".historical-stats", @$node).get(0))
-      .append("svg")
-        .attr
-          width:  @_numMetrics*(@_metricWidth+@_hPadding)
-          height: @stats.length*(@_metricHeight + @_vPadding) - @_vPadding
-
-    # add live stats
-    @liveStats = d3.select($(".live-stats", @$node).get(0))
-      .append("svg")
-        .attr
-          width:  @_maxWidth
-          height: @stats.length*(@_metricHeight + @_vPadding) - @_vPadding
-
-    # add face
-    @face = new Face $(".face", @$node), "true"
-
-    #
-    @_subscribeToStatData(@options.id)
-
-  # updates live stats, percentages, and face
+  #
   updateLiveStats : (data) =>
 
-    self = @
+    #
+    data = @main.updateStoredLiveStats(data)
 
-    # create background bars
-    background = @liveStats.selectAll(".background").data(data)
-    background.enter()
-      .append("svg:rect")
-        .each (d, i) ->
-          d3.select(@).attr
-            width:     (self._maxWidth)
-            height:    self._metricHeight
-            class:     "background"
-            transform: "translate(0, #{(self._metricHeight+self._vPadding)*i})" # a bars distances between each metric
+    # this needs to correspond with the value in CSS so that the ratio is correct
+    maxWidth = 50
 
-    # create foreground bars
-    foreground = @liveStats.selectAll(".stat").data(data)
-    foreground.enter()
-      .append("svg:rect")
-        .each (d, i) ->
-          d3.select(@).attr
-            width:     0
-            height:    self._metricHeight
-            class:     "stat fill-temp #{StatsUtils.getTemperature(d.value)}"
-            transform: "translate(0, #{(self._metricHeight+self._vPadding)*i})" # a bars distances between each metric
+    ## UPDATE
 
-    # update foreground bars
-    foreground.data(data)
-      .each (d) ->
-        d3.select(@)
-          .transition().delay(0).duration(500)
-          .attr
-            width: (d.value*self._maxWidth) - d.value
-            class: "stat fill-temp #{StatsUtils.getTemperature(d.value)}"
+    # metrics
+    @view.select(".metrics").selectAll(".metric").data(data).text (d) -> d.metric
 
-    # update percentages
-    for d in data
-      $(".percentages", @$node).find(".#{d.metric}").text "#{Math.round(d.value*100)}%"
+    # values
+    @view.select(".current-stats").selectAll(".foreground").data(data)
+      .style("width", (d) -> "#{(d.value*maxWidth) - d.value}px")
+      .attr("class", (d) -> "foreground background-temp #{StatsUtils.getTemperature(d.value)}")
 
-    # update face
+    # percent
+    @view.select(".percents").selectAll(".percent").data(data).text (d) -> "#{Math.round(d.value*100)}%"
+
+    # face
     @face.update StatsUtils.getOverallTemperature(data)
+
+    ## CREATE
+
+    # metrics
+    @view.select(".metrics").selectAll("div").data(data)
+      .enter().append("div").attr(class: "metric").text (d) -> d.metric
+
+    # values
+    valueEnter = @view.select(".current-stats").selectAll("div").data(data)
+      .enter().append("div").attr(class: "value")
+    valueEnter.append("div")
+      .style("width", (d) -> "#{(d.value*maxWidth) - d.value}px")
+      .attr("class", (d) -> "foreground background-temp #{StatsUtils.getTemperature(d.value)}")
+    valueEnter.append("div").attr(class: "background")
+
+    # percent
+    @view.select(".percents").selectAll("div").data(data)
+      .enter().append("div").attr(class: "percent").text (d) -> "#{Math.round(d.value*100)}%"
 
   # updateHistoricStats
   updateHistoricStats : (data) =>
 
-    self = @
+    #
+    data = @main.updateStoredHistoricalStats(data)
 
-    # add stat groups
-    groups = @historicStats.selectAll("g").data(data)
+    ## UPDATE
 
-    # create stats
-    groups.enter()
-      .append("svg:g")
-        .each (gd, i) ->
+    @view.select(".historic-stats").selectAll(".stat").data(data)
+      .each (d) ->
+        d3.select(@).selectAll(".foreground").data(d.data)
+          .attr("class", (d) -> "foreground background-temp #{StatsUtils.getTemperature(d.value)}")
 
-          #
-          group = d3.select(@).attr
-            class: gd.metric
-            transform: "translate(0, #{(self._metricHeight+self._vPadding)*i})" # a bars distances between each metric
+    ## CREATE
 
-          # foreground
-          foreground = group.selectAll(".stat").data(gd.data)
-          foreground.enter()
-            .append("svg:rect")
-              .each (bd, j) ->
-                d3.select(@).attr
-                  x:      (self._metricWidth + self._hPadding)*j
-                  width:  self._metricWidth
-                  height: self._metricHeight
-                  class:  "stat fill-temp #{StatsUtils.getTemperature(bd.value)}"
+    # historic stat container
+    @view.select(".historic-stats").selectAll("div").data(data)
+      .enter()
+        .append("div").attr(class: "stat")
+          .each (d) ->
 
-    # update stats
-    groups.data(data)
-      .each (gd) ->
-
-        # foreground
-        foreground = self.historicStats.select(".#{gd.metric}").selectAll(".stat").data(gd.data)
-        foreground.data(gd.data)
-          .each (bd) ->
-            d3.select(@).attr
-              class:  "stat fill-temp #{StatsUtils.getTemperature(bd.value)}"
+            # historic stats
+            statEnter = d3.select(@).selectAll("div").data(d.data)
+              .enter().append("div").attr(class: "value")
+            statEnter.append("div").attr("class", (d) -> "foreground background-temp #{StatsUtils.getTemperature(d.value)}")
+            statEnter.append("div").attr(class: "background")
 
   #
-  _subscribeToStatData : (id) ->
+  _subscribeToStatData : () ->
+
+    #
     PubSub.publish 'STATS.SUBSCRIBE.LIVE', {
-      statProviderId : id
+      start          : @options.start
+      end            : @options.end
+      entity         : @options.entity
+      entityId       : @options.entityId
+      metrics        : @options.metrics
       callback       : @updateLiveStats
     }
 
-
-    # TODO : Add these additional parameters when publishing the need for stats
+    #
     PubSub.publish 'STATS.SUBSCRIBE.HISTORIC', {
-      statProviderId : id
+      start          : @options.start
+      end            : @options.end
+      entity         : @options.entity
+      entityId       : @options.entityId
+      metrics        : @options.metrics
       callback       : @updateHistoricStats
-      # entity      (Provided on instantiation)
-      # entityId    (Provided on instantiation)
-      # metric      (ram, cpu, disk, swap)
     }

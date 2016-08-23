@@ -1,31 +1,26 @@
 .nanobox-dash-ui-hourly-stats
-  .expanded-view
-    
-    //- 
-    .stat-row
-      .historical-stats
-      .live-stats
-      .stats
-        each stat in stats
-          .stat.color-temp(class = stat.metric)
-            .percent #{stat.value}%
-            .label #{stat.metric}
+  .expanded-view(class="#{classes}")
+  
+    .stats
+      .historic-stats
+      .current-stats
+      .metas
     
     //- 
     .timeline
-
+    
     //- 
     .toggle-slider
       span Date Range
       
     //- 
-    .slider-dropshield(style = "display:none;")
-    .slider(style = "display:none;")
-      .close &times;
-      .days
-      
-      //- 
-      .slide-range
-        .handle
-          .side.left
-          .side.right
+    //- .slider-dropshield(style = "display:none;")
+    //- .slider(style = "display:none;")
+    //-   .close &times;
+    //-   .days
+    //-   
+    //-   //- 
+    //-   .slide-range
+    //-     .handle
+    //-       .side.left
+    //-       .side.right

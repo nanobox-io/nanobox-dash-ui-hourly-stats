@@ -1,5 +1,5 @@
-Face        = require 'misc/face'
-StatsUtils  = require 'misc/stats-utils'
+Face       = require 'misc/face'
+StatsUtils = require 'misc/stats-utils'
 
 #
 view = require 'jade/micro-view'
@@ -7,80 +7,58 @@ view = require 'jade/micro-view'
 #
 module.exports = class MicroView
 
-  # options; I'd love to figure out a way to calculate these rather than just
-  # having them hard coded...
-  _metricHeight: 5
-  _vPadding:     3
-  _maxWidth:     42
-
   #
-  constructor: ($el, @options={}) ->
-
-    #
-    @stats = @options.stats
-
-    #
-    @$node = $(view({labels:@stats}))
+  constructor: ($el, @options={}, @main) ->
+    @$node = $(view(classes: @options.classes))
     $el.append @$node
 
-  # build the svg
+  #
   build : () ->
-
-    # add live stats
-    @liveStats = d3.select($(".live-stats", @$node).get(0))
-      .append("svg")
-        .attr
-          width:  @_maxWidth
-          height: @stats.length*(@_metricHeight + @_vPadding) - @_vPadding
-
-    # add face
-    @face = new Face $(".face", @$node), "true"
-
-    #
-    @_subscribeToStatData(@options.id)
-
-  # updates live stats, and face
-  updateLiveStats : (data) =>
-
-    self = @
-
-    # create background bars
-    background = @liveStats.selectAll(".background").data(data)
-    background.enter()
-      .append("svg:rect")
-        .each (d, i) ->
-          d3.select(@).attr
-            width:     (self._maxWidth)
-            height:    self._metricHeight
-            class:     "background"
-            transform: "translate(0, #{(self._metricHeight + self._vPadding)*i})" # a bars distances between each metric
-
-    # create foreground bars
-    foreground = @liveStats.selectAll(".stat").data(data)
-    foreground.enter()
-      .append("svg:rect")
-        .each (d, i) ->
-          d3.select(@).attr
-            width:     0
-            height:    self._metricHeight
-            class:     "stat fill-temp #{StatsUtils.getTemperature(d.value)}"
-            transform: "translate(0, #{(self._metricHeight + self._vPadding)*i})" # a bars distances between each metric
-
-    # update foreground bars
-    foreground.data(data)
-      .each (d) ->
-        d3.select(@)
-          .transition().delay(0).duration(500)
-          .attr
-            width: (d.value*self._maxWidth) - d.value
-            class: "stat fill-temp #{StatsUtils.getTemperature(d.value)}"
-
-    # update face
-    @face.update StatsUtils.getOverallTemperature(data)
+    @view = d3.select($(".micro-view", @$node).get(0))
+    @face = new Face $(".micro-view .face", @$node), "true"
+    @_subscribeToStatData()
 
   #
-  _subscribeToStatData : (id) ->
+  updateStats : (data) =>
+
+    #
+    data = @main.updateStoredLiveStats(data)
+
+    # this needs to correspond with the value in CSS so that the ratio is correct
+    maxWidth = 50
+
+    ## UPDATE
+
+    # metrics
+    @view.select(".metrics").selectAll(".metric").data(data).text (d) -> d.metric
+
+    # values
+    @view.select(".current-stats").selectAll(".foreground").data(data)
+      .style("width", (d) -> "#{(d.value*maxWidth) - d.value}px")
+      .attr("class", (d) -> "foreground background-temp #{StatsUtils.getTemperature(d.value)}")
+
+    # face
+    @face.update StatsUtils.getOverallTemperature(data)
+
+    ## CREATE
+
+    # metrics
+    @view.select(".metrics").selectAll("div").data(data)
+      .enter().append("div").attr(class: "metric").text (d) -> d.metric
+
+    # values
+    valueEnter = @view.select(".current-stats").selectAll("div").data(data)
+      .enter().append("div").attr(class: "value")
+    valueEnter.append("div")
+      .attr("class", (d) -> "foreground background-temp #{StatsUtils.getTemperature(d.value)}")
+      .style("width", (d) -> "#{(d.value*maxWidth) - d.value}px")
+    valueEnter.append("div").attr(class: "background")
+
+  #
+  _subscribeToStatData : () ->
     PubSub.publish 'STATS.SUBSCRIBE.LIVE', {
-      statProviderId : id
-      callback       : @updateLiveStats
+      entity         : @options.entity
+      entityId       : @options.entityId
+      metrics        : @options.metrics
+      callback       : @updateStats
     }

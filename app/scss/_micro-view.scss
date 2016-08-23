@@ -1,17 +1,17 @@
 .micro-view           {display:flex; align-items:center;
 
-  //
-  & > *               { margin:0px 4px; }
+  // metrics
+  .metric             {@include font-size(8px); position:relative; top:1px; width:27px; margin-right:5px; color:$gray; text-align:right; text-transform:uppercase;}
 
-  // labels
-  .labels             {text-align:right;
-    .label            {font-size:8px; line-height:8px; color:$gray; text-transform:uppercase;}
-  }
-
-  // live stats
-  .live-stats         {display:flex;
-    svg               {margin-top: -2px;
-      rect            {fill:$lightest-gray; transition: fill 200ms ease;}
+  // current-stats
+  .current-stats      {width:50px;
+    .value            {position:relative; height:5px; &:not(:last-child) {margin-bottom:3px;}
+      & > *           {height:inherit; background:$lightest-gray;}
+      .foreground     {@include transition(all, 0.25s); position:absolute; top:0px; left:0px; z-index:1;}
+      .background     {position:absolute; top:0px; left:0px; z-index:0; width:100%;}
     }
   }
+
+  //
+  .face               {}
 }

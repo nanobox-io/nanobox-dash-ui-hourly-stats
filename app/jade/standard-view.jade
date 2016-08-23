@@ -1,12 +1,7 @@
 .nanobox-dash-ui-hourly-stats
-  .standard-view(class="#{xtraClasses}")
-    .labels
-      each stat in stats
-        .label #{stat.metric}
-    .historical-stats
-    .divider
-    .live-stats
-    .percentages
-      each stat in stats
-        .percent(class = stat.metric) #{stat.value}%
+  .standard-view(class="#{classes}")
+    .metrics
+    .historic-stats
+    .current-stats
+    .percents
     .face

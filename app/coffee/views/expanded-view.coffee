@@ -7,65 +7,32 @@ view = require 'jade/expanded-view'
 #
 module.exports = class ExpandedView
 
-  # options; I'd love to figure out a way to calculate these rather than just
-  # having them hard coded...
-  _numMetrics:   25 # figure out a better way to know this rather than just happening to know it's 24...
-  _metricHeight: 35
-  _metricWidth:  5
-  _liveWidth:    12
-  _vPadding:     10
-  _hPadding:     5
-
   #
-  constructor: ($el, @options={}) ->
-
-    #
-    @stats = @options.stats
-
-    #
-    @$node = $(view({stats:@stats}))
+  constructor: ($el, @options={}, @main) ->
+    @$node = $(view({classes: @options.classes}))
     $el.append @$node
 
-  # build svgs
+  #
   build : () ->
 
-    # add histroical stats svg
-    @historicStats = d3.select($(".historical-stats", @$node).get(0))
-      .append("svg")
-        .attr
-          width:  @_numMetrics*(@_metricWidth+@_hPadding)
-          height: @stats.length*(@_metricHeight + @_vPadding) - @_vPadding
-
-    # add live stats svg
-    @liveStats = d3.select($(".live-stats", @$node).get(0))
-      .append("svg")
-        .attr
-          width:  @_liveWidth
-          height: @stats.length*(@_metricHeight + @_vPadding) - @_vPadding
+    @view = d3.select($(".expanded-view", @$node).get(0))
+    @_subscribeToStatData()
 
     # add timeline; we need to add a little to the width to account for the beginning
     # and ending values which can't get cut off
     @timeline = d3.select($(".timeline", @$node).get(0))
-      .append("svg")
-        .attr
-          width  : @_numMetrics*(@_metricWidth + @_hPadding) + 15
-          height : @_metricHeight
 
     # add the timeline and set to "right now"
     @updateTimeline(moment())
 
     # create the slider and add toggle
     @slider ||= new Slider(@$node, @)
-    @$node.find(".toggle-slider").click (e) => @slider.open()
-
-    #
-    @_subscribeToStatData(@options.id)
-
+    @$node.find(".toggle-slider").click (e) =>
+      console.log "CLICK!"
+      @slider.open()
 
   #
   updateTimeline : (endDate) ->
-
-    self = @
 
     #
     now = moment()
@@ -78,193 +45,177 @@ module.exports = class ExpandedView
     for i in [1..25]
       timeline.unshift moment(endDate).subtract(i, "hours")
 
-    # create timeline
-    time = @timeline.selectAll(".time").data(timeline)
-    time.enter()
-      .append("svg:g")
-        .attr
-          class: "time"
-          transform: "translate(0, 0)"
+    ## UPDATE
 
-      .each (d, i) ->
-        group = d3.select(@)
+    # update timeline
+    @timeline.selectAll(".time").data(timeline)
+      .each (d)  ->
+
+        thing = d3.select(@)
+
+        diff = now.diff(d, "hours")
+
+        #
+        switch
+
+          # one hour ago (if the date matches todays date); we need to catch this
+          # before the mod
+          when diff == 1 && d.date() == moment().date()
+            thing.select(".hour").text("1hr")
+            thing.select(".period").text("ago")
+
+          # 24 hours from 1 hour ago (if the date matches yesterdays date); we need
+          # to catch this before the mod
+          when diff == 25 && d.date() == moment().subtract(1, "day").date()
+            thing.select(".hour").text("24hrs")
+            thing.select(".period").text("ago")
+
+          # every 6 hours; we want the diff to be 1 because we're going from 1 hour
+          # ago (not right now)
+          else
+            thing.select(".hour").text(d.format("h"))
+            thing.select(".period").text(d.format("a"))
+
+    ## CREATE
+
+    #
+    timeEnter = @timeline.selectAll("div").data(timeline)
+      .enter()
+        .append("div")
+          .attr(class: "time")
+
+      #
+      .each (d) ->
+        # group = d3.select(@)
 
         #
         diff = now.diff(d, "hours")
 
         # not really happy about this because 10 and 11 are just arbitrary numbers
         # that happen to make it work...
-        pos = (10*i+1)+11
+        # pos = (10*i+1)+11
+
+        thing = d3.select(@)
 
         switch
 
           # one hour ago; we need to catch this before the mod
           when diff == 1
-            group.attr(class: "time primary", transform: "translate(#{pos}, 0)")
-            group.append("svg:rect").attr(width: 1, height: 4, class: "tick")
-            group.append("svg:text").text("1hr").attr(y: 15, class: "hour")
-            group.append("svg:text").text("ago").attr(y: 23, class: "period")
+            thing.attr(class: "time primary")
+            thing.append("div").text("1hr").attr(class: "hour")
+            thing.append("div").text("ago").attr(class: "period")
 
           # 24 hours from 1 hour ago; we need to catch this before the mod
           when diff == 25
-            group.attr(class: "time primary", transform: "translate(#{pos}, 0)")
-            group.append("svg:rect").attr(width: 1, height: 4, class: "tick")
-            group.append("svg:text").text("24hrs").attr(y: 15, class: "hour")
-            group.append("svg:text").text("ago").attr(y: 23, class: "period")
+            thing.attr(class: "time primary")
+            thing.append("div").text("24hrs").attr(class: "hour")
+            thing.append("div").text("ago").attr(class: "period")
 
           # every 6 hours; we want the diff to be 1 because we're going from 1
           # hour ago (not right now)
           when diff % 6 == 1
-            group.attr(class: "time secondary", transform: "translate(#{pos}, 0)")
-            group.append("svg:rect").attr(width: 1, height: 4, class: "tick")
-            group.append("svg:text").text(d.format("h")).attr(y: 15, class: "hour")
-            group.append("svg:text").text(d.format("a")).attr(y: 23, class: "period")
+            thing.attr(class: "time secondary")
+            thing.append("div").text(d.format("h")).attr(class: "hour")
+            thing.append("div").text(d.format("a")).attr(class: "period")
           else return
 
-    # update timeline
-    time.data(timeline).each (d, i) ->
-      group = d3.select(@)
-
-      #
-      diff = now.diff(d, "hours")
-
-      #
-      switch
-
-        # one hour ago (if the date matches todays date); we need to catch this
-        # before the mod
-        when diff == 1 && d.date() == moment().date()
-          group.select(".hour").text("1hr")
-          group.select(".period").text("ago")
-
-        # 24 hours from 1 hour ago (if the date matches yesterdays date); we need
-        # to catch this before the mod
-        when diff == 25 && d.date() == moment().subtract(1, "day").date()
-          group.select(".hour").text("24hrs")
-          group.select(".period").text("ago")
-
-        # every 6 hours; we want the diff to be 1 because we're going from 1 hour
-        # ago (not right now)
-        else
-          group.select(".hour").text(d.format("h"))
-          group.select(".period").text(d.format("a"))
-
-  # updates live stats, and percentages
+  #
   updateLiveStats : (data) =>
 
-    self = @
-
     #
-    y = d3.scale.linear().range([self._metricHeight, 0])
+    data = @main.updateStoredLiveStats(data)
 
-    # create background bars
-    background = @liveStats.selectAll(".background").data(data)
-    background.enter()
-      .append("svg:rect")
-        .each (d, i) ->
-          d3.select(@).attr
-            width:     self._liveWidth
-            height:    self._metricHeight
-            class:     "background"
-            transform: "translate(0, #{(self._metricHeight + (self._metricWidth*2))*i})" # a bars distances between each metric
+    # this needs to correspond with the value in CSS so that the ratio is correct
+    maxHeight = 50
 
-    # create foreground bars
-    foreground = @liveStats.selectAll(".stat").data(data)
-    foreground.enter()
-      .append("svg:rect")
-        .each (d, i) ->
-          d3.select(@).attr
-            y:         y(d.value)
-            width:     self._liveWidth
-            height:    self._metricHeight - y(d.value)
-            class:     "stat fill-temp #{StatsUtils.getTemperature(d.value)}"
-            transform: "translate(0, #{(self._metricHeight + (self._metricWidth*2))*i})" # a bars distances between each metric
+    ## UPDATE
 
-    # update foreground bars
-    foreground.data(data)
-      .each (d) ->
-        d3.select(@)
-          .transition().delay(0).duration(500)
-          .attr
-            y:      y(d.value)
-            height: self._metricHeight - y(d.value)
-            class:  "stat fill-temp #{StatsUtils.getTemperature(d.value)}"
+    # values
+    @view.select(".stats .current-stats").selectAll(".foreground").data(data)
+      .style("height", (d) -> "#{(d.value*maxHeight) - d.value}px")
+      .attr("class", (d) -> "foreground background-temp #{StatsUtils.getTemperature(d.value)}")
 
-    # update percentages
-    for d in data
-      stat = $(".stats", @$node).find(".#{d.metric}")
-      stat.removeClass("sleep cold warm hot")
-      stat.addClass(StatsUtils.getTemperature(d.value))
-      stat.find(".percent").text "#{Math.round(d.value*100)}%"
+    # metas; percents & metrics
+    @view.select(".stats .metas").selectAll(".percent").data(data)
+      .text (d) -> "#{Math.round(d.value*100)}%"
+      .attr("class", (d) -> "percent color-temp #{StatsUtils.getTemperature(d.value)}")
+    @view.select(".stats .metas").selectAll(".metric").data(data)
+      .text (d) -> d.metric
+      .attr("class", (d) -> "metric color-temp #{StatsUtils.getTemperature(d.value)}")
 
-  # updates historic stats
-  updateHistoricStats : (data) =>
+    ## CREATE
 
-    self = @
+    # values
+    valueEnter = @view.select(".stats .current-stats").selectAll("div").data(data)
+      .enter().append("div").attr(class: "value")
+    valueEnter.append("div")
+      .style("height", (d) -> "#{(d.value*maxHeight) - d.value}px")
+      .attr("class", (d) -> "foreground background-temp #{StatsUtils.getTemperature(d.value)}")
+    valueEnter.append("div").attr(class: "background")
 
-    #
-    y = d3.scale.linear().range([self._metricHeight, 0])
-
-    # add metric groups
-    groups = @historicStats.selectAll("g").data(data)
-
-    # create metrics
-    groups.enter()
-      .append("svg:g")
-        .each (gd, i) ->
-
-          # metric group
-          group = d3.select(@).attr
-            class: gd.metric
-            transform: "translate(0, #{(self._metricHeight + 10)*i})" # a bars distances between each metric
-
-          # background bars
-          background = group.selectAll(".background").data(gd.data)
-          background.enter()
-            .append("svg:rect")
-              .each (bd, j) ->
-                d3.select(@).attr
-                  x:      (self._metricWidth + self._hPadding)*j
-                  width:  self._metricWidth
-                  height: self._metricHeight
-                  class:  "background"
-
-          # foreground bars
-          foreground = group.selectAll(".stat").data(gd.data)
-          foreground.enter()
-            .append("svg:rect")
-              .each (bd, j) ->
-                d3.select(@).attr
-                  x:      (self._metricWidth + self._hPadding)*j
-                  y:      y(bd.value)
-                  width:  self._metricWidth
-                  height: self._metricHeight - y(bd.value)
-                  class:  "stat fill-temp #{StatsUtils.getTemperature(bd.value)}"
-
-    # update metrics
-    groups.data(data)
-      .each (gd) ->
-
-        # foreground bars
-        foreground = self.historicStats.select(".#{gd.metric}").selectAll(".stat").data(gd.data)
-        foreground.data(gd.data)
-          .each (bd, j) ->
-            d3.select(@)
-              # pulling this for now because it looks weird with the slider
-              # .transition().delay(0).duration(250)
-              .attr
-                y:      y(bd.value)
-                height: self._metricHeight - y(bd.value)
-                class:  "stat fill-temp #{StatsUtils.getTemperature(bd.value)}"
+    # metas; percents & metrcis
+    metaEnter = @view.select(".stats .metas").selectAll("div").data(data)
+      .enter().append("div").attr(class: "meta")
+    metaEnter.append("div").attr(class: "percent")
+      .text (d) -> "#{Math.round(d.value*100)}%"
+      .attr("class", (d) -> "color-temp #{StatsUtils.getTemperature(d.value)}")
+    metaEnter.append("div").attr(class: "metric")
+      .text (d) -> d.metric
+      .attr("class", (d) -> "color-temp #{StatsUtils.getTemperature(d.value)}")
 
   #
-  _subscribeToStatData : (id) ->
+  updateHistoricStats : (data) =>
+
+    #
+    data = @main.updateStoredHistoricalStats(data)
+
+    # this needs to correspond with the value in CSS so that the ratio is correct
+    maxHeight = 50
+
+    ## UPDATE
+
+    @view.select(".stats .historic-stats").selectAll(".stat").data(data)
+      .each (d) ->
+        d3.select(@).selectAll(".foreground").data(d.data)
+          .style("height", (d) -> "#{(d.value*maxHeight) - d.value}px")
+          .attr("class", (d) -> "foreground background-temp #{StatsUtils.getTemperature(d.value)}")
+
+    ## CREATE
+
+    # historic stat container
+    @view.select(".stats .historic-stats").selectAll("div").data(data)
+      .enter()
+        .append("div").attr(class: "stat")
+          .each (d) ->
+
+            # historic stats
+            statEnter = d3.select(@).selectAll("div").data(d.data)
+              .enter()
+                .append("div").attr(class: "value")
+            statEnter.append("div")
+              .style("height", (d) -> "#{(d.value*maxHeight) - d.value}px")
+              .attr("class", (d) -> "foreground background-temp #{StatsUtils.getTemperature(d.value)}")
+            statEnter.append("div").attr(class: "background")
+
+  #
+  _subscribeToStatData : () ->
+
+    #
     PubSub.publish 'STATS.SUBSCRIBE.LIVE', {
-      statProviderId : id
+      start          : @options.start
+      end            : @options.end
+      entity         : @options.entity
+      entityId       : @options.entityId
+      metrics        : @options.metrics
       callback       : @updateLiveStats
     }
 
+    #
     PubSub.publish 'STATS.SUBSCRIBE.HISTORIC', {
-      statProviderId : id
+      start          : @options.start
+      end            : @options.end
+      entity         : @options.entity
+      entityId       : @options.entityId
+      metrics        : @options.metrics
       callback       : @updateHistoricStats
     }

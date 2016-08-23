@@ -1,37 +1,25 @@
-.standard-view            {display:flex; width:100%; align-items:center;
+.standard-view          {display:flex; align-items:center;
 
-  // labels
-  .labels                 {text-align:right;
-    .label                {font-size:8px; line-height:10px; color:$gray; text-transform:uppercase;}
-  }
+  // metrics & current-stats
+  @extend .micro-view;
 
-  // histroical stats
-  .historical-stats       {display:inline-flex; margin-left:5px;
-    svg                   {
-      g                   {
-        rect              {fill:$lightest-gray; transition: fill 200ms ease;}
+  // percents
+  .percents              {@include font-size(8px); position:relative; top:1px; width:21px; margin-left:5px; color:$gray;}
+
+  // historic stats
+  .historic-stats       {margin-right:5px; padding-right:5px; border-right:1px solid $lightest-gray;
+    .stat               {display:flex; height:5px; &:not(:last-child) {margin-bottom:3px;}
+      .value            {position:relative; width:5px; height:inherit; &:not(:last-child) {margin-right:3px;}
+        & > *           {width:inherit; height:inherit; background:$lightest-gray;}
+        .foreground     {@include transition(all, 0.25s); position:absolute; top:0px; left:0px; z-index:1;}
+        .background     {position:absolute; top:0px; left:0px; z-index:0; width:100%;}
       }
     }
   }
 
   //
-  .divider                {background:$lighter-gray; width:1px; margin:0 2px; align-self: stretch; }
-
-  // live stats
-  .live-stats             {display:inline-flex; margin-left:5px;
-    svg                   {
-      rect                {fill:$lightest-gray; transition: fill 200ms ease;}
-    }
-  }
-
-  // percentages
-  .percentages            {margin-left:5px;
-    .percent              {font-size:8px; line-height:10px; color:$gray; text-align:left;}
-  }
+  &.compressed          {}
 
   //
-  &.compressed            {
-    .labels .label,
-    .percentages .percent {line-height: 8px;}
-  }
+  .face                 {}
 }
