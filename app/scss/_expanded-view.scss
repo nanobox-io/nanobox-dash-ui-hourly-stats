@@ -74,48 +74,48 @@
   }
 
   //
-  #slider                           {z-index:101; position:absolute; bottom:-65px; left:0px; width:630px; height:90px; padding:10px; background:$dark-blue; color:$light-blue; border-radius:5px; user-select:none;
-    &.open                          {@include drop-shadow(0px, 1px, 4px, rgba(#013342, 0.6), 0px); display:inline-block !important;}
+  #slider                           {align-items:center; flex-direction:column; z-index:101; position:absolute; bottom:-60px; left:-5px; width:621px; height:90px; padding:10px; color:$light-blue; background:$dark-blue; border-radius:5px; user-select:none;
+    &.open                          {@include drop-shadow(0px, 1px, 4px, rgba(#013342, 0.6), 0px); display:flex !important;}
 
     //
-    .close                          {position:absolute; top:1px; right:5px; font-size:21px; line-height:21px; cursor:pointer; }
+    .close                          {@include font-size(21px); position:absolute; top:0px; right:5px; cursor:pointer;}
 
     //
-    .days                           {display:flex; align-items:center; justify-content:space-around; text-align:center;
+    .days                           {display:flex; align-items:center; justify-content:space-around; width:100%; text-align:center;
       .day                          {flex:1 1 20%;}
     }
 
     //
-    .range                          {width:100%; height:50px; position:relative;
+    .range                          {width:100%; height:55px; position:relative;
 
       //
-      .rule                         {display:flex; align-items:center;
-        .tick                       {display:table; position:relative; width:1px; background:#005A7D;
-          &:not(.first),
-          &:not(.last)              {margin-right:1px;}
+      .rule                         {display:flex; align-items:center; position:absolute; bottom:0px; width:100%;
+        .tick                       {display:table; position:relative; width:1px; margin-right:1px; background:#005A7D;
 
-          &:first-child             {margin-right:2px;}
-          &:last-child              {margin-left:2px;}
-
+          //
           &.full                    {height:40px; margin:0px 2px;}
           &.half                    {height:18px;}
           &.hour                    {height:12px;}
+
+          //
+          &.first                   {margin:0px 2px 0px 0px;}
+          &.last                    {margin:0px 0px 0px 2px;}
         }
       }
 
       // data
-      .data                 {position:relative; top:-8px;
-        .stat               {display:flex; position:relative; height:1px; &:not(:last-child) {margin-bottom:1px;}
-          .value            {position:absolute; top:0px; left:0px; width:1px; height:inherit; // &:not(:last-child) {margin-right:2px;}
-            & > *           {width:inherit; height:inherit; background:$lightest-gray;}
-            .foreground     {@include transition(all, 0.25s); position:absolute; top:0px; left:0px; z-index:1;}
-            .background     {position:absolute; top:0px; left:0px; z-index:0; width:100%;}
+      .data                         {position:relative; position:absolute; bottom:0px; width:100%;
+        .stat                       {display:flex; position:relative; height:1px; &:not(:last-child) {margin-bottom:1px;}
+          .value                    {position:absolute; top:0px; left:0px; width:1px; height:inherit; // &:not(:last-child) {margin-right:2px;}
+            & > *                   {width:inherit; height:inherit; background:$lightest-gray;}
+            .foreground             {@include transition(all, 0.25s); position:absolute; top:0px; left:0px; z-index:1;}
+            .background             {position:absolute; top:0px; left:0px; z-index:0; width:100%;}
           }
         }
       }
 
       //
-      .handle                       {@include transition(background-color, 0.1s); display:flex; justify-content:space-between; z-index:2; position:absolute; top:5px; left:0px; width:75px; height:55px; background-color:rgba(#288EAD, 0.4); cursor:pointer;
+      .handle                       {@include transition(background-color, 0.1s); display:flex; justify-content:space-between; z-index:2; position:absolute; top:3px; left:0px; width:75px; height:55px; background-color:rgba(#288EAD, 0.4); cursor:pointer;
         &hover                      {background-color:rgba(#288EAD, 0.5);}
 
         //

@@ -2,7 +2,7 @@ module.exports = class StatsUtils
 
   #
   @getTemperature : (val) ->
-    if      val < 0   then "sleep"
+    if      val <= 0  then "sleep"
     else if val < .75 then "cool"
     else if val < 0.9 then "warm"
     else                   "hot"

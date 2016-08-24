@@ -1,5 +1,6 @@
-Face       = require 'misc/face'
-StatsUtils = require 'misc/stats-utils'
+Face        = require 'utils/face-utils'
+StatsUtils  = require 'utils/stats-utils'
+LiveStats   = require 'views/stats/live-stats'
 
 #
 view = require 'jade/micro-view'
@@ -14,55 +15,29 @@ module.exports = class MicroView
 
   #
   build : () ->
-    @view = d3.select($(".micro-view", @$node).get(0))
-    @face = new Face $(".micro-view .face", @$node), "true"
-    @_subscribeToStatData()
-
-  #
-  updateLiveStats : (data) =>
 
     #
-    data = @main.updateStoredLiveStats(data)
+    view = d3.select($(".micro-view", @$node).get(0))
 
-    # this needs to correspond with the value in CSS so that the ratio is correct
-    maxWidth = 50
+    # add a live stats
+    @liveStats ||= new LiveStats(view, @main)
 
-    ## UPDATE
+    # add a face
+    @face = new Face $(".micro-view .face", @$node), "true"
 
-    # metrics
-    @view.select(".metrics").selectAll(".metric").data(data).text (d) -> d.metric
+    #
+    @_subscribeToUpdates()
 
-    # values
-    @view.select(".current-stats").selectAll(".foreground").data(data)
-      .style("width", (d) -> "#{(d.value*maxWidth) - d.value}px")
-      .attr("class", (d) -> "foreground background-temp #{StatsUtils.getTemperature(d.value)}")
-
-    # face
+  # update live stats
+  updateLiveStats : (data) =>
+    @liveStats.updateData(data)
     @face.update StatsUtils.getOverallTemperature(data)
 
-    ## CREATE
-
-    # metrics
-    @view.select(".metrics").selectAll("div").data(data)
-      .enter().append("div").attr(class: "metric").text (d) -> d.metric
-
-    # values
-    valueEnter = @view.select(".current-stats").selectAll("div").data(data)
-      .enter().append("div").attr(class: "value")
-    valueEnter.append("div")
-      .attr("class", (d) -> "foreground background-temp #{StatsUtils.getTemperature(d.value)}")
-      .style("width", (d) -> "#{(d.value*maxWidth) - d.value}px")
-    valueEnter.append("div").attr(class: "background")
-
-  #
-  updateLiveCollection : (dataArray) ->
-    @updateLiveStats(data) for data in dataArray
-
-  #
-  _subscribeToStatData : () ->
+  # publish that we're interested in live updates
+  _subscribeToUpdates: () ->
     PubSub.publish 'STATS.SUBSCRIBE.LIVE', {
-      entity         : @options.entity
-      entityId       : @options.entityId
-      metrics        : @options.metrics
-      callback       : @updateLiveStats
+      entity   : @options.entity
+      entityId : @options.entityId
+      metrics  : @options.metrics
+      callback : @updateLiveStats
     }
