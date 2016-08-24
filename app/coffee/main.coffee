@@ -42,11 +42,13 @@ class HourlyStats
 
   updateStoredHistoricData: (data) ->
     for d, i in @storedHistoricData
+      # d.time = moment(d.time) # convert the time into a moment object
       (@storedHistoricData[i] = data) if (d.metric == data.metric)
     return @storedHistoricData
 
   updateStoredWeekData: (data) ->
     for d, i in @storedWeekData
+      # d.time = moment(d.time) # convert the time into a moment object
       (@storedWeekData[i] = data) if (d.metric == data.metric)
     return @storedWeekData
 
@@ -61,7 +63,7 @@ class HourlyStats
     for metric in @options.metrics
       data = []
       for hour in [0..24]
-        data.push {time: "#{("0" + hour).slice(-2)}", value: 0}
+        data.push {time: moment().subtract(hour, "h"), value: 0}
       seed.push {metric: metric, data: data}
     seed
 
@@ -69,8 +71,8 @@ class HourlyStats
     seed = []
     for metric in @options.metrics
       data = []
-      for stat in [0...168]
-        data.push {date: moment().subtract(stat, "hours"), value: 0}
+      for hour in [0...168]
+        data.push {time: moment().subtract(hour, "h"), value: 0}
       seed.push {metric: metric, data: data}
     seed
 

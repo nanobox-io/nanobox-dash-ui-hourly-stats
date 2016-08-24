@@ -96,8 +96,6 @@ module.exports = class Slider
     # takes a single data point and returns an entire data set (array)
     @data = @parent.main.updateStoredWeekData(@data)
 
-    console.log "DATA?", @data
-
     #
     selector = d3.select(@$range.get(0))
 
@@ -134,7 +132,7 @@ module.exports = class Slider
                       .attr(class: "value")
 
                     #
-                    pos += (if (d.date.hour() == 0) then 5 else 2)
+                    pos += (if (d.time.hour() == 0) then 5 else 2)
 
             statEnter.append("div").attr("class", (d) -> "foreground background-temp #{StatsUtils.getTemperature(d.value)}")
             statEnter.append("div").attr(class: "background")
@@ -209,13 +207,14 @@ module.exports = class Slider
       </div>")
 
   #
-  _getSlideSet : (date) ->
+  _getSlideSet : (start, end) ->
     data = []
     for d in @data
       values = []
       for v, i in d.data
+        values = d.data[i..i+24]
         # if "value" == "end value" take that index and the next 24
-        values = d.data[i..i+24] if v.date.isSame(date, "hour")
+        # if v.time.isSame(start, "hour")
       data.push {metric: d.metric, data: values}
     data
 
@@ -252,4 +251,4 @@ module.exports = class Slider
     # a 25 hours range not 24; it shows the last hour AND 24 hours from that hour
     # meaning it shows that same hour twice (once at each end)
     @parent.timeline.updateData(end.add(1, "hour"))
-    @parent.updateHistoricCollection(@_getSlideSet(start))
+    @parent.updateHistoricCollection(@_getSlideSet(start, end))
