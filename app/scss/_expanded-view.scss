@@ -39,20 +39,26 @@
   }
 
   // timeline
-  .timeline                         {@include font-size(10px); display:flex; justify-content:space-between; position:relative; top:7px; left:-11px; width:262px; color:$gray; font-style:italic;
-    .time                           {position:relative; text-align:center;
-      &:before                      {content:""; position:absolute; top:-7px; width:1px; height:5px; background:$gray;}
+  .timeline                         {@include font-size(10px); display:flex; position:relative; top:8px; left:-1px; width:262px; color:$gray; font-style:italic;
+    .time                           {position:relative; width:5px; margin-right:5px; text-align:center;
+
+      .hour                         {position:relative;}
+      .period                       {position:relative; left:-3px;}
+
+      &.primary, &.secondary        {
+        &:before                    {content:""; position:absolute; top:-8px; width:1px; height:5px; background:$gray;}
+      }
     }
   }
 
   // slide toggle
-  .toggle-slider                    {position:relative; width:195px; height:22px; font-size:11px; text-align:center; line-height:24px; background:$dashboard_1; cursor:pointer;
+  .toggle-slider                    {@include font-size(11px); display:flex; align-items:center; position:relative; width:200px; height:21px; margin-top:18px; text-align:center; background:$dashboard_1; cursor:pointer;
 
     @mixin bracket                  {content:""; position:absolute; top:-1px; bottom:-1px; width:3px; border:1px solid $dashboard_8;}
     &:before                        {@include bracket; left:-1px; border-right-color:transparent;}
     &:after                         {@include bracket; right:-1px; border-left-color:transparent;}
 
-    span                            {color:$dashboard_73;}
+    span                            {width:100%; color:$dashboard_73;}
 
     &:hover                         {background:$dashboard_73;
       &:after                       {color:$dashboard_82; border-color:$dashboard_82; border-left-color: transparent;}
@@ -63,59 +69,80 @@
   }
 
   //
-  .slider-dropshield                {position:fixed; top:0px; left:0px; /*z-index:100;*/ width:100%; height:100%;
+  #slidershield                {position:fixed; top:0px; left:0px; /*z-index:100;*/ width:100%; height:100%;
     &.open                          {display:inline-block !important;}
   }
 
-  // //
-  // .slider                           {z-index:101; position:absolute; bottom:-45px; left:0px; width:630px; height:90px; padding:10px; background:$dark-blue; color:$light-blue; border-radius:5px; user-select:none;
-  //   &.open                          {@include drop-shadow(0px, 1px, 4px, rgba(#013342, 0.6), 0px); display:inline-block !important;}
   //
-  //   .close                          {position:absolute; top:1px; right:5px; font-size:21px; line-height:21px; cursor:pointer; }
-  //
-  //   //
-  //   .days                           {display:flex; align-items:center; justify-content:space-around; text-align:center;
-  //     .day                          {flex:1 1 20%;}
-  //   }
-  //
-  //   //
-  //   .slide-range                    {width:100%; height:50px; position:relative;
-  //
-  //     //
-  //     svg                           {position:absolute; top:0px; left:0px;
-  //       &.lines                     {top:5px}
-  //       &.data                      {top:45px; left:4px;}
-  //     }
-  //
-  //     //
-  //     .handle                       {@include transition(background-color, 0.1s); display:flex; align-items:center; justify-content:space-between; z-index:2; position:absolute; top:2px; left:0px; width:75px; height:55px; background-color:rgba(#288EAD, 0.4); cursor:pointer;
-  //       &hover                      {background-color:rgba(#288EAD, 0.5);}
-  //
-  //       //
-  //       .side                       {color:$yellow; text-align:center; font-size: 9px; margin:5px 3px;
-  //         .slider-label             {display:flex; flex-direction:column; align-items:center; text-transform:uppercase;}
-  //         .hour                     {font-size:13px; }
-  //         &:before                  {content:""; position:absolute; top:-1px; bottom:-1px; width:3px; border:1px solid $white; }
-  //         &:after                   {content:""; position:absolute; top:24px; display:block; height:0px; width:0px; border:5px solid transparent; }
-  //
-  //         //
-  //         &.left                    {float:left;
-  //           &:before                {left:-1px; border-right-color:transparent; }
-  //           &:after                 {border-right-color:$yellow; left:-13px; }
-  //         }
-  //
-  //         //
-  //         &.right                   {float:right;
-  //           &:before                {right:-1px; border-left-color:transparent; }
-  //           &:after                 {border-left-color:$yellow; right:-13px; }
-  //         }
-  //       }
-  //     }
-  //
-  //     //
-  //     .loading                      {position: absolute; color:$white; top:17px; text-align:center; width:100%; font-size:14px;
-  //       span                        {position: absolute; /* Doesn't effect centering this way */ }
-  //      }
-  //   }
-  // }
+  #slider                           {z-index:101; position:absolute; bottom:-65px; left:0px; width:630px; height:90px; padding:10px; background:$dark-blue; color:$light-blue; border-radius:5px; user-select:none;
+    &.open                          {@include drop-shadow(0px, 1px, 4px, rgba(#013342, 0.6), 0px); display:inline-block !important;}
+
+    //
+    .close                          {position:absolute; top:1px; right:5px; font-size:21px; line-height:21px; cursor:pointer; }
+
+    //
+    .days                           {display:flex; align-items:center; justify-content:space-around; text-align:center;
+      .day                          {flex:1 1 20%;}
+    }
+
+    //
+    .range                          {width:100%; height:50px; position:relative;
+
+      //
+      .rule                         {display:flex; align-items:center;
+        .tick                       {display:table; position:relative; width:1px; background:#005A7D;
+          &:not(.first),
+          &:not(.last)              {margin-right:1px;}
+
+          &:first-child             {margin-right:2px;}
+          &:last-child              {margin-left:2px;}
+
+          &.full                    {height:40px; margin:0px 2px;}
+          &.half                    {height:18px;}
+          &.hour                    {height:12px;}
+        }
+      }
+
+      // data
+      .data                 {position:relative; top:-8px;
+        .stat               {display:flex; position:relative; height:1px; &:not(:last-child) {margin-bottom:1px;}
+          .value            {position:absolute; top:0px; left:0px; width:1px; height:inherit; // &:not(:last-child) {margin-right:2px;}
+            & > *           {width:inherit; height:inherit; background:$lightest-gray;}
+            .foreground     {@include transition(all, 0.25s); position:absolute; top:0px; left:0px; z-index:1;}
+            .background     {position:absolute; top:0px; left:0px; z-index:0; width:100%;}
+          }
+        }
+      }
+
+      //
+      .handle                       {@include transition(background-color, 0.1s); display:flex; justify-content:space-between; z-index:2; position:absolute; top:5px; left:0px; width:75px; height:55px; background-color:rgba(#288EAD, 0.4); cursor:pointer;
+        &hover                      {background-color:rgba(#288EAD, 0.5);}
+
+        //
+        .side                       {color:$yellow; text-align:center; font-size: 9px; margin:5px 3px;
+          .slider-label             {display:flex; flex-direction:column; align-items:center; text-transform:uppercase;}
+          .hour                     {font-size:13px; }
+          &:before                  {content:""; position:absolute; top:-1px; bottom:-1px; width:3px; border:1px solid $white; }
+          &:after                   {content:""; position:absolute; top:24px; display:block; height:0px; width:0px; border:5px solid transparent; }
+
+          //
+          &.left                    {float:left;
+            &:before                {left:-1px; border-right-color:transparent; }
+            &:after                 {border-right-color:$yellow; left:-13px; }
+          }
+
+          //
+          &.right                   {float:right;
+            &:before                {right:-1px; border-left-color:transparent; }
+            &:after                 {border-left-color:$yellow; right:-13px; }
+          }
+        }
+      }
+
+      //
+      // .loading                      {position: absolute; color:$white; top:17px; text-align:center; width:100%; font-size:14px;
+      //   span                        {position: absolute; /* Doesn't effect centering this way */ }
+      // }
+    }
+  }
 }

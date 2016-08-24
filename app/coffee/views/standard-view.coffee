@@ -61,6 +61,10 @@ module.exports = class StandardView
     @view.select(".percents").selectAll("div").data(data)
       .enter().append("div").attr(class: "percent").text (d) -> "#{Math.round(d.value*100)}%"
 
+  #
+  updateLiveCollection : (dataArray) ->
+    @updateLiveStats(data) for data in dataArray
+
   # updateHistoricStats
   updateHistoricStats : (data) =>
 
@@ -89,12 +93,14 @@ module.exports = class StandardView
             statEnter.append("div").attr(class: "background")
 
   #
+  updateHistoricCollection : (dataArray) ->
+    @updateHistoricStats(data) for data in dataArray
+
+  #
   _subscribeToStatData : () ->
 
     #
     PubSub.publish 'STATS.SUBSCRIBE.LIVE', {
-      start          : @options.start
-      end            : @options.end
       entity         : @options.entity
       entityId       : @options.entityId
       metrics        : @options.metrics

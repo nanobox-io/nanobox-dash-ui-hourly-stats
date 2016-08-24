@@ -19,7 +19,7 @@ module.exports = class MicroView
     @_subscribeToStatData()
 
   #
-  updateStats : (data) =>
+  updateLiveStats : (data) =>
 
     #
     data = @main.updateStoredLiveStats(data)
@@ -55,10 +55,14 @@ module.exports = class MicroView
     valueEnter.append("div").attr(class: "background")
 
   #
+  updateLiveCollection : (dataArray) ->
+    @updateLiveStats(data) for data in dataArray
+
+  #
   _subscribeToStatData : () ->
     PubSub.publish 'STATS.SUBSCRIBE.LIVE', {
       entity         : @options.entity
       entityId       : @options.entityId
       metrics        : @options.metrics
-      callback       : @updateStats
+      callback       : @updateLiveStats
     }

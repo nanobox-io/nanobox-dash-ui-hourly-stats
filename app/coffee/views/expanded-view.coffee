@@ -25,11 +25,22 @@ module.exports = class ExpandedView
     # add the timeline and set to "right now"
     @updateTimeline(moment())
 
+    # NOTE: this will be replaced with actual data that is either passed in (most
+    # likely) or fetched at this point
+    # test data
+    @data = []
+    for metric in ["cpu", "ram", "swap", "disk"]
+      m = {metric: metric, data: []}
+
+      # we only want 7 days worth of data (not 8) because one of the days will
+      # be split across 2 days (making 8)
+      for stat in [0...168]
+        m.data.push {date: moment().subtract(stat, "hours"), value: ((Math.random() * 1.00) + 0.00)}
+      @data.push m
+
     # create the slider and add toggle
     @slider ||= new Slider(@$node, @)
-    @$node.find(".toggle-slider").click (e) =>
-      console.log "CLICK!"
-      @slider.open()
+    @$node.find(".toggle-slider").click (e) => @slider.open(@data)
 
   #
   updateTimeline : (endDate) ->
@@ -47,12 +58,11 @@ module.exports = class ExpandedView
 
     ## UPDATE
 
-    # update timeline
+    #
     @timeline.selectAll(".time").data(timeline)
       .each (d)  ->
 
-        thing = d3.select(@)
-
+        #
         diff = now.diff(d, "hours")
 
         #
@@ -61,20 +71,21 @@ module.exports = class ExpandedView
           # one hour ago (if the date matches todays date); we need to catch this
           # before the mod
           when diff == 1 && d.date() == moment().date()
-            thing.select(".hour").text("1hr")
-            thing.select(".period").text("ago")
+            [hour, period] = ["1hr", "ago"]
 
           # 24 hours from 1 hour ago (if the date matches yesterdays date); we need
           # to catch this before the mod
           when diff == 25 && d.date() == moment().subtract(1, "day").date()
-            thing.select(".hour").text("24hrs")
-            thing.select(".period").text("ago")
+            [hour, period] = ["24hrs", "ago"]
 
           # every 6 hours; we want the diff to be 1 because we're going from 1 hour
           # ago (not right now)
           else
-            thing.select(".hour").text(d.format("h"))
-            thing.select(".period").text(d.format("a"))
+            [hour, period] = [d.format("h"), d.format("a")]
+
+        #
+        d3.select(@).select(".hour").text(hour)
+        d3.select(@).select(".period").text(period)
 
     ## CREATE
 
@@ -83,41 +94,38 @@ module.exports = class ExpandedView
       .enter()
         .append("div")
           .attr(class: "time")
-
-      #
       .each (d) ->
-        # group = d3.select(@)
 
         #
         diff = now.diff(d, "hours")
 
-        # not really happy about this because 10 and 11 are just arbitrary numbers
-        # that happen to make it work...
-        # pos = (10*i+1)+11
+        #
+        classes = ["time"]
 
-        thing = d3.select(@)
-
+        #
         switch
 
           # one hour ago; we need to catch this before the mod
           when diff == 1
-            thing.attr(class: "time primary")
-            thing.append("div").text("1hr").attr(class: "hour")
-            thing.append("div").text("ago").attr(class: "period")
+            classes.push "primary"
+            [hour, period] = ["1hr", "ago"]
 
           # 24 hours from 1 hour ago; we need to catch this before the mod
           when diff == 25
-            thing.attr(class: "time primary")
-            thing.append("div").text("24hrs").attr(class: "hour")
-            thing.append("div").text("ago").attr(class: "period")
+            classes.push "primary"
+            [hour, period] = ["24hrs", "ago"]
 
           # every 6 hours; we want the diff to be 1 because we're going from 1
           # hour ago (not right now)
           when diff % 6 == 1
-            thing.attr(class: "time secondary")
-            thing.append("div").text(d.format("h")).attr(class: "hour")
-            thing.append("div").text(d.format("a")).attr(class: "period")
+            classes.push "secondary"
+            [hour, period] = [d.format("h"), d.format("a")]
           else return
+
+        #
+        d3.select(@).attr(class: classes.join(" "))
+        d3.select(@).append("div").text(hour).attr(class: "hour")
+        d3.select(@).append("div").text(period).attr(class: "period")
 
   #
   updateLiveStats : (data) =>
@@ -137,11 +145,11 @@ module.exports = class ExpandedView
 
     # metas; percents & metrics
     @view.select(".stats .metas").selectAll(".percent").data(data)
-      .text (d) -> "#{Math.round(d.value*100)}%"
       .attr("class", (d) -> "percent color-temp #{StatsUtils.getTemperature(d.value)}")
+      .text (d) -> "#{Math.round(d.value*100)}%"
     @view.select(".stats .metas").selectAll(".metric").data(data)
-      .text (d) -> d.metric
       .attr("class", (d) -> "metric color-temp #{StatsUtils.getTemperature(d.value)}")
+      .text (d) -> d.metric
 
     ## CREATE
 
@@ -156,12 +164,16 @@ module.exports = class ExpandedView
     # metas; percents & metrcis
     metaEnter = @view.select(".stats .metas").selectAll("div").data(data)
       .enter().append("div").attr(class: "meta")
-    metaEnter.append("div").attr(class: "percent")
+    metaEnter.append("div")
+      .attr("class", (d) -> "percent color-temp #{StatsUtils.getTemperature(d.value)}")
       .text (d) -> "#{Math.round(d.value*100)}%"
-      .attr("class", (d) -> "color-temp #{StatsUtils.getTemperature(d.value)}")
-    metaEnter.append("div").attr(class: "metric")
+    metaEnter.append("div")
+      .attr("class", (d) -> "metric color-temp #{StatsUtils.getTemperature(d.value)}")
       .text (d) -> d.metric
-      .attr("class", (d) -> "color-temp #{StatsUtils.getTemperature(d.value)}")
+
+  #
+  updateLiveCollection : (dataArray) ->
+    @updateLiveStats(data) for data in dataArray
 
   #
   updateHistoricStats : (data) =>
@@ -198,12 +210,14 @@ module.exports = class ExpandedView
             statEnter.append("div").attr(class: "background")
 
   #
+  updateHistoricCollection : (dataArray) ->
+    @updateHistoricStats(data) for data in dataArray
+
+  #
   _subscribeToStatData : () ->
 
     #
     PubSub.publish 'STATS.SUBSCRIBE.LIVE', {
-      start          : @options.start
-      end            : @options.end
       entity         : @options.entity
       entityId       : @options.entityId
       metrics        : @options.metrics

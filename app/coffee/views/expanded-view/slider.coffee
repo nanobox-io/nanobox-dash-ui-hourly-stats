@@ -11,16 +11,19 @@ module.exports = class Slider
   constructor : (@$node, @parent) ->
 
     # slider and dropshield
-    @$slider  = @$node.find('.slider')
-    @$shield  = @$node.find('.slider-dropshield')
+    @$slider  = @$node.find('#slider')
+    @$shield  = @$node.find('#slidershield')
+
+    #
+    @$range  = @$slider.find('.range')
 
     # slide control (handle)
-    @$handle  = @$node.find('.handle')
+    @$handle  = @$range.find('.handle')
     @$left    = @$handle.find('.left')
     @$right   = @$handle.find('.right')
 
     # add close events
-    @$node.find('.close').click @close
+    @$slider.find('.close').click @close
     @$shield.click @close
 
     # add drag events
@@ -37,10 +40,9 @@ module.exports = class Slider
     #
     @_drawDays()
     @_drawTimeline()
-    @_drawData()
 
   #
-  open : () =>
+  open : (@data) =>
 
     # display slider and dropshield
     @$slider.addClass 'open'
@@ -66,20 +68,7 @@ module.exports = class Slider
       # the slider has been opened so we don't need to "initialize" the handle
       @hasOpened = true
 
-    # NOTE: this will be replaced with actual data that is either passed in (most
-    # likely) or fetched at this point
-    # test data
-    @data = []
-    for metric in ["cpu", "ram", "swap", "disk"]
-      m = {metric: metric, values: []}
-
-      # we only want 7 days worth of data (not 8) because one of the days will
-      # be split across 2 days (making 8)
-      for stat in [0...168]
-        m.values.push {date: moment().subtract(stat, "hours"), value: ((Math.random() * 1.00) + 0.00)}
-      @data.push m
-
-    # draw data points on slider
+    #
     @updateData(@data)
 
   # hide the slider and dropshield and reset data back to "now"
@@ -93,35 +82,53 @@ module.exports = class Slider
     # @parent.updateHistoricStats(@_getSlideSet(now.subtract(24, "hours")))
 
   #
-  updateData: (data) ->
+  updateData : (data) =>
+
+    console.log "DATA?", data
+
+    self = @
 
     #
-    for metric, i in data
-      metricg = @svg.append("svg:g").attr(transform: "translate(0, #{2*i})")
+    selector = d3.select(@$range.get(0))
 
-      # pos starts at leftLimit
-      # pos = @leftLimit
-      pos = moment().hours()*3
+    ## UPDATE
 
-      # reverse the values because we're bulding it from left to right and the
-      # vales come in desc. from left to right and we want asc.
-      metric.values.reverse()
+    #
+    selector.select(".data").selectAll(".stat").data(data)
+      .each (d) ->
+        console.log "D?"
+        d3.select(@).selectAll(".foreground").data(d.data)
+          .attr("class", (d) -> "foreground background-temp #{StatsUtils.getTemperature(d.value)}")
 
-      #
-      for stat, j in metric.values
-        metricg.append("svg:rect")
-          .attr
-            class:  "fill-temp #{StatsUtils.getTemperature(stat.value)}",
-            x:      pos+j,
-            y:      0,
-            width:  1,
-            height: 1
+    ## CREATE
 
-        # set next position
-        pos += 2
+    #
+    selector.select(".data").selectAll("div").data(data)
+      .enter()
+        .append("div").attr(class: "stat")
+          .each (d) ->
 
-        # if the stat hour is a "day" add an extra space
-        pos += 4 if stat.date.hour() == 0
+            # start positioning data points from the left limit
+            pos = self.leftLimit
+
+            # historic stats; we reverse the values because we're bulding it from
+            # left to right and the vales come in desc. from left to right and we
+            # want asc.
+            statEnter = d3.select(@).selectAll("div").data(d.data.reverse())
+              .enter()
+                .append("div")
+                  .each (d, i) ->
+
+                    #
+                    d3.select(@)
+                      .style(left: "#{pos+i}px")
+                      .attr(class: "value")
+
+                    #
+                    pos += (if (d.date.hour() == 0) then 5 else 2)
+
+            statEnter.append("div").attr("class", (d) -> "foreground background-temp #{StatsUtils.getTemperature(d.value)}")
+            statEnter.append("div").attr(class: "background")
 
   #
   _drawDays : () =>
@@ -144,69 +151,68 @@ module.exports = class Slider
         else day.format("ddd")
 
       # add each day to the "days track"
-      @$node.find('.days').append("<div class='day'>#{display}</div>")
+      @$slider.find('.days').append("<div class='day'>#{display}</div>")
 
   #
-  _drawTimeline: () =>
+  _drawTimeline : () =>
 
     #
-    @svg = d3.select(@$node.find(".slide-range").get(0))
-      .append("svg")
-        .attr
-          class: "lines"
-          width:  640
-          height: 50
+    count = 0
+    pos = 0
+
+    # this is the number of hours in 8 days (24*8); we're showing "today" and a
+    # week from today (8 days)
+    hours = 192
 
     #
-    [count, posx] = [0, 0.5]
+    for i in [0..hours]
 
-    #
-    for i in [0...193]
+      console.log "HERE?", i
+
+      classes = ["tick"]
 
       # calculate tick size
       switch
 
         # 24 hour ticks
-        when count == 0 then [y1, y2] = [5, 50]
+        when count == 0
+          classes.push "full"
 
         # 6 hours ticks; also, count != 0, but the first case handles that
-        when count % 6 == 0 then [y1, y2] = [16, 34]
+        when count % 6 == 0
+          classes.push "half"
 
         # hour ticks
-        else [y1, y2] = [20, 32]
+        else
+          classes.push "hour"
 
-      # draw tick
-      @svg.append("line")
-        .attr
-          x1: posx
-          x2: posx
-          y1: y1
-          y2: y2
-          "stroke-width": 1
-          stroke: "#005A7D"
+      # calculate tick position
+      switch
+
+        #
+        when i == 0
+          classes.push "first"
+
+        #
+        when i == 192
+          classes.push "last"
 
       # increment count per "hour"
       count++
 
-      # set next tick position
-      posx += 3
-
       # if count is an "day" (24 hours) then add a little extra padding to the
       # front and back of the tick placement
-      switch count
-        when 1, 24 then posx += 2
+      # switch count
+        # when 1, 24 then classes.push ["mark"]
 
       # reset count every "day"
       if count == 24 then count = 0
 
-  #
-  _drawData : () ->
-    @svg = d3.select(@$node.find(".slide-range").get(0))
-      .append("svg")
-        .attr
-          class: "data"
-          width:  640
-          height: 10
+      # pos += (if (d.date.hour() == 0) then 5 else 2)
+
+      #
+      d3.select(@$range.find(".rule").get(0))
+        .append("div").attr(class: classes.join(" ")).style(left: "#{pos+i}px")
 
   #
   _buildRangeTag : ($el, time) =>
@@ -218,20 +224,18 @@ module.exports = class Slider
       </div>")
 
   #
-  _getSlideSet: (date) ->
+  _getSlideSet : (date) ->
     data = []
     for d in @data
 
       # if the value is the same as the end value, then take that index and the
       # next 24
       values = []
-      for v, i in d.values
+      for v, i in d.data
         if v.date.isSame(date, "hour")
-          values = d.values[i..i+24]
+          values = d.data[i..i+24]
 
-      metric = {metric: d.metric, data: values}
-
-      data.push metric
+      data.push {metric: d.metric, data: values}
 
     data
 
@@ -268,4 +272,4 @@ module.exports = class Slider
     # a 25 hours range not 24; it shows the last hour AND 24 hours from that hour
     # meaning it shows that same hour twice (once at each end)
     @parent.updateTimeline(end.add(1, "hour"))
-    @parent.updateHistoricStats(@_getSlideSet(start))
+    @parent.updateHistoricCollection(@_getSlideSet(start))
