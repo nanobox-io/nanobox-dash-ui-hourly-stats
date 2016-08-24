@@ -10,7 +10,7 @@ module.exports = class MicroView
 
   #
   constructor: ($el, @options={}, @main) ->
-    @$node = $(view(classes: @options.classes))
+    @$node = $(view({classes: @options.classes}))
     $el.append @$node
 
   #

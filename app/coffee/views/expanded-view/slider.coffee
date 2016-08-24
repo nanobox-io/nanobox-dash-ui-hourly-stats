@@ -208,13 +208,16 @@ module.exports = class Slider
 
   #
   _getSlideSet : (start, end) ->
+    # console.log "THINGS", start, end
     data = []
     for d in @data
       values = []
       for v, i in d.data
-        values = d.data[i..i+24]
+        # values = d.data[i..i+24]
         # if "value" == "end value" take that index and the next 24
         # if v.time.isSame(start, "hour")
+        if v.time.hour() == start.hour()
+          values = d.data[i..i+24]
       data.push {metric: d.metric, data: values}
     data
 

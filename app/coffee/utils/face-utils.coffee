@@ -4,7 +4,7 @@ face = require 'jade/face'
 module.exports = class Face
 
   #
-  temperature: "sleep"
+  temperature: "wait"
 
   #
   constructor: (@$el, @scalable) ->

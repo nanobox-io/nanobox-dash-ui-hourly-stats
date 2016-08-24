@@ -2,7 +2,7 @@ module.exports = class StatsUtils
 
   #
   @getTemperature : (val) ->
-    if      val <= 0  then "sleep"
+    if      val <= 0  then "wait"
     else if val < .75 then "cool"
     else if val < 0.9 then "warm"
     else                   "hot"
@@ -28,7 +28,9 @@ module.exports = class StatsUtils
     # complete hour
     now = moment().subtract(1, "hour")
 
-    # end is 12x12*percent that happens to be some number that works...?
+    # console.log "THING?", Math.round(144*perc)
+
+    # end is 168-24*percent that happens to be some number that works...?
     end = moment(now).subtract(Math.round(144*perc), "hours")
 
     # start is 24 hours ago from "end"
