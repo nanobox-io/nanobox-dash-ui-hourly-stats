@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
-<!-- Generator: Adobe Illustrator 19.2.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!-- Generator: Adobe Illustrator 20.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
 <svg version="1.1" id="svgs" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 width="175.094px" height="55.1px" viewBox="0 0 175.094 55.1" style="enable-background:new 0 0 175.094 55.1;"
-	 xml:space="preserve">
+	 viewBox="0 0 175.094 55.1" style="enable-background:new 0 0 175.094 55.1;" xml:space="preserve">
 <style type="text/css">
 	.st0{fill:#79B94A;}
 	.st1{fill:none;stroke:#FFFFFF;stroke-width:1.5289;stroke-miterlimit:10;}
 	.st2{fill:#FFFFFF;}
 	.st3{fill:#FF9A17;}
 	.st4{fill:#D60000;}
+	.st5{fill:#D5D5D5;}
+	.st6{fill:url(#SVGID_1_);}
 </style>
 <g id="face-cool">
 	<g>
@@ -33,5 +34,14 @@
 	<path class="st1" d="M72.849,22.039c1.242-2.43,3.762-4.097,6.678-4.097s5.436,1.667,6.676,4.097"/>
 	<circle class="st2" cx="86.608" cy="13.444" r="1.273"/>
 	<circle class="st2" cx="72.409" cy="13.444" r="1.273"/>
+</g>
+<g id="face-waiting">
+	<circle class="st5" cx="111.828" cy="16.54" r="10.533"/>
+	<linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="110.7438" y1="19.388" x2="115.4486" y2="11.7209">
+		<stop  offset="0" style="stop-color:#FFFFFF"/>
+		<stop  offset="1" style="stop-color:#DEDEDE"/>
+	</linearGradient>
+	<path class="st6" d="M111.828,24.209c-4.229,0-7.67-3.44-7.67-7.669h2c0,3.126,2.544,5.669,5.67,5.669s5.67-2.543,5.67-5.669
+		c0-3.126-2.544-5.67-5.67-5.67v-2c4.229,0,7.67,3.441,7.67,7.67S116.058,24.209,111.828,24.209z"/>
 </g>
 </svg>
