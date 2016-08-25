@@ -3,14 +3,14 @@ Slider      = require 'views/expanded-view/slider'
 Timeline    = require 'views/expanded-view/timeline'
 
 #
-view = require 'jade/expanded-view'
+expandedView = require 'jade/expanded-view'
 
 #
 module.exports = class ExpandedView
 
   #
   constructor: ($el, @options={}, @main) ->
-    @$node = $(view({classes: @options.classes}))
+    @$node = $(expandedView({classes: @options.classes}))
     $el.append @$node
 
   #

@@ -3,14 +3,14 @@ StatsUtils  = require 'utils/stats-utils'
 LiveStats   = require 'views/stats/live-stats'
 
 #
-view = require 'jade/micro-view'
+microView = require 'jade/micro-view'
 
 #
 module.exports = class MicroView
 
   #
   constructor: ($el, @options={}, @main) ->
-    @$node = $(view({classes: @options.classes}))
+    @$node = $(microView({classes: @options.classes}))
     $el.append @$node
 
   #

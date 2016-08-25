@@ -4,14 +4,14 @@ LiveStats     = require 'views/stats/live-stats'
 HistoricStats = require 'views/stats/historic-stats'
 
 #
-view = require 'jade/standard-view'
+standardView = require 'jade/standard-view'
 
 #
 module.exports = class StandardView
 
   #
   constructor: ($el, @options={}, @main) ->
-    @$node = $(view({classes: @options.classes}))
+    @$node = $ standardView({classes: @options.classes})
     $el.append @$node
 
   #
