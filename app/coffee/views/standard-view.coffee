@@ -50,7 +50,7 @@ module.exports = class StandardView
 
     PubSub.publish 'STATS.SUBSCRIBE.HISTORIC', {
       start    : @options.start
-      end      : @options.end
+      stop     : @options.stop
       entity   : @options.entity
       entityId : @options.entityId
       metrics  : @options.metrics
