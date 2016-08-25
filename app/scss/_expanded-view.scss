@@ -7,7 +7,7 @@
     .historic-stats           {margin-right:15px;
       .stat                   {display:flex; height:50px; &:not(:last-child) {margin-bottom:10px;}
         .value                {position:relative; width:5px; height:inherit; &:not(:last-child) {margin-right:5px;}
-          & > *               {width:inherit; height:inherit; background:$lightest-gray;}
+          & > *               {width:inherit; height:inherit; background:$stat-bg-gray;}
           .foreground         {/*@include transition(all, 0.25s);*/ position:absolute; bottom:0px; left:0px; z-index:1;}
           .background         {position:absolute; bottom:0px; left:0px; z-index:0; width:100%;}
         }
@@ -17,7 +17,7 @@
     // current-stats
     .current-stats            {width:12px;
       .value                  {position:relative; height:50px; width:inherit; &:not(:last-child) {margin-bottom:10px;}
-        & > *                 {width:inherit; height:inherit; background:$lightest-gray;}
+        & > *                 {width:inherit; height:inherit; background:$stat-bg-gray;}
         .foreground           {@include transition(all, 0.25s); position:absolute; bottom:0px; left:0px; z-index:1;}
         .background           {position:absolute; bottom:0px; left:0px; z-index:0; width:100%;}
       }
@@ -107,7 +107,7 @@
       .data                   {position:relative; position:absolute; bottom:0px; width:100%;
         .stat                 {display:flex; position:relative; height:1px; &:not(:last-child) {margin-bottom:1px;}
           .value              {position:absolute; top:0px; left:0px; width:1px; height:inherit; // &:not(:last-child) {margin-right:2px;}
-            & > *             {width:inherit; height:inherit; background:$lightest-gray;}
+            & > *             {width:inherit; height:inherit; background:$stat-bg-gray;}
             .foreground       {@include transition(all, 0.25s); position:absolute; top:0px; left:0px; z-index:1;}
             .background       {position:absolute; top:0px; left:0px; z-index:0; width:100%;}
           }

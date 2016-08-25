@@ -6,7 +6,7 @@
   // current-stats
   .current-stats      {width:50px;
     .value            {position:relative; height:5px; &:not(:last-child) {margin-bottom:3px;}
-      & > *           {height:inherit; background:$lightest-gray;}
+      & > *           {height:inherit; background:$stat-bg-gray;}
       .foreground     {@include transition(all, 0.25s); position:absolute; top:0px; left:0px; z-index:1;}
       .background     {position:absolute; top:0px; left:0px; z-index:0; width:100%;}
     }
