@@ -7,7 +7,8 @@ module.exports = class LiveStats
   maxWidth: 50
 
   #
-  constructor: (@view, @main) -> # do nothing...
+  constructor: ($el, @main) ->
+    @view = d3.select($el.get(0))
 
   #
   updateCollection : (dataArray) ->

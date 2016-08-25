@@ -17,24 +17,3 @@ module.exports = class StatsUtils
 
     # return overall temp
     @getTemperature(highTemp)
-
-  #
-  @getTimeStampsFromPercentage : (perc) ->
-
-    # reverse the percent because we're sliding backwards into the week
-    perc = (1 - perc)
-
-    # "now" is now - 1 hour because we only have a full hours stats up to the last
-    # complete hour
-    now = moment().subtract(1, "hour")
-
-    # console.log "THING?", Math.round(144*perc)
-
-    # end is 168-24*percent that happens to be some number that works...?
-    end = moment(now).subtract(Math.round(144*perc), "hours")
-
-    # start is 24 hours ago from "end"
-    start = moment(end).subtract(24, "hours")
-
-    #
-    [start, end]

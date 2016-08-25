@@ -5,17 +5,15 @@ ExpandedView  = require 'views/expanded-view'
 #
 class HourlyStats
 
-  # this is a global data object for this instance. The idea is that we're going
-  # to store the most recent updated data then update it with any incoming values
-  # and use that object to update the D3
-
   #
   constructor: (@$el, @options={}) ->
 
     # set defaults
     if !@options.metrics then @options.metrics = ["cpu", "ram", "swap", "disk"]
 
-    #
+    # these are global data stores. The idea is that we're going to store the most
+    # recent updated data then update it with any incoming values and use that
+    # object to update the D3
     @storedLiveData     = @_seedLiveData()
     @storedHistoricData = @_seedHistoricData()
     @storedWeekData     = @_seedWeekData()

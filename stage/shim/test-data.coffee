@@ -27,7 +27,7 @@ module.exports = class TestData
       , 5000
 
     #
-    PubSub.subscribe 'STATS.UNSUBSCRIBE', (m, data)=>
+    # PubSub.subscribe 'STATS.UNSUBSCRIBE', (m, data) =>
 
   #
   generateLiveStats : (isContainer) ->
