@@ -17,13 +17,13 @@ module.exports = class MicroView
   build : () ->
 
     #
-    view = d3.select($(".micro-view", @$node).get(0))
+    $node = $(".micro-view", @$node)
 
     # add a live stats
-    @liveStats ||= new LiveStats(view, @main)
+    @liveStats ||= new LiveStats($node, @main)
 
     # add a face
-    @face = new Face $(".micro-view .face", @$node), "true"
+    @face = new Face $node.find(".face"), "true"
 
     #
     @_subscribeToUpdates()

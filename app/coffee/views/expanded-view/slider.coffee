@@ -83,7 +83,7 @@ module.exports = class Slider
     # update data to "right now"
     # now = moment()
     # @parent.updateTimeline(now)
-    # @parent.updateHistoricStats(@_getSlideSet(now.subtract(24, "hours")))
+    # @parent.updateHistoricStats(@_getSlideSection(now.subtract(24, "hours")))
 
   #
   updateCollection: (dataArray) ->
@@ -118,9 +118,8 @@ module.exports = class Slider
             # start positioning data points from the left limit
             pos = self.leftLimit
 
-            # historic stats; we reverse the values because we're bulding it from
-            # left to right and the vales come in desc. from left to right and we
-            # want asc.
+            # historic stats; we reverse the values because we want index 0 to be
+            # on the right side of the timeline and not the left
             statEnter = d3.select(@).selectAll("div").data(d.data.reverse())
               .enter()
                 .append("div")
@@ -207,18 +206,18 @@ module.exports = class Slider
       </div>")
 
   #
-  _getSlideSet : (start, end) ->
-    # console.log "THINGS", start, end
+  _getSlideSection : (start, end) ->
     data = []
     for d in @data
-      values = []
-      for v, i in d.data
-        # values = d.data[i..i+24]
-        # if "value" == "end value" take that index and the next 24
-        # if v.time.isSame(start, "hour")
-        if v.time.hour() == start.hour()
-          values = d.data[i..i+24]
-      data.push {metric: d.metric, data: values}
+      section = d.data[end..start]
+
+      # "zero fill" any missing values
+      until section.length == @numData
+        section.push {time: moment(), value: 0}
+      end
+
+      #
+      data.push {metric: d.metric, data: section}
     data
 
   #
@@ -242,16 +241,33 @@ module.exports = class Slider
     #
     @$handle.css left: newPosition
 
-    #
+    # percent moved across the timeline FROM LEFT TO RIGHT (now == 100%)
     percent = (newPosition - @leftLimit) / (@rightLimit - @leftLimit)
-    [start, end] = StatsUtils.getTimeStampsFromPercentage(percent)
 
-    #
-    @_buildRangeTag @$left, start
-    @_buildRangeTag @$right, end
+    # subract 1 from now because we only have stats up to the last complete hour
+    now = moment().subtract(1, "hour")
+
+    # because our data is arranged from oldest to newest (left to right) we need
+    # to reverse the percentage calculate here so that as we travel left across
+    # the timeline we're subracting larger and larger amounts from the current
+    # time
+    [start, end] = [Math.floor(144*(1-percent))+24, Math.floor(144*(1-percent))]
+    @_buildRangeTag @$left, moment(now).subtract(start, "hours")
+    @_buildRangeTag @$right, moment(now).subtract(end, "hours")
 
     # we need to add one hour to "end" when updating the timeline because it shows
     # a 25 hours range not 24; it shows the last hour AND 24 hours from that hour
-    # meaning it shows that same hour twice (once at each end)
-    @parent.timeline.updateData(end.add(1, "hour"))
-    @parent.updateHistoricCollection(@_getSlideSet(start, end))
+    # meaning it shows that same hour twice (once at each end). We need to use
+    # the end value from above for the same reason; we're moving right to left
+    # across the timeline, thus we need to be subtracting larger numbers from the
+    # time calculation
+    @parent.timeline.updateData(moment(now).subtract(end, "hours").add(1, "hour"))
+
+    # the data on the timeline is ordered by index 168 at the right to 0 index on
+    # the left. We have 7 days worth of data (168 indecies) so we find the end
+    # by taking 6 days (144 hours) and multiplying that by the percent across the
+    # timeline we've traveled. The start time is calculated the same way adding
+    # 24 for the additional day (144 + 24 = 168) giving us our start and end
+    # indicies that we'll use to pull the data to update the historical view
+    [start, end] = [Math.floor(144*percent)+24, Math.floor(144*percent)]
+    @parent.updateHistoricCollection(@_getSlideSection(start, end))

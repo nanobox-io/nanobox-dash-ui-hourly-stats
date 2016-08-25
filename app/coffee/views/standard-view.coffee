@@ -18,14 +18,14 @@ module.exports = class StandardView
   build : () ->
 
     #
-    view = d3.select($(".standard-view", @$node).get(0))
+    $node = $(".standard-view", @$node)
 
     # add a live and historic stats
-    @liveStats ||= new LiveStats(view, @main)
-    @historicStats ||= new HistoricStats(view, @main)
+    @liveStats ||= new LiveStats($node, @main)
+    @historicStats ||= new HistoricStats($node, @main)
 
     # add a face
-    @face = new Face $(".standard-view .face", @$node), "true"
+    @face = new Face $node.find(".face"), "true"
 
     #
     @_subscribeToUpdates()

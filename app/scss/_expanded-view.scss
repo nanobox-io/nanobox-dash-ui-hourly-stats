@@ -1,148 +1,143 @@
-.expanded-view          {display:flex; flex-direction:column; position:relative;
+.expanded-view                {display:flex; flex-direction:column; position:relative;
 
   //
-  .stats                {display:flex; flex-direction:row;
+  .stats                      {display:flex; flex-direction:row;
 
     // historic stats
-    .historic-stats     {margin-right:15px;
-      .stat             {display:flex; height:50px; &:not(:last-child) {margin-bottom:10px;}
-        .value          {position:relative; width:5px; height:inherit; &:not(:last-child) {margin-right:5px;}
-          & > *         {width:inherit; height:inherit; background:$lightest-gray;}
-          .foreground   {@include transition(all, 0.25s); position:absolute; bottom:0px; left:0px; z-index:1;}
-          .background   {position:absolute; bottom:0px; left:0px; z-index:0; width:100%;}
+    .historic-stats           {margin-right:15px;
+      .stat                   {display:flex; height:50px; &:not(:last-child) {margin-bottom:10px;}
+        .value                {position:relative; width:5px; height:inherit; &:not(:last-child) {margin-right:5px;}
+          & > *               {width:inherit; height:inherit; background:$lightest-gray;}
+          .foreground         {/*@include transition(all, 0.25s);*/ position:absolute; bottom:0px; left:0px; z-index:1;}
+          .background         {position:absolute; bottom:0px; left:0px; z-index:0; width:100%;}
         }
       }
     }
 
     // current-stats
-    .current-stats      {width:12px;
-      .value            {position:relative; height:50px; width:inherit; &:not(:last-child) {margin-bottom:10px;}
-        & > *           {width:inherit; height:inherit; background:$lightest-gray;}
-        .foreground     {@include transition(all, 0.25s); position:absolute; bottom:0px; left:0px; z-index:1;}
-        .background     {position:absolute; bottom:0px; left:0px; z-index:0; width:100%;}
+    .current-stats            {width:12px;
+      .value                  {position:relative; height:50px; width:inherit; &:not(:last-child) {margin-bottom:10px;}
+        & > *                 {width:inherit; height:inherit; background:$lightest-gray;}
+        .foreground           {@include transition(all, 0.25s); position:absolute; bottom:0px; left:0px; z-index:1;}
+        .background           {position:absolute; bottom:0px; left:0px; z-index:0; width:100%;}
       }
     }
 
     // metrics & percents
-    .metas              {display:flex; flex-direction:column; margin-left:5px;
-      .meta             {position:relative;
-        .percent        {@include font-size(14px); color:$gray;}
-        .metric         {@include font-size(10px); color:$gray; text-transform:uppercase;}
+    .metas                    {display:flex; flex-direction:column; margin-left:5px;
+      .meta                   {position:relative;
+        .percent              {@include font-size(14px); color:$gray;}
+        .metric               {@include font-size(10px); color:$gray; text-transform:uppercase;}
 
         // we need to manually position these to get them just right
-        &:nth-child(1)  {top:27px;}
-        &:nth-child(2)  {top:57px;}
-        &:nth-child(3)  {top:86px;}
-        &:nth-child(4)  {top:115px;}
+        &:nth-child(1)        {top:27px;}
+        &:nth-child(2)        {top:57px;}
+        &:nth-child(3)        {top:86px;}
+        &:nth-child(4)        {top:115px;}
       }
     }
   }
 
   // timeline
-  .timeline                         {@include font-size(10px); display:flex; position:relative; top:8px; left:-1px; width:262px; color:$gray; font-style:italic;
-    .time                           {position:relative; width:5px; margin-right:5px; text-align:center;
+  .timeline                   {@include font-size(10px); display:flex; position:relative; top:8px; left:-1px; width:262px; color:$gray; font-style:italic;
+    .time                     {position:relative; width:5px; margin-right:5px; text-align:center;
 
-      .hour                         {position:relative;}
-      .period                       {position:relative; left:-3px;}
+      .hour                   {position:relative;}
+      .period                 {position:relative; left:-3px;}
 
-      &.primary, &.secondary        {
-        &:before                    {content:""; position:absolute; top:-8px; width:1px; height:5px; background:$gray;}
+      &.primary, &.secondary  {
+        &:before              {content:""; position:absolute; top:-8px; width:1px; height:5px; background:$gray;}
       }
     }
   }
 
   // slide toggle
-  .toggle-slider                    {@include font-size(11px); display:flex; align-items:center; position:relative; width:200px; height:21px; margin-top:18px; text-align:center; background:$dashboard_1; cursor:pointer;
+  .toggle-slider              {@include font-size(11px); display:flex; align-items:center; position:relative; width:200px; height:21px; margin-top:18px; text-align:center; background:$dashboard_1; cursor:pointer;
 
-    @mixin bracket                  {content:""; position:absolute; top:-1px; bottom:-1px; width:3px; border:1px solid $dashboard_8;}
-    &:before                        {@include bracket; left:-1px; border-right-color:transparent;}
-    &:after                         {@include bracket; right:-1px; border-left-color:transparent;}
+    @mixin bracket            {content:""; position:absolute; top:-1px; bottom:-1px; width:3px; border:1px solid $dashboard_8;}
+    &:before                  {@include bracket; left:-1px; border-right-color:transparent;}
+    &:after                   {@include bracket; right:-1px; border-left-color:transparent;}
 
-    span                            {width:100%; color:$dashboard_73;}
+    span                      {width:100%; color:$dashboard_73;}
 
-    &:hover                         {background:$dashboard_73;
-      &:after                       {color:$dashboard_82; border-color:$dashboard_82; border-left-color: transparent;}
-      &:before                      {color:$dashboard_82; border-color:$dashboard_82; border-right-color:transparent;}
+    &:hover                   {background:$dashboard_73;
+      &:after                 {color:$dashboard_82; border-color:$dashboard_82; border-left-color: transparent;}
+      &:before                {color:$dashboard_82; border-color:$dashboard_82; border-right-color:transparent;}
 
-      span                          {color:$dashboard_82;}
+      span                    {color:$dashboard_82;}
     }
   }
 
+  // slider
+
   //
-  #slidershield                {position:fixed; top:0px; left:0px; /*z-index:100;*/ width:100%; height:100%;
-    &.open                          {display:inline-block !important;}
+  #slidershield               {position:fixed; top:0px; left:0px; /*z-index:100;*/ width:100%; height:100%;
+    &.open                    {display:inline-block !important;}
   }
 
   //
-  #slider                           {align-items:center; flex-direction:column; z-index:101; position:absolute; bottom:-60px; left:-5px; width:621px; height:90px; padding:10px; color:$light-blue; background:$dark-blue; border-radius:5px; user-select:none;
-    &.open                          {@include drop-shadow(0px, 1px, 4px, rgba(#013342, 0.6), 0px); display:flex !important;}
+  #slider                     {align-items:center; flex-direction:column; z-index:101; position:absolute; bottom:-60px; left:-5px; width:621px; height:90px; padding:10px; color:$light-blue; background:$dark-blue; border-radius:5px; user-select:none;
+    &.open                    {@include drop-shadow(0px, 1px, 4px, rgba(#013342, 0.6), 0px); display:flex !important;}
+    .close                    {@include font-size(21px); position:absolute; top:0px; right:5px; cursor:pointer;}
 
     //
-    .close                          {@include font-size(21px); position:absolute; top:0px; right:5px; cursor:pointer;}
-
-    //
-    .days                           {display:flex; align-items:center; justify-content:space-around; width:100%; text-align:center;
-      .day                          {flex:1 1 20%;}
+    .days                     {display:flex; align-items:center; justify-content:space-around; width:100%; text-align:center;
+      .day                    {flex:1 1 20%;}
     }
 
     //
-    .range                          {width:100%; height:55px; position:relative;
+    .range                    {width:100%; height:55px; position:relative;
 
-      //
-      .rule                         {display:flex; align-items:center; position:absolute; bottom:0px; width:100%;
-        .tick                       {display:table; position:relative; width:1px; margin-right:1px; background:#005A7D;
-
-          //
-          &.full                    {height:40px; margin:0px 2px;}
-          &.half                    {height:18px;}
-          &.hour                    {height:12px;}
+      // timeline
+      .rule                   {display:flex; align-items:center; position:absolute; bottom:0px; width:100%;
+        .tick                 {display:table; position:relative; width:1px; margin-right:1px; background:#005A7D;
 
           //
-          &.first                   {margin:0px 2px 0px 0px;}
-          &.last                    {margin:0px 0px 0px 2px;}
+          &.full              {height:40px; margin:0px 2px;}
+          &.half              {height:18px;}
+          &.hour              {height:12px;}
+
+          //
+          &.first             {margin:0px 2px 0px 0px;}
+          &.last              {margin:0px 0px 0px 2px;}
         }
       }
 
       // data
-      .data                         {position:relative; position:absolute; bottom:0px; width:100%;
-        .stat                       {display:flex; position:relative; height:1px; &:not(:last-child) {margin-bottom:1px;}
-          .value                    {position:absolute; top:0px; left:0px; width:1px; height:inherit; // &:not(:last-child) {margin-right:2px;}
-            & > *                   {width:inherit; height:inherit; background:$lightest-gray;}
-            .foreground             {@include transition(all, 0.25s); position:absolute; top:0px; left:0px; z-index:1;}
-            .background             {position:absolute; top:0px; left:0px; z-index:0; width:100%;}
+      .data                   {position:relative; position:absolute; bottom:0px; width:100%;
+        .stat                 {display:flex; position:relative; height:1px; &:not(:last-child) {margin-bottom:1px;}
+          .value              {position:absolute; top:0px; left:0px; width:1px; height:inherit; // &:not(:last-child) {margin-right:2px;}
+            & > *             {width:inherit; height:inherit; background:$lightest-gray;}
+            .foreground       {@include transition(all, 0.25s); position:absolute; top:0px; left:0px; z-index:1;}
+            .background       {position:absolute; top:0px; left:0px; z-index:0; width:100%;}
           }
         }
       }
 
-      //
-      .handle                       {@include transition(background-color, 0.1s); display:flex; justify-content:space-between; z-index:2; position:absolute; top:3px; left:0px; width:75px; height:55px; background-color:rgba(#288EAD, 0.4); cursor:pointer;
-        &hover                      {background-color:rgba(#288EAD, 0.5);}
+      // scrubber
+      .handle                 {@include transition(background-color, 0.1s); display:flex; justify-content:space-between; z-index:2; position:absolute; top:3px; left:0px; width:75px; height:55px; background-color:rgba(#288EAD, 0.4); cursor:pointer;
+        &hover                {background-color:rgba(#288EAD, 0.5);}
 
         //
-        .side                       {color:$yellow; text-align:center; font-size: 9px; margin:5px 3px;
-          .slider-label             {display:flex; flex-direction:column; align-items:center; text-transform:uppercase;}
-          .hour                     {font-size:13px; }
-          &:before                  {content:""; position:absolute; top:-1px; bottom:-1px; width:3px; border:1px solid $white; }
-          &:after                   {content:""; position:absolute; top:24px; display:block; height:0px; width:0px; border:5px solid transparent; }
+        .side                 {color:$yellow; text-align:center; font-size: 9px; margin:5px 3px;
+          .slider-label       {display:flex; flex-direction:column; align-items:center; text-transform:uppercase;}
+          .hour               {font-size:13px; }
+          &:before            {content:""; position:absolute; top:-1px; bottom:-1px; width:3px; border:1px solid $white; }
+          &:after             {content:""; position:absolute; top:24px; display:block; height:0px; width:0px; border:5px solid transparent; }
 
           //
-          &.left                    {float:left;
-            &:before                {left:-1px; border-right-color:transparent; }
-            &:after                 {border-right-color:$yellow; left:-13px; }
+          &.left              {float:left;
+            &:before          {left:-1px; border-right-color:transparent; }
+            &:after           {border-right-color:$yellow; left:-13px; }
           }
 
           //
-          &.right                   {float:right;
-            &:before                {right:-1px; border-left-color:transparent; }
-            &:after                 {border-left-color:$yellow; right:-13px; }
+          &.right             {float:right;
+            &:before          {right:-1px; border-left-color:transparent; }
+            &:after           {border-left-color:$yellow; right:-13px; }
           }
         }
       }
-
-      //
-      // .loading                      {position: absolute; color:$white; top:17px; text-align:center; width:100%; font-size:14px;
-      //   span                        {position: absolute; /* Doesn't effect centering this way */ }
-      // }
     }
   }
 }

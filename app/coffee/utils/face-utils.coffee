@@ -7,7 +7,7 @@ module.exports = class Face
   temperature: "wait"
 
   #
-  constructor: (@$el, @scalable) ->
+  constructor: (@$el, @scalable) -> # do nothing...
 
   #
   update : (temp) ->
