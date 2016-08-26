@@ -209,15 +209,7 @@ module.exports = class Slider
   _getSlideSection : (start, end) ->
     data = []
     for d in @data
-      section = d.data[end..start]
-
-      # "zero fill" any missing values
-      until section.length == @numData
-        section.push {time: moment(), value: 0}
-      end
-
-      #
-      data.push {metric: d.metric, data: section}
+      data.push {metric: d.metric, data: d.data[end..start]}
     data
 
   #

@@ -1,14 +1,15 @@
 module.exports = class StatsUtils
 
   #
-  @getTemperature : (val) ->
-    if      val <= 0  then "wait"
-    else if val < .75 then "cool"
-    else if val < 0.9 then "warm"
-    else                   "hot"
+  @getTemperature: (val) ->
+    switch
+      when val < 0     then "wait"
+      when val <= 0.75 then "cool"
+      when val <= 0.90 then "warm"
+      else                  "hot"
 
   # Finds the hottest temperature and returns that
-  @getOverallTemperature : (data) ->
+  @getOverallTemperature: (data) ->
 
     # find the highest temp
     highTemp = 0

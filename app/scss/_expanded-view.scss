@@ -18,7 +18,7 @@
     .current-stats            {width:12px;
       .value                  {position:relative; height:50px; width:inherit; &:not(:last-child) {margin-bottom:10px;}
         & > *                 {width:inherit; height:inherit; background:$stat-bg-gray;}
-        .foreground           {@include transition(all, 0.25s); position:absolute; bottom:0px; left:0px; z-index:1;}
+        .foreground           {@include transition(all, 0.25s); position:absolute; bottom:0px; left:0px; z-index:1; min-height:2px;}
         .background           {position:absolute; bottom:0px; left:0px; z-index:0; width:100%;}
       }
     }

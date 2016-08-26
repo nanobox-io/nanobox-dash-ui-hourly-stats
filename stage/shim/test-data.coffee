@@ -14,17 +14,28 @@ module.exports = class TestData
       setInterval () ->
         if window.enableUpdates
           data.callback statsDataSimultor.generateLiveStat()
-      , 5000
+      , 3000
 
     #
     PubSub.subscribe 'STATS.SUBSCRIBE.HISTORIC', (m, data)=>
-      data.callback statsDataSimultor.generateHistoricalStat()
 
-      # auto update; disabled by default
-      setInterval () ->
-        if window.enableUpdates
-          data.callback statsDataSimultor.generateHistoricalStat()
-      , 5000
+      #
+      for metric in @getMetrics(false)
+
+        stats = []
+        for hour in [0..1]
+          stats.push {time: moment().subtract(hour, "h"), value: ((Math.random() * 1.00) + 0.00)}
+
+        # console.log "PUSH", metric, JSON.stringify stats
+        data.callback {metric: metric, data: stats}
+
+      # data.callback statsDataSimultor.generateHistoricalStats()
+
+      # # auto update; disabled by default
+      # setInterval () ->
+      #   if window.enableUpdates
+      #     data.callback statsDataSimultor.generateHistoricalStat()
+      # , 3000
 
     #
     # PubSub.subscribe 'STATS.UNSUBSCRIBE', (m, data) =>

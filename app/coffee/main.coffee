@@ -20,7 +20,7 @@ class HourlyStats
 
   # build creates a new component based on the @view that is passed in when
   # instantiated
-  build : () ->
+  build: () ->
     view = switch @options.view
       when "micro"    then new MicroView @$el, @options, @
       when "standard" then new StandardView @$el, @options, @
@@ -28,6 +28,13 @@ class HourlyStats
 
     #
     view.build()
+
+  # getLiveStats
+  getLiveStats: () ->
+    stats = {}
+    for data in @storedLiveData
+      stats[data.metric] = data.value
+    stats
 
   # the following methods take a data update and look for the corresponding node
   # in the stored data set and replace it (leaving the rest of the previous data
@@ -39,9 +46,12 @@ class HourlyStats
     return @storedLiveData
 
   updateStoredHistoricData: (data) ->
+    # console.log "UPDATED STORED!", JSON.stringify data
+    # console.log "PRESTORED!", JSON.stringify @storedHistoricData
     for d, i in @storedHistoricData
       # d.time = moment(d.time) # convert the time into a moment object
       (@storedHistoricData[i] = data) if (d.metric == data.metric)
+    # console.log "STORED!", JSON.stringify @storedHistoricData
     return @storedHistoricData
 
   updateStoredWeekData: (data) ->

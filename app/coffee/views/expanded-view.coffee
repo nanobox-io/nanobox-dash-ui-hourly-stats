@@ -102,16 +102,26 @@ module.exports = class ExpandedView
   # layout is completely different
   updateHistoricStats : (data) =>
 
+    # console.log "PREUPDATE!!", JSON.stringify data
+
     # takes a single data point and returns an entire data set (array)
     data = @main.updateStoredHistoricData(data)
+
+    # console.log "UPDATE!!", JSON.stringify data
 
     # this needs to correspond with the value in CSS so that the ratio is correct
     maxHeight = 50
 
     ## UPDATE
 
+    # console.log "DATA???", data
+
+    # console.log "THINGS!", @view.select(".stats .historic-stats").selectAll(".stat")
+    # console.log "STUFF!", @view.select(".stats .historic-stats").selectAll(".stat").data(data)
+
     @view.select(".stats .historic-stats").selectAll(".stat").data(data)
       .each (d) ->
+        # console.log "HERE?", d, d3.select(@).selectAll(".foreground")
         d3.select(@).selectAll(".foreground").data(d.data)
           .style("height", (d) -> "#{(d.value*maxHeight) - d.value}px")
           .attr("class", (d) -> "foreground background-temp #{StatsUtils.getTemperature(d.value)}")
@@ -121,17 +131,16 @@ module.exports = class ExpandedView
     # historic stat container
     @view.select(".stats .historic-stats").selectAll("div").data(data)
       .enter()
-        .append("div").attr(class: "stat")
-          .each (d) ->
+      .append("div").attr(class: "stat")
+        .each (d) ->
 
-            # historic stats
-            statEnter = d3.select(@).selectAll("div").data(d.data)
-              .enter()
-                .append("div").attr(class: "value")
-            statEnter.append("div")
-              .style("height", (d) -> "#{(d.value*maxHeight) - d.value}px")
-              .attr("class", (d) -> "foreground background-temp #{StatsUtils.getTemperature(d.value)}")
-            statEnter.append("div").attr(class: "background")
+          # historic stats
+          statEnter = d3.select(@).selectAll("div").data(d.data)
+            .enter().append("div").attr(class: "value")
+          statEnter.append("div")
+            .style("height", (d) -> "#{(d.value*maxHeight) - d.value}px")
+            .attr("class", (d) -> "foreground background-temp #{StatsUtils.getTemperature(d.value)}")
+          statEnter.append("div").attr(class: "background")
 
   # publish that we're interested in live and historic updates
   _subscribeToUpdates: () ->
