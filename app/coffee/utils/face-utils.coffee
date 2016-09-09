@@ -14,10 +14,9 @@ module.exports = class Face
 
     # don't update if it's already showing the right temperature
     return if @temperature == temp
-
     @temperature = temp
 
     @$el.empty()
-    $face = $ face( {temperature:temp, scalable:@scalable } )
-    @$el.append $face
-    castShadows $face
+    $face = $ face({temperature:temp, scalable:@scalable })
+    @$el.append($face)
+    castShadows($face)

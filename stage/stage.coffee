@@ -5,13 +5,13 @@ window.init = () ->
   statsDataSimultor.createFakeStatDataProvider()
 
   # Micro View
-  # microData =
-  #   view        : "micro"
-  #   entity      : "host"
-  #   entityId    : "0001"
-  #
-  # micro = new nanobox.HourlyStats $("#micro1"), microData
-  # micro.build()
+  microData =
+    view        : "micro"
+    entity      : "host"
+    entityId    : "0001"
+
+  micro = new nanobox.HourlyStats $("#micro1"), microData
+  micro.build()
 
   # micro2Data =
   #   view        : "micro"
@@ -23,13 +23,13 @@ window.init = () ->
   # micro2.build()
 
   # Standard View
-  # standardData =
-  #   view        : "standard"
-  #   entity      : "host"
-  #   entityId    : "0003"
-  #
-  # standard = new nanobox.HourlyStats $("#standard1"), standardData
-  # standard.build()
+  standardData =
+    view        : "standard"
+    entity      : "host"
+    entityId    : "0003"
+
+  standard = new nanobox.HourlyStats $("#standard1"), standardData
+  standard.build()
 
   # standard2Data =
   #   view        : "standard"
@@ -56,7 +56,6 @@ window.init = () ->
 
   expanded = new nanobox.HourlyStats $("#expanded1"), expandedData
   expanded.build()
-  console.log "STUFF?", expanded.getLiveStats()
 
   # expanded2Data =
   #   view        : "expanded"

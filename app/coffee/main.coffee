@@ -41,20 +41,32 @@ class HourlyStats
   # in tact). This is done so that a complete set of data will always be passed
   # to D3
   updateStoredLiveData: (data) ->
+
+    # return the current stored data if there is no data being updated
+    return @storedLiveData if data == undefined
+
+    # replace the corresponding metric with the data provided
     for d, i in @storedLiveData
       (@storedLiveData[i] = data) if (d.metric == data.metric)
     return @storedLiveData
 
   updateStoredHistoricData: (data) ->
-    # console.log "UPDATED STORED!", JSON.stringify data
-    # console.log "PRESTORED!", JSON.stringify @storedHistoricData
+
+    # return the current stored data if there is no data being updated
+    return @storedHistoricData if data == undefined
+
+    # replace the corresponding metric with the data provided
     for d, i in @storedHistoricData
       # d.time = moment(d.time) # convert the time into a moment object
       (@storedHistoricData[i] = data) if (d.metric == data.metric)
-    # console.log "STORED!", JSON.stringify @storedHistoricData
     return @storedHistoricData
 
   updateStoredWeekData: (data) ->
+
+    # return the current stored data if there is no data being updated
+    return @storedHistoricData if data == undefined
+
+    # replace the corresponding metric with the data provided
     for d, i in @storedWeekData
       # d.time = moment(d.time) # convert the time into a moment object
       (@storedWeekData[i] = data) if (d.metric == data.metric)

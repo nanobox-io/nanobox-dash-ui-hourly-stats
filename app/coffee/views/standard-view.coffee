@@ -27,7 +27,8 @@ module.exports = class StandardView
     # add a face
     @face = new Face $node.find(".face"), "true"
 
-    #
+    # seed data and subscribe to updates
+    @_seedData()
     @_subscribeToUpdates()
 
   # update live stats
@@ -37,6 +38,11 @@ module.exports = class StandardView
 
   # updateHistoricStats
   updateHistoricStats : (data) => @historicStats.updateData(data)
+
+  # we need to populate the component with an initial set of empty data
+  _seedData: () ->
+    @updateLiveStats()
+    @updateHistoricStats()
 
   # publish that we're interested in live and historic updates
   _subscribeToUpdates: () ->

@@ -25,13 +25,18 @@ module.exports = class MicroView
     # add a face
     @face = new Face $node.find(".face"), "true"
 
-    #
+    # seed data and subscribe to updates
+    @_seedData()
     @_subscribeToUpdates()
 
   # update live stats
   updateLiveStats : (data) =>
     @liveStats.updateData(data)
     @face.update StatsUtils.getOverallTemperature(data)
+
+  # we need to populate the component with an initial set of empty data
+  _seedData: () ->
+    @updateLiveStats()
 
   # publish that we're interested in live updates
   _subscribeToUpdates: () ->
