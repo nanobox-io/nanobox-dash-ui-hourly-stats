@@ -3,7 +3,7 @@ module.exports = class StatsUtils
   #
   @getTemperature: (val) ->
     switch
-      when val <= 0    then "wait"
+      when val < 0     then "wait"
       when val <= 0.75 then "cool"
       when val <= 0.90 then "warm"
       else                  "hot"
