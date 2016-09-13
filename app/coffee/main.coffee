@@ -75,7 +75,7 @@ class HourlyStats
   # the following methods seed data for each type for D3
   _seedLiveData: () ->
     seed = []
-    seed.push {metric: metric, value: 0} for metric in @options.metrics
+    seed.push {metric: metric, value: -1} for metric in @options.metrics
     seed
 
   _seedHistoricData: () ->
@@ -83,7 +83,7 @@ class HourlyStats
     for metric in @options.metrics
       data = []
       for hour in [0..24]
-        data.push {time: moment().subtract(hour, "h"), value: 0}
+        data.push {time: moment().subtract(hour, "h"), value: -1}
       seed.push {metric: metric, data: data}
     seed
 
@@ -92,7 +92,7 @@ class HourlyStats
     for metric in @options.metrics
       data = []
       for hour in [0...168]
-        data.push {time: moment().subtract(hour, "h"), value: 0}
+        data.push {time: moment().subtract(hour, "h"), value: -1}
       seed.push {metric: metric, data: data}
     seed
 
