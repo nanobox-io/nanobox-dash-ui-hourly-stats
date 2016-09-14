@@ -24,7 +24,7 @@ module.exports = class LiveStats
     @view.select(".historic-stats").selectAll(".stat").data(data)
       .each (d) ->
         d3.select(@).selectAll(".foreground").data(d.data)
-          .attr("class", (d) -> "foreground background-temp #{StatsUtils.getTemperature(d.value)}")
+          .attr("class", (d) -> "#{StatsUtils.getStatClasses(d.value)}")
 
     ## CREATE
     @view.select(".historic-stats").selectAll("div").data(data)
@@ -33,5 +33,5 @@ module.exports = class LiveStats
         .each (d) ->
           statEnter = d3.select(@).selectAll("div").data(d.data)
             .enter().append("div").attr(class: "value")
-          statEnter.append("div").attr("class", (d) -> "foreground background-temp #{StatsUtils.getTemperature(d.value)}")
+          statEnter.append("div").attr("class", (d) -> "#{StatsUtils.getStatClasses(d.value)}")
           statEnter.append("div").attr(class: "background")

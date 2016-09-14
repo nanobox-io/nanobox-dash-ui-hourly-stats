@@ -65,14 +65,14 @@ module.exports = class ExpandedView
     # values
     @view.select(".stats .current-stats").selectAll(".foreground").data(data)
       .style("height", (d) -> "#{(d.value*maxHeight) - d.value}px")
-      .attr("class", (d) -> "foreground background-temp #{StatsUtils.getTemperature(d.value)}")
+      .attr("class", (d) -> "#{StatsUtils.getStatClasses(d.value)}")
 
     # metas; percents & metrics
     @view.select(".stats .metas").selectAll(".percent").data(data)
-      .attr("class", (d) -> "percent color-temp #{StatsUtils.getTemperature(d.value)}")
+      .attr("class", (d) -> "#{StatsUtils.getPercentClasses(d.value)}")
       .text (d) -> "#{Math.round(d.value*100)}%"
     @view.select(".stats .metas").selectAll(".metric").data(data)
-      .attr("class", (d) -> "metric color-temp #{StatsUtils.getTemperature(d.value)}")
+      .attr("class", (d) -> "#{StatsUtils.getMetricClasses(d.value)}")
       .text (d) -> d.metric
 
     ## CREATE
@@ -82,17 +82,17 @@ module.exports = class ExpandedView
       .enter().append("div").attr(class: "value")
     valueEnter.append("div")
       .style("height", (d) -> "#{(d.value*maxHeight) - d.value}px")
-      .attr("class", (d) -> "foreground background-temp #{StatsUtils.getTemperature(d.value)}")
+      .attr("class", (d) -> "#{StatsUtils.getStatClasses(d.value)}")
     valueEnter.append("div").attr(class: "background")
 
     # metas; percents & metrcis
     metaEnter = @view.select(".stats .metas").selectAll("div").data(data)
       .enter().append("div").attr(class: "meta")
     metaEnter.append("div")
-      .attr("class", (d) -> "percent color-temp #{StatsUtils.getTemperature(d.value)}")
+      .attr("class", (d) -> "#{StatsUtils.getPercentClasses(d.value)}")
       .text (d) -> "#{Math.round(d.value*100)}%"
     metaEnter.append("div")
-      .attr("class", (d) -> "metric color-temp #{StatsUtils.getTemperature(d.value)}")
+      .attr("class", (d) -> "#{StatsUtils.getMetricClasses(d.value)}")
       .text (d) -> d.metric
 
   #
@@ -114,7 +114,7 @@ module.exports = class ExpandedView
       .each (d) ->
         d3.select(@).selectAll(".foreground").data(d.data)
           .style("height", (d) -> "#{(d.value*maxHeight) - d.value}px")
-          .attr("class", (d) -> "foreground background-temp #{StatsUtils.getTemperature(d.value)}")
+          .attr("class", (d) -> "#{StatsUtils.getStatClasses(d.value)}")
 
     ## CREATE
 
@@ -129,7 +129,7 @@ module.exports = class ExpandedView
             .enter().append("div").attr(class: "value")
           statEnter.append("div")
             .style("height", (d) -> "#{(d.value*maxHeight) - d.value}px")
-            .attr("class", (d) -> "foreground background-temp #{StatsUtils.getTemperature(d.value)}")
+            .attr("class", (d) -> "#{StatsUtils.getStatClasses(d.value)}")
           statEnter.append("div").attr(class: "background")
 
   # we need to populate the component with an initial set of empty data

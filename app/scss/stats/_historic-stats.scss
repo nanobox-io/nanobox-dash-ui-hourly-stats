@@ -1,0 +1,9 @@
+.historic-stats       {margin-right:5px; padding-right:5px; border-right:1px solid $stat-bg-gray;
+  .stat               {display:flex; height:5px; &:not(:last-child) {margin-bottom:3px;}
+    .value            {position:relative; width:5px; height:inherit; &:not(:last-child) {margin-right:3px;}
+      & > *           {width:inherit; height:inherit; background:$stat-bg-gray;}
+      .foreground     {@include transition(all, 0.25s); position:absolute; top:0px; left:0px; z-index:1;}
+      .background     {position:absolute; top:0px; left:0px; z-index:0; width:100%;}
+    }
+  }
+}

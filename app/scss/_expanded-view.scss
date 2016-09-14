@@ -8,7 +8,7 @@
       .stat                   {display:flex; height:50px; &:not(:last-child) {margin-bottom:10px;}
         .value                {position:relative; width:5px; height:inherit; &:not(:last-child) {margin-right:5px;}
           & > *               {width:inherit; height:inherit; background:$stat-bg-gray;}
-          .foreground         {/*@include transition(all, 0.25s);*/ position:absolute; bottom:0px; left:0px; z-index:1;  min-height:2px;}
+          .foreground         {/*@include transition(all, 0.25s);*/ position:absolute; bottom:0px; left:0px; z-index:1; min-height:2px; &.empty {visibility:hidden;}}
           .background         {position:absolute; bottom:0px; left:0px; z-index:0; width:100%;}
         }
       }
@@ -18,7 +18,7 @@
     .current-stats            {width:12px;
       .value                  {position:relative; height:50px; width:inherit; &:not(:last-child) {margin-bottom:10px;}
         & > *                 {width:inherit; height:inherit; background:$stat-bg-gray;}
-        .foreground           {@include transition(all, 0.25s); position:absolute; bottom:0px; left:0px; z-index:1; min-height:2px; background:$cool;}
+        .foreground           {@include transition(all, 0.25s); position:absolute; bottom:0px; left:0px; z-index:1; min-height:2px; background:$cool; &.empty {visibility:hidden;}}
         .background           {position:absolute; bottom:0px; left:0px; z-index:0; width:100%;}
       }
     }
@@ -26,13 +26,13 @@
     // metrics & percents
     .metas                    {display:flex; flex-direction:column; margin-left:5px;
       .meta                   {position:relative;
-        .percent              {@include font-size(14px); color:$gray;}
+        .percent              {@include font-size(14px); color:$gray; &.empty {visibility:hidden;}}
         .metric               {@include font-size(10px); color:$gray; text-transform:uppercase;}
 
         // we need to manually position these to get them just right
         &:nth-child(1)        {top:27px;}
         &:nth-child(2)        {top:64px;}
-        &:nth-child(3)        {top:99px;}
+        &:nth-child(3)        {top:100px;}
         &:nth-child(4)        {top:136px;}
       }
     }

@@ -28,10 +28,12 @@ module.exports = class LiveStats
     # values
     @view.select(".current-stats").selectAll(".foreground").data(data)
       .style("width", (d) => "#{(d.value*@maxWidth) - d.value}px")
-      .attr("class", (d) => "foreground background-temp #{StatsUtils.getTemperature(d.value)}")
+      .attr("class", (d) -> "#{StatsUtils.getStatClasses(d.value)}")
 
     # percent
-    @view.select(".percents").selectAll(".percent").data(data).text (d) -> "#{Math.round(d.value*100)}%"
+    @view.select(".percents").selectAll(".percent").data(data)
+      .attr("class", (d) -> "#{StatsUtils.getPercentClasses(d.value)}")
+      .text (d) -> "#{Math.round(d.value*100)}%"
 
     ## CREATE
 
@@ -43,10 +45,12 @@ module.exports = class LiveStats
     valueEnter = @view.select(".current-stats").selectAll("div").data(data)
       .enter().append("div").attr(class: "value")
     valueEnter.append("div")
-      .attr("class", (d) => "foreground background-temp #{StatsUtils.getTemperature(d.value)}")
+      .attr("class", (d) -> "#{StatsUtils.getStatClasses(d.value)}")
       .style("width", (d) => "#{(d.value*@maxWidth) - d.value}px")
     valueEnter.append("div").attr(class: "background")
 
     # percent
     @view.select(".percents").selectAll("div").data(data)
-      .enter().append("div").attr(class: "percent").text (d) -> "#{Math.round(d.value*100)}%"
+      .enter().append("div")
+        .attr("class", (d) -> "#{StatsUtils.getPercentClasses(d.value)}")
+        .text (d) -> "#{Math.round(d.value*100)}%"

@@ -22,3 +22,24 @@ module.exports = class StatsUtils
 
     # return overall temp
     @getTemperature(temp)
+
+  #
+  @getStatClasses: (value) ->
+    classes = "foreground background-temp"
+    classes += " #{@getTemperature(value)}"
+    classes += " empty" if value == -1
+    classes
+
+  #
+  @getPercentClasses: (value) ->
+    classes = "percent color-temp"
+    classes += " #{@getTemperature(value)}"
+    classes += " empty" if value == -1
+    classes
+
+  #
+  @getMetricClasses: (value) ->
+    classes = "metric color-temp"
+    classes += " #{@getTemperature(value)}"
+    classes += " empty" if value == -1
+    classes

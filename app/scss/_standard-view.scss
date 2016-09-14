@@ -1,25 +1,17 @@
-.standard-view          {display:flex; align-items:center;
+.standard-view            {display:flex; align-items:center;
 
   // metrics & current-stats
   @extend .micro-view;
 
   // percents
-  .percents              {@include font-size(8px); position:relative; top:1px; width:21px; margin-left:5px; color:$gray;}
+  .percents               {@include font-size(8px); position:relative; top:1px; width:21px; margin-left:5px; color:$gray; .empty {visibility:hidden;}}
 
-  // historic stats
-  .historic-stats       {margin-right:5px; padding-right:5px; border-right:1px solid $stat-bg-gray;
-    .stat               {display:flex; height:5px; &:not(:last-child) {margin-bottom:3px;}
-      .value            {position:relative; width:5px; height:inherit; &:not(:last-child) {margin-right:3px;}
-        & > *           {width:inherit; height:inherit; background:$stat-bg-gray;}
-        .foreground     {@include transition(all, 0.25s); position:absolute; top:0px; left:0px; z-index:1;}
-        .background     {position:absolute; top:0px; left:0px; z-index:0; width:100%;}
-      }
-    }
-  }
+  // historic-stats
+  @import "stats/historic-stats";
 
   //
-  &.compressed          {}
+  &.compressed            {}
 
   //
-  .face                 {}
+  .face                   {}
 }
