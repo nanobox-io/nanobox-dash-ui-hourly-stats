@@ -2,7 +2,7 @@
   .stat               {display:flex; height:5px; &:not(:last-child) {margin-bottom:3px;}
     .value            {position:relative; width:5px; height:inherit; &:not(:last-child) {margin-right:3px;}
       & > *           {width:inherit; height:inherit; background:$stat-bg-gray;}
-      .foreground     {@include transition(all, 0.25s); position:absolute; top:0px; left:0px; z-index:1;}
+      .foreground     {@include transition(all, 0.25s); position:absolute; top:0px; left:0px; z-index:1; &.empty{visibility:hidden;}}
       .background     {position:absolute; top:0px; left:0px; z-index:0; width:100%;}
     }
   }
