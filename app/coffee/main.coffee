@@ -29,7 +29,9 @@ class HourlyStats
     #
     view.build()
 
-  # getLiveStats
+  # getLiveStats returns the current set of storedLiveData; this is used as an
+  # api for valkrie to pull this data to pass into other components (namely the
+  # usage breakdown component)
   getLiveStats: () ->
     stats = {}
     for data in @storedLiveData
