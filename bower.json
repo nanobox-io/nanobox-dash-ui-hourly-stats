@@ -1,6 +1,6 @@
 {
   "name": "hourly-stats",
-  "version": "0.0.73",
+  "version": "0.0.74",
   "dependencies": {
     "jquery": "^3.1.1",
     "velocity": "~1.1.0",
