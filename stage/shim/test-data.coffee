@@ -24,7 +24,7 @@ module.exports = class TestData
 
         stats = []
         for hour in [0..1]
-          stats.push {time: moment().subtract(hour, "h"), value: ((Math.random() * 1.00) + 0.00)}
+          stats.push {time: moment().subtract(hour, "h"), value: ((Math.random() * 2.00) + 0.00)}
         data.callback {metric: metric, data: stats}
 
       # data.callback statsDataSimultor.generateHistoricalStats()

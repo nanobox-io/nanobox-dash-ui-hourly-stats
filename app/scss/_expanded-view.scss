@@ -8,7 +8,7 @@
       .stat                   {display:flex; height:50px; &:not(:last-child) {margin-bottom:10px;}
         .value                {position:relative; width:5px; height:inherit; &:not(:last-child) {margin-right:5px;}
           & > *               {width:inherit; height:inherit; background:$stat-bg-gray;}
-          .foreground         {/*@include transition(all, 0.25s);*/ position:absolute; bottom:0px; left:0px; z-index:1; min-height:2px; &.empty {visibility:hidden;}}
+          .foreground         {/*@include transition(all, 0.25s);*/ position:absolute; bottom:0px; left:0px; z-index:1; min-height:2px; max-height:100%; &.empty {visibility:hidden;}}
           .background         {position:absolute; bottom:0px; left:0px; z-index:0; width:100%;}
         }
       }
@@ -18,7 +18,7 @@
     .current-stats            {width:12px;
       .value                  {position:relative; height:50px; width:inherit; &:not(:last-child) {margin-bottom:10px;}
         & > *                 {width:inherit; height:inherit; background:$stat-bg-gray;}
-        .foreground           {@include transition(all, 0.25s); position:absolute; bottom:0px; left:0px; z-index:1; min-height:2px; background:$_cool; &.empty {visibility:hidden;}}
+        .foreground           {@include transition(all, 0.25s); position:absolute; bottom:0px; left:0px; z-index:1; min-height:2px; max-height:100%; background:$_cool; &.empty {visibility:hidden;}}
         .background           {position:absolute; bottom:0px; left:0px; z-index:0; width:100%;}
       }
     }
