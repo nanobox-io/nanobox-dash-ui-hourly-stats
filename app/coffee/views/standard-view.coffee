@@ -48,10 +48,11 @@ module.exports = class StandardView
   _subscribeToUpdates: () ->
 
     PubSub.publish 'STATS.SUBSCRIBE.LIVE', {
-      entity   : @options.entity
-      entityId : @options.entityId
-      metrics  : @options.metrics
-      callback : @updateLiveStats
+      entity      : @options.entity
+      entityId    : @options.entityId
+      metrics     : @options.metrics
+      callback    : @updateLiveStats
+      uid         : @main.uid
     }
 
     PubSub.publish 'STATS.SUBSCRIBE.HISTORIC', {

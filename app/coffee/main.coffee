@@ -21,13 +21,18 @@ class HourlyStats
   # build creates a new component based on the @view that is passed in when
   # instantiated
   build: () ->
+    @uid   = "#{@options.entityId}/#{new Date().getTime()}"
     view = switch @options.view
-      when "micro"    then new MicroView @$el, @options, @
+      when "micro"    then new MicroView    @$el, @options, @
       when "standard" then new StandardView @$el, @options, @
       when "expanded" then new ExpandedView @$el, @options, @
 
     #
     view.build()
+
+  # Unsubscribe from live updates on destroy
+  destroy : () -> PubSub.publish 'STATS.UNSUBSCRIBE.LIVE', {uid:@uid}
+
 
   # getLiveStats returns the current set of storedLiveData; this is used as an
   # api for valkrie to pull this data to pass into other components (namely the

@@ -45,4 +45,5 @@ module.exports = class MicroView
       entityId : @options.entityId
       metrics  : @options.metrics
       callback : @updateLiveStats
+      uid      : @main.uid
     }

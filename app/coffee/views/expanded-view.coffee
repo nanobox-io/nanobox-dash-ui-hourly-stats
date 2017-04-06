@@ -145,6 +145,7 @@ module.exports = class ExpandedView
       entityId       : @options.entityId
       metrics        : @options.metrics
       callback       : @updateLiveStats
+      uid            : @main.uid
     }
 
     PubSub.publish 'STATS.SUBSCRIBE.HISTORIC', {
